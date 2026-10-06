@@ -1,0 +1,861 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-06T08:47:26.093Z",
+  "title": "Design System: JLPT N5 單字整理表",
+  "extensions": {
+    "colorMeta": {
+      "vermilion": {
+        "role": "primary",
+        "displayName": "朱筆",
+        "canonical": "#b5473b",
+        "oklch": "oklch(54.4% 0.146 28.9)",
+        "tonalRamp": [
+          "#330000",
+          "#570000",
+          "#7b0806",
+          "#9f3329",
+          "#c8584b",
+          "#f27e6e",
+          "#ffa493",
+          "#ffe8e3"
+        ]
+      },
+      "vermilion-ink": {
+        "role": "primary",
+        "displayName": "朱墨",
+        "canonical": "#9e3b30",
+        "oklch": "oklch(48.9% 0.134 29.2)",
+        "tonalRamp": [
+          "#310000",
+          "#540000",
+          "#77140d",
+          "#9b382e",
+          "#c35d4f",
+          "#ed8273",
+          "#ffa897",
+          "#ffe8e3"
+        ]
+      },
+      "vermilion-wash": {
+        "role": "primary",
+        "displayName": "朱暈",
+        "canonical": "#f7e4df",
+        "oklch": "oklch(93.3% 0.022 35.1)",
+        "tonalRamp": [
+          "#130805",
+          "#2e201d",
+          "#4b3c38",
+          "#695955",
+          "#8d7c77",
+          "#b2a09b",
+          "#d8c6c1",
+          "#fdeae5"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "紙",
+        "canonical": "#f7f3ea",
+        "oklch": "oklch(96.5% 0.013 86.8)",
+        "tonalRamp": [
+          "#0d0b06",
+          "#27241d",
+          "#433f38",
+          "#615d56",
+          "#838078",
+          "#a8a49c",
+          "#cecac1",
+          "#f2eee5"
+        ]
+      },
+      "paper-sheet": {
+        "role": "neutral",
+        "displayName": "攤開的紙",
+        "canonical": "#fffdf8",
+        "oklch": "oklch(99.4% 0.007 88.6)",
+        "tonalRamp": [
+          "#0c0b08",
+          "#252420",
+          "#41403c",
+          "#5f5d59",
+          "#82807c",
+          "#a6a4a0",
+          "#cccac5",
+          "#f0eee9"
+        ]
+      },
+      "paper-shade": {
+        "role": "neutral",
+        "displayName": "紙影",
+        "canonical": "#f1ece1",
+        "oklch": "oklch(94.4% 0.016 86.4)",
+        "tonalRamp": [
+          "#0e0b05",
+          "#27241b",
+          "#433f37",
+          "#615d54",
+          "#848076",
+          "#a9a49a",
+          "#cfcabf",
+          "#f3eee3"
+        ]
+      },
+      "paper-mask": {
+        "role": "neutral",
+        "displayName": "遮紙",
+        "canonical": "#e5dfd2",
+        "oklch": "oklch(90.5% 0.019 86.2)",
+        "tonalRamp": [
+          "#0f0b04",
+          "#28231a",
+          "#443f35",
+          "#625d52",
+          "#858074",
+          "#aaa498",
+          "#d0cabd",
+          "#f4eee1"
+        ]
+      },
+      "sumi": {
+        "role": "neutral",
+        "displayName": "墨",
+        "canonical": "#1f1d1a",
+        "oklch": "oklch(23.2% 0.006 78.2)",
+        "tonalRamp": [
+          "#0d0b08",
+          "#262421",
+          "#423f3c",
+          "#605d5a",
+          "#82807c",
+          "#a7a4a0",
+          "#cdcac6",
+          "#f1eeea"
+        ]
+      },
+      "sumi-soft": {
+        "role": "neutral",
+        "displayName": "淡墨",
+        "canonical": "#3b3732",
+        "oklch": "oklch(33.9% 0.010 73.6)",
+        "tonalRamp": [
+          "#0e0b07",
+          "#27231f",
+          "#433f3a",
+          "#615d57",
+          "#847f7a",
+          "#a9a49e",
+          "#cfcac3",
+          "#f3eee7"
+        ]
+      },
+      "sumi-faded": {
+        "role": "neutral",
+        "displayName": "褪墨",
+        "canonical": "#6a645b",
+        "oklch": "oklch(50.6% 0.016 78.2)",
+        "tonalRamp": [
+          "#0f0a05",
+          "#28231b",
+          "#443f36",
+          "#635d54",
+          "#857f76",
+          "#aaa49a",
+          "#d0c9bf",
+          "#f4ede3"
+        ]
+      },
+      "ruled-line": {
+        "role": "neutral",
+        "displayName": "橫線",
+        "canonical": "#e4ddcf",
+        "oklch": "oklch(89.9% 0.020 84.6)",
+        "tonalRamp": [
+          "#0f0a03",
+          "#292319",
+          "#453f34",
+          "#635d51",
+          "#867f73",
+          "#aaa497",
+          "#d1cabc",
+          "#f5eee0"
+        ]
+      },
+      "pencil-line": {
+        "role": "neutral",
+        "displayName": "鉛筆線",
+        "canonical": "#8c8478",
+        "oklch": "oklch(61.7% 0.020 78.2)",
+        "tonalRamp": [
+          "#100a03",
+          "#292319",
+          "#463f34",
+          "#645c51",
+          "#877f73",
+          "#aca397",
+          "#d2c9bc",
+          "#f6ede0"
+        ]
+      },
+      "pine": {
+        "role": "secondary",
+        "displayName": "松葉綠",
+        "canonical": "#2f6f4f",
+        "oklch": "oklch(49.0% 0.084 159.2)",
+        "tonalRamp": [
+          "#001400",
+          "#002f14",
+          "#014d2f",
+          "#2c6c4c",
+          "#50906e",
+          "#75b592",
+          "#9bdcb7",
+          "#def5e7"
+        ]
+      },
+      "pine-wash": {
+        "role": "secondary",
+        "displayName": "松葉綠（底）",
+        "canonical": "#e4eee2",
+        "oklch": "oklch(93.8% 0.019 140.5)",
+        "tonalRamp": [
+          "#070d06",
+          "#1f261e",
+          "#3a4239",
+          "#586056",
+          "#7a8378",
+          "#9ea89d",
+          "#c4cec2",
+          "#e8f2e6"
+        ]
+      },
+      "indigo": {
+        "role": "secondary",
+        "displayName": "藍染",
+        "canonical": "#2b5a9e",
+        "oklch": "oklch(47.1% 0.122 257.9)",
+        "tonalRamp": [
+          "#00003d",
+          "#001e5d",
+          "#0d3d7e",
+          "#2e5da1",
+          "#5081c8",
+          "#73a6f0",
+          "#98cdff",
+          "#e2f0ff"
+        ]
+      },
+      "indigo-wash": {
+        "role": "secondary",
+        "displayName": "藍染（底）",
+        "canonical": "#e6ecf4",
+        "oklch": "oklch(94.1% 0.013 255.5)",
+        "tonalRamp": [
+          "#080b10",
+          "#20242a",
+          "#3b4046",
+          "#595e65",
+          "#7b8188",
+          "#9fa5ad",
+          "#c5cbd3",
+          "#e9eff7"
+        ]
+      },
+      "ochre": {
+        "role": "tertiary",
+        "displayName": "黃土",
+        "canonical": "#85561c",
+        "oklch": "oklch(49.5% 0.095 67.4)",
+        "tonalRamp": [
+          "#220000",
+          "#401600",
+          "#603300",
+          "#815217",
+          "#a6753e",
+          "#cc9962",
+          "#f4bf87",
+          "#fdebda"
+        ]
+      },
+      "ochre-wash": {
+        "role": "tertiary",
+        "displayName": "黃土（底）",
+        "canonical": "#f3e7d3",
+        "oklch": "oklch(93.2% 0.030 80.7)",
+        "tonalRamp": [
+          "#110a00",
+          "#2b2313",
+          "#483e2e",
+          "#665c4b",
+          "#897f6d",
+          "#aea390",
+          "#d5c9b5",
+          "#f9edd9"
+        ]
+      },
+      "correct": {
+        "role": "feedback",
+        "displayName": "答對",
+        "canonical": "#2b6a4a",
+        "oklch": "oklch(47.4% 0.084 158.6)",
+        "tonalRamp": [
+          "#001400",
+          "#002f14",
+          "#044d2f",
+          "#2d6c4c",
+          "#51906e",
+          "#76b591",
+          "#9bdcb6",
+          "#dff5e7"
+        ]
+      },
+      "correct-wash": {
+        "role": "feedback",
+        "displayName": "答對（底）",
+        "canonical": "#e2eee0",
+        "oklch": "oklch(93.6% 0.023 141.2)",
+        "tonalRamp": [
+          "#060e05",
+          "#1e271d",
+          "#394338",
+          "#576155",
+          "#798477",
+          "#9da89b",
+          "#c3cec1",
+          "#e7f3e5"
+        ]
+      },
+      "wrong": {
+        "role": "feedback",
+        "displayName": "答錯",
+        "canonical": "#a83f33",
+        "oklch": "oklch(51.1% 0.141 29.3)",
+        "tonalRamp": [
+          "#320000",
+          "#550000",
+          "#790e08",
+          "#9e352a",
+          "#c65a4c",
+          "#f07f70",
+          "#ffa694",
+          "#ffe8e3"
+        ]
+      },
+      "wrong-wash": {
+        "role": "feedback",
+        "displayName": "答錯（底）",
+        "canonical": "#f8e4df",
+        "oklch": "oklch(93.4% 0.023 34.3)",
+        "tonalRamp": [
+          "#140805",
+          "#2e201d",
+          "#4b3c38",
+          "#6a5955",
+          "#8d7c77",
+          "#b2a09b",
+          "#d9c6c1",
+          "#fee9e4"
+        ]
+      },
+      "night-paper": {
+        "role": "neutral",
+        "displayName": "夜之紙",
+        "canonical": "#171512",
+        "oklch": "oklch(19.7% 0.007 78.2)",
+        "tonalRamp": [
+          "#0d0b08",
+          "#262420",
+          "#423f3c",
+          "#605d59",
+          "#82807c",
+          "#a7a4a0",
+          "#cdcac6",
+          "#f1eeea"
+        ]
+      },
+      "night-sheet": {
+        "role": "neutral",
+        "displayName": "夜之攤開的紙",
+        "canonical": "#211e1a",
+        "oklch": "oklch(23.7% 0.009 75.2)",
+        "tonalRamp": [
+          "#0d0b07",
+          "#27231f",
+          "#423f3b",
+          "#615d58",
+          "#83807b",
+          "#a8a49f",
+          "#cecac4",
+          "#f2eee8"
+        ]
+      },
+      "night-shade": {
+        "role": "neutral",
+        "displayName": "夜之紙影",
+        "canonical": "#2a2621",
+        "oklch": "oklch(27.1% 0.011 73.5)",
+        "tonalRamp": [
+          "#0e0a07",
+          "#27231e",
+          "#433f3a",
+          "#615d57",
+          "#847f79",
+          "#a9a49d",
+          "#cfcac3",
+          "#f3eee7"
+        ]
+      },
+      "night-mask": {
+        "role": "neutral",
+        "displayName": "夜之遮紙",
+        "canonical": "#3b362f",
+        "oklch": "oklch(33.6% 0.014 76.4)",
+        "tonalRamp": [
+          "#0f0a05",
+          "#28231d",
+          "#443f38",
+          "#625d55",
+          "#857f77",
+          "#aaa49b",
+          "#d0c9c1",
+          "#f4ede4"
+        ]
+      },
+      "night-ink": {
+        "role": "neutral",
+        "displayName": "夜之墨",
+        "canonical": "#ede6da",
+        "oklch": "oklch(92.7% 0.018 81.3)",
+        "tonalRamp": [
+          "#0f0a04",
+          "#28231a",
+          "#453f35",
+          "#635d53",
+          "#867f75",
+          "#aaa498",
+          "#d0cabe",
+          "#f5eee1"
+        ]
+      },
+      "night-ink-soft": {
+        "role": "neutral",
+        "displayName": "夜之淡墨",
+        "canonical": "#d8d0c3",
+        "oklch": "oklch(86.0% 0.020 80.1)",
+        "tonalRamp": [
+          "#100a03",
+          "#292319",
+          "#453f34",
+          "#645d51",
+          "#867f73",
+          "#aba497",
+          "#d1c9bc",
+          "#f6ede0"
+        ]
+      },
+      "night-ink-faded": {
+        "role": "neutral",
+        "displayName": "夜之褪墨",
+        "canonical": "#a9a196",
+        "oklch": "oklch(71.3% 0.018 76.1)",
+        "tonalRamp": [
+          "#100a04",
+          "#29231a",
+          "#453f35",
+          "#645c52",
+          "#877f74",
+          "#aba398",
+          "#d2c9be",
+          "#f6ede1"
+        ]
+      },
+      "night-ruled-line": {
+        "role": "neutral",
+        "displayName": "夜之橫線",
+        "canonical": "#38332d",
+        "oklch": "oklch(32.4% 0.013 72.4)",
+        "tonalRamp": [
+          "#0e0a06",
+          "#28231d",
+          "#443f39",
+          "#625d56",
+          "#857f78",
+          "#aaa39c",
+          "#d0c9c2",
+          "#f4ede6"
+        ]
+      },
+      "night-pencil-line": {
+        "role": "neutral",
+        "displayName": "夜之鉛筆線",
+        "canonical": "#7a7268",
+        "oklch": "oklch(55.6% 0.018 73.5)",
+        "tonalRamp": [
+          "#100a04",
+          "#29231a",
+          "#463e35",
+          "#645c53",
+          "#877f75",
+          "#aca398",
+          "#d2c9be",
+          "#f6ede2"
+        ]
+      },
+      "night-vermilion": {
+        "role": "primary",
+        "displayName": "夜之朱",
+        "canonical": "#e2806f",
+        "oklch": "oklch(70.3% 0.124 30.9)",
+        "tonalRamp": [
+          "#2e0000",
+          "#510000",
+          "#731b10",
+          "#973d2f",
+          "#bf6151",
+          "#e88574",
+          "#ffab99",
+          "#ffe8e2"
+        ]
+      },
+      "night-vermilion-ink": {
+        "role": "primary",
+        "displayName": "夜之朱墨",
+        "canonical": "#f0a395",
+        "oklch": "oklch(78.7% 0.094 30.7)",
+        "tonalRamp": [
+          "#270000",
+          "#470803",
+          "#69291f",
+          "#8b473c",
+          "#b26a5d",
+          "#d98e81",
+          "#ffb4a5",
+          "#ffe8e3"
+        ]
+      },
+      "night-vermilion-wash": {
+        "role": "primary",
+        "displayName": "夜之朱暈",
+        "canonical": "#3b231f",
+        "oklch": "oklch(28.6% 0.038 29.9)",
+        "tonalRamp": [
+          "#180503",
+          "#341d19",
+          "#523834",
+          "#725651",
+          "#967873",
+          "#bb9c97",
+          "#e2c2bc",
+          "#ffe8e3"
+        ]
+      },
+      "night-on-vermilion": {
+        "role": "primary",
+        "displayName": "夜之朱上字",
+        "canonical": "#1b1210",
+        "oklch": "oklch(19.3% 0.016 32.8)",
+        "tonalRamp": [
+          "#110907",
+          "#2b211f",
+          "#483d3a",
+          "#665b58",
+          "#897d7a",
+          "#aea19e",
+          "#d4c7c4",
+          "#f9ebe8"
+        ]
+      },
+      "night-pine": {
+        "role": "secondary",
+        "displayName": "夜之松葉綠",
+        "canonical": "#86cba4",
+        "oklch": "oklch(78.5% 0.090 158.7)",
+        "tonalRamp": [
+          "#001400",
+          "#003012",
+          "#004d2d",
+          "#276d4b",
+          "#4d916c",
+          "#72b690",
+          "#97ddb5",
+          "#dff5e7"
+        ]
+      },
+      "night-pine-wash": {
+        "role": "secondary",
+        "displayName": "夜之松葉綠（底）",
+        "canonical": "#1d3227",
+        "oklch": "oklch(29.5% 0.034 160.5)",
+        "tonalRamp": [
+          "#000f07",
+          "#14291e",
+          "#30453a",
+          "#4d6457",
+          "#6f8779",
+          "#93ac9e",
+          "#b8d2c3",
+          "#def5e8"
+        ]
+      },
+      "night-indigo": {
+        "role": "secondary",
+        "displayName": "夜之藍染",
+        "canonical": "#94b8ee",
+        "oklch": "oklch(77.6% 0.087 258.3)",
+        "tonalRamp": [
+          "#00052e",
+          "#04224d",
+          "#213f6d",
+          "#3e5e8e",
+          "#6081b4",
+          "#83a6db",
+          "#a8cdff",
+          "#e2f0ff"
+        ]
+      },
+      "night-indigo-wash": {
+        "role": "secondary",
+        "displayName": "夜之藍染（底）",
+        "canonical": "#1d2b41",
+        "oklch": "oklch(28.8% 0.045 259.2)",
+        "tonalRamp": [
+          "#020a1e",
+          "#16243a",
+          "#314058",
+          "#4e5e77",
+          "#70819c",
+          "#94a6c1",
+          "#b9cce8",
+          "#e3efff"
+        ]
+      },
+      "night-ochre": {
+        "role": "tertiary",
+        "displayName": "夜之黃土",
+        "canonical": "#e2b574",
+        "oklch": "oklch(79.9% 0.098 75.8)",
+        "tonalRamp": [
+          "#200000",
+          "#3d1900",
+          "#5c3600",
+          "#7d5508",
+          "#a27736",
+          "#c89c5b",
+          "#f0c281",
+          "#fbecd9"
+        ]
+      },
+      "night-ochre-wash": {
+        "role": "tertiary",
+        "displayName": "夜之黃土（底）",
+        "canonical": "#3a2c18",
+        "oklch": "oklch(30.4% 0.038 75.4)",
+        "tonalRamp": [
+          "#140800",
+          "#2f210d",
+          "#4c3d29",
+          "#6a5b45",
+          "#8e7d67",
+          "#b3a28a",
+          "#d9c8b0",
+          "#fbecd9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "題目單字",
+        "purpose": "練習題的日文單字，一個畫面只有一個。"
+      },
+      "headline": {
+        "displayName": "頁面標題",
+        "purpose": "頁首標題。"
+      },
+      "title": {
+        "displayName": "分類標題",
+        "purpose": "各詞性／主題分類的標題。"
+      },
+      "headword": {
+        "displayName": "單字",
+        "purpose": "單字表、答案揭曉與錯題清單中的日文單字。"
+      },
+      "body": {
+        "displayName": "內文",
+        "purpose": "中文意思、說明與選項文字。"
+      },
+      "body-ja": {
+        "displayName": "日文內文",
+        "purpose": "日文例句與讀音。"
+      },
+      "label": {
+        "displayName": "標籤",
+        "purpose": "表頭、字數、進度與分數。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet",
+        "value": "0 1px 2px rgba(28, 24, 20, 0.05), 0 2px 6px -2px rgba(28, 24, 20, 0.08)",
+        "purpose": "只用在練習卡（淺色）。"
+      },
+      {
+        "name": "sheet-night",
+        "value": "0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px -2px rgba(0, 0, 0, 0.5)",
+        "purpose": "只用在練習卡（深色）。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "seal-drop",
+        "value": "420ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "朱印分數落下，系統唯一的動畫時刻。"
+      },
+      {
+        "name": "state",
+        "value": "120ms ease-out",
+        "purpose": "選項的底色與邊框狀態轉換。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "options-two-column",
+        "value": "560px"
+      },
+      {
+        "name": "table-to-rows",
+        "value": "640px"
+      },
+      {
+        "name": "container",
+        "value": "900px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "畫面上唯一的主要動作：下一題、看結果、複習錯題。",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">下一題</button>",
+      "css": ".ds-btn-primary{min-height:52px;padding:0 28px;font:600 1rem/1 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--on-accent, #fffdf8);background:var(--accent, #b5473b);border:1px solid transparent;border-radius:12px;cursor:pointer}.ds-btn-primary:hover{background:var(--accent-ink, #9e3b30)}.ds-btn-primary:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "與主要按鈕並列的次要動作，例如「再來一組」。",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">再來一組</button>",
+      "css": ".ds-btn-secondary{min-height:52px;padding:0 28px;font:600 1rem/1 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--ink, #1f1d1a);background:transparent;border:1px solid var(--line-strong, #8c8478);border-radius:12px;cursor:pointer}.ds-btn-secondary:hover{background:var(--surface-2, #f1ece1)}.ds-btn-secondary:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}"
+    },
+    {
+      "name": "Answer Options",
+      "kind": "custom",
+      "refersTo": "answer-option",
+      "description": "練習題的四個選項：預設、答對、答錯與停用狀態。",
+      "html": "<div class=\"ds-opts\"><button class=\"ds-opt\" type=\"button\"><span class=\"ds-key\">1</span><span class=\"ds-lab\">炎熱的</span></button><button class=\"ds-opt ds-ok\" type=\"button\" disabled><span class=\"ds-key\">2</span><span class=\"ds-lab\">白色的</span><svg viewBox=\"0 0 20 20\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.5 10.5l3.5 3.5 7.5-8\"/></svg></button><button class=\"ds-opt ds-ng\" type=\"button\" disabled><span class=\"ds-key\">3</span><span class=\"ds-lab\">薄的、淡的</span><svg viewBox=\"0 0 20 20\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5.5 5.5l9 9M14.5 5.5l-9 9\"/></svg></button><button class=\"ds-opt ds-off\" type=\"button\" disabled><span class=\"ds-key\">4</span><span class=\"ds-lab\">狹窄的</span></button></div>",
+      "css": ".ds-opts{display:grid;gap:10px;max-width:420px}.ds-opt{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;font:400 1.05rem/1.4 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;text-align:left;color:var(--ink, #1f1d1a);background:var(--card, #fffdf8);border:1px solid var(--line-strong, #8c8478);border-radius:12px;cursor:pointer;transition:background-color 120ms ease-out}.ds-opt:hover:not([disabled]){background:var(--surface-2, #f1ece1)}.ds-opt:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}.ds-key{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;font-size:.78rem;color:var(--sub, #6a645b);background:var(--surface-2, #f1ece1)}.ds-lab{flex:1}.ds-ok,.ds-ng{font-weight:600;border-width:2px;padding:9px 13px}.ds-ok{color:var(--correct, #2b6a4a);background:var(--correct-bg, #e2eee0);border-color:var(--correct, #2b6a4a)}.ds-ng{color:var(--wrong, #a83f33);background:var(--wrong-bg, #f8e4df);border-color:var(--wrong, #a83f33)}.ds-ok .ds-key,.ds-ng .ds-key{background:transparent;color:inherit}.ds-off{opacity:.5;cursor:default}"
+    },
+    {
+      "name": "Category Navigation",
+      "kind": "nav",
+      "refersTo": "nav-chip",
+      "description": "單字表上方的橫向捲動分類列與遮住中文開關。",
+      "html": "<nav class=\"ds-nav\"><div class=\"ds-chips\"><a class=\"ds-chip ds-chip-quiz\" href=\"#\">練習</a><a class=\"ds-chip\" href=\"#\">動詞<span class=\"ds-n\">76</span></a><a class=\"ds-chip\" href=\"#\" aria-current=\"true\">い形容詞<span class=\"ds-n\">38</span></a><a class=\"ds-chip\" href=\"#\">な形容詞<span class=\"ds-n\">20</span></a></div><button class=\"ds-mask\" type=\"button\" aria-pressed=\"false\">遮住中文</button></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:10px;height:60px;padding:0 12px;background:var(--bg, #f7f3ea);border-bottom:1px solid var(--line, #e4ddcf);font-family:\"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif}.ds-chips{flex:1;display:flex;gap:4px;overflow-x:auto}.ds-chip{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:999px;font-size:.86rem;color:var(--ink-2, #3b3732);text-decoration:none;white-space:nowrap}.ds-chip:hover{background:var(--surface-2, #f1ece1)}.ds-chip:focus-visible,.ds-mask:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}.ds-n{font-size:.75rem;color:var(--sub, #6a645b);font-variant-numeric:tabular-nums}.ds-chip-quiz{color:var(--accent-ink, #9e3b30);font-weight:600}.ds-chip[aria-current=\"true\"]{background:var(--ink, #1f1d1a);color:var(--bg, #f7f3ea)}.ds-chip[aria-current=\"true\"] .ds-n{color:inherit;opacity:.7}.ds-mask{flex:none;min-height:40px;padding:0 14px;font:inherit;font-size:.85rem;color:var(--ink, #1f1d1a);background:var(--card, #fffdf8);border:1px solid var(--line-strong, #8c8478);border-radius:999px;cursor:pointer}.ds-mask[aria-pressed=\"true\"]{background:var(--accent, #b5473b);border-color:var(--accent, #b5473b);color:var(--on-accent, #fffdf8)}"
+    },
+    {
+      "name": "Part-of-speech Tags",
+      "kind": "chip",
+      "refersTo": "pos-tag-intransitive",
+      "description": "詞性標籤：自動詞、他動詞、自他動詞與一般詞性。",
+      "html": "<div class=\"ds-tags\"><span class=\"ds-pos ds-ji\">自動詞</span><span class=\"ds-pos ds-ta\">他動詞</span><span class=\"ds-pos ds-jita\">自他動詞</span><span class=\"ds-pos\">い形容詞</span></div>",
+      "css": ".ds-tags{display:flex;flex-wrap:wrap;gap:8px}.ds-pos{display:inline-block;padding:2px 9px;border-radius:999px;font:400 .78rem/1.6 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;white-space:nowrap;color:var(--accent-ink, #9e3b30);background:var(--accent-bg, #f7e4df)}.ds-ji{color:var(--ji, #2f6f4f);background:var(--ji-bg, #e4eee2)}.ds-ta{color:var(--ta, #2b5a9e);background:var(--ta-bg, #e6ecf4)}.ds-jita{color:var(--jita, #85561c);background:var(--jita-bg, #f3e7d3)}"
+    },
+    {
+      "name": "Range Select",
+      "kind": "input",
+      "refersTo": "select-field",
+      "description": "練習範圍的原生下拉選單。",
+      "html": "<label class=\"ds-scope\"><span>範圍</span><select class=\"ds-select\"><option>全部（275）</option><option>動詞（76）</option></select></label>",
+      "css": ".ds-scope{display:inline-flex;align-items:center;gap:8px;font:400 .85rem/1.4 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--sub, #6a645b)}.ds-select{font:inherit;color:var(--ink, #1f1d1a);background:var(--card, #fffdf8);border:1px solid var(--line-strong, #8c8478);border-radius:8px;min-height:40px;padding:0 10px}.ds-select:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}"
+    },
+    {
+      "name": "Ruled Word List",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "畫在紙上的單字列：教科書體單字、讀音、中文、詞性與例句。",
+      "html": "<div class=\"ds-list\"><div class=\"ds-row\"><div class=\"ds-w\"><span class=\"ds-jw\" lang=\"ja\">会う</span><span class=\"ds-rd\" lang=\"ja\">あう</span></div><span class=\"ds-pos2 ds-ji2\">自動詞</span><div class=\"ds-mean\">見面</div><div class=\"ds-ex\"><span lang=\"ja\">友達に<b>会</b>います。</span><span class=\"ds-zh\">跟朋友見面。</span></div></div><div class=\"ds-row\"><div class=\"ds-w\"><span class=\"ds-jw\" lang=\"ja\">静かな</span><span class=\"ds-rd\" lang=\"ja\">しずかな</span></div><span class=\"ds-pos2\">な形容詞</span><div class=\"ds-mean\">安靜的</div><div class=\"ds-ex\"><span lang=\"ja\"><b>静か</b>な部屋です。</span><span class=\"ds-zh\">安靜的房間。</span></div></div></div>",
+      "css": ".ds-list{max-width:520px;font:400 .92rem/1.6 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--ink, #1f1d1a)}.ds-row{display:grid;grid-template-columns:1fr auto;grid-template-areas:\"w pos\" \"mean mean\" \"ex ex\";column-gap:12px;padding:14px 2px;border-bottom:1px solid var(--line, #e4ddcf)}.ds-w{grid-area:w;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px}.ds-jw{font:600 1.35rem/1.3 \"Klee One\",\"Hiragino Mincho ProN\",\"Yu Mincho\",serif}.ds-rd{font-size:.85rem;color:var(--sub, #6a645b)}.ds-pos2{grid-area:pos;align-self:center;padding:2px 9px;border-radius:999px;font-size:.78rem;color:var(--accent-ink, #9e3b30);background:var(--accent-bg, #f7e4df)}.ds-ji2{color:var(--ji, #2f6f4f);background:var(--ji-bg, #e4eee2)}.ds-mean{grid-area:mean;margin-top:2px;font-size:1rem}.ds-ex{grid-area:ex;margin-top:8px}.ds-ex [lang=ja]{display:block;font-family:\"Hiragino Sans\",\"Noto Sans JP\",\"Yu Gothic\",sans-serif}.ds-ex b{color:var(--accent-ink, #9e3b30)}.ds-zh{display:block;font-size:.85rem;color:var(--sub, #6a645b)}"
+    },
+    {
+      "name": "Seal Score",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "一輪結束時的評語朱印：弧形假名評語、教科書體分數，系統唯一的動畫時刻。",
+      "html": "<div class=\"ds-seal\" role=\"img\" aria-label=\"答對 8 題，共 10 題。よくできました（做得很好）\"><svg viewBox=\"0 0 168 168\" aria-hidden=\"true\"><defs><path id=\"dsArc\" d=\"M 30 92 A 54 54 0 0 1 138 92\"/></defs><circle cx=\"84\" cy=\"84\" r=\"80\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.5\"/><circle cx=\"84\" cy=\"84\" r=\"73\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/><text class=\"ds-phrase\" lang=\"ja\" font-size=\"16\" letter-spacing=\"1\"><textPath href=\"#dsArc\" startOffset=\"50%\" text-anchor=\"middle\">よくできました</textPath></text><text class=\"ds-num\" x=\"84\" y=\"118\" text-anchor=\"middle\">8</text><text class=\"ds-of\" x=\"84\" y=\"140\" text-anchor=\"middle\">/ 10</text></svg></div><p class=\"ds-gloss\"><span lang=\"ja\">よくできました</span>：做得很好</p>",
+      "css": ".ds-seal{width:168px;height:168px;margin:16px auto 0;color:var(--accent, #b5473b);transform:rotate(-8deg);animation:ds-seal 420ms cubic-bezier(.16,1,.3,1) both}.ds-seal svg{display:block;width:100%;height:100%;overflow:visible}.ds-phrase,.ds-num,.ds-of{font-family:\"Klee One\",\"Hiragino Mincho ProN\",serif;font-weight:600;fill:currentColor}.ds-num{font-size:50px}.ds-of{font-size:14px;letter-spacing:.08em;opacity:.85}.ds-gloss{margin:10px 0 0;text-align:center;font:400 .85rem/1.5 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--sub, #6a645b)}.ds-gloss [lang=ja]{color:var(--accent-ink, #9e3b30);font-weight:600}@keyframes ds-seal{0%{transform:rotate(-8deg) scale(1.35);opacity:.25}70%{transform:rotate(-8deg) scale(.97);opacity:1}100%{transform:rotate(-8deg) scale(1);opacity:1}}@media (prefers-reduced-motion:reduce){.ds-seal{animation:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "通勤用的單字本",
+    "overview": "這個介面是一本放在口袋裡、在捷運上隨手翻開的單字本：暖白的紙、墨色的字、一支只在必要時落下的朱筆。學習者手上通常只有幾分鐘、一隻手、晃動的車廂和忽明忽暗的光線，所以每一頁都要一眼看懂、拇指按得到、隨時可以闔上再打開。介面本身退到紙的背後，讓日文字成為頁面上最有存在感的東西。\n\n材質語言來自課本：紙張分成頁面底色（`paper`）和攤開的那一張（`paper-sheet`），單字之間像筆記本一樣用細橫線分隔，而不是一張張浮起來的卡片。日文單字用教科書體 Klee One 書寫，讓學習者看到正確的筆畫形狀；中文說明用安靜的繁中黑體退居其次。朱紅（`vermilion`）是老師的批改筆，只出現在使用者的下一步與需要特別注意的地方。\n\n元件的手感是**清爽、俐落**：細線、精準的對齊、大而明確的觸控目標，沒有多餘的裝飾或特效。整個系統只保留一個值得記住的時刻：一輪練習結束時，分數像朱印一樣蓋在紙上。",
+    "keyCharacteristics": [
+      "暖白紙張與暖墨黑，深色模式是「夜裡的墨」，不是冷灰。",
+      "朱紅只用在行動與重點，詞性用低彩度的傳統色（松葉綠、藍染、黃土）。",
+      "日文單字用教科書體，日文例句用日文黑體，中文介面用繁中黑體，三者各司其職。",
+      "單字表是畫在紙上的橫線，不是卡片堆疊。",
+      "觸控目標至少 40px，主要動作 52–56px，放在拇指範圍內。",
+      "動態只有一個：朱印分數落下。"
+    ],
+    "rules": [
+      {
+        "name": "The 朱筆 Rule",
+        "body": "朱紅只標記兩件事：使用者的下一步，以及要特別注意的字。不拿來當裝飾、背景或大面積色塊（朱印是唯一例外）。",
+        "section": "colors"
+      },
+      {
+        "name": "The 綠色是對 Rule",
+        "body": "答對永遠用綠色加勾，答錯用朱紅加叉。不採用日本「紅圈＝答對」的慣例，因為台灣學習者會把紅色讀成錯誤。",
+        "section": "colors"
+      },
+      {
+        "name": "The 夜裡的墨 Rule",
+        "body": "深色模式是暖黑紙（`night-paper` / `night-sheet`）配米白墨（`night-ink`），每個淺色 token 都有一個 `night-` 對應值（紙影、遮紙、淡墨、褪墨、橫線、鉛筆線、朱、朱墨、朱暈、松葉綠、藍染、黃土與各自的底色）；答對沿用 `night-pine`，答錯沿用 `night-vermilion-ink`。朱紅按鈕在深色模式改用深色字（`night-on-vermilion`）。不使用冷藍灰。",
+        "section": "colors"
+      },
+      {
+        "name": "The 語言標記 Rule",
+        "body": "所有日文（單字、讀音、例句、題目、助詞が／を）都必須帶 `lang=\"ja\"`，由 `:lang(ja)` 套用日文字體。中文介面字體清單永遠以繁中字體開頭。",
+        "section": "typography"
+      },
+      {
+        "name": "The 手寫只給日文 Rule",
+        "body": "Klee One 只用在要學習的日文單字上（題目、單字、答案、錯題）；介面文字、數字、按鈕從不使用它（朱印分數除外）。",
+        "section": "typography"
+      },
+      {
+        "name": "The 一張紙 Rule",
+        "body": "畫面上同時只有一張紙是浮起來的（練習卡）。單字表、提示、答案區都畫在紙上，不加陰影、不加外框。",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do 讓日文單字成為畫面上最大、最有存在感的元素，並一律用 Klee One 書寫。",
+      "Do 為每一段日文加上 `lang=\"ja\"`。",
+      "Do 把主要動作放在練習卡下方、拇指範圍內，觸控目標至少 40px，主要按鈕 52px 以上。",
+      "Do 用紙張色階和 1px 細線分層，讓單字表看起來像畫在紙上的橫線。",
+      "Do 讓所有文字與紙面維持 4.5:1 以上的對比，可操作元件的邊框維持 3:1 以上，淺色與深色模式都要檢查。",
+      "Do 作答回饋要立即、安靜：顏色、勾叉圖示、文字三者並用，並透過 aria-live 讓螢幕閱讀器唸出結果。"
+    ],
+    "donts": [
+      "Don't 用朱紅做大面積背景、裝飾或強調以外的用途（朱印分數除外）。",
+      "Don't 用紅色表示答對。",
+      "Don't 把單字列做成一張張浮起來的卡片，或在練習卡以外的地方加陰影。",
+      "Don't 在卡片、提示或警告框上使用左側彩色粗邊框。",
+      "Don't 用表情符號（⚠️、✅、❌）代替圖示；圖示一律是線寬一致的自繪 SVG。",
+      "Don't 走櫻花粉、動漫可愛、黑金奢華或遊戲化（吉祥物、霓虹色、連勝火焰）的日語學習套版。",
+      "Don't 加入毛玻璃、漸層文字或分散在各處的進場動畫；整個系統只有一個朱印時刻。",
+      "Don't 在深色模式使用冷藍灰，或讓任何顏色只有淺色版本。"
+    ]
+  }
+}
