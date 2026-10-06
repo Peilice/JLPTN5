@@ -343,6 +343,28 @@
   .ex-ja .hl { font-weight: 700; color: var(--accent-ink); }
   .ex-zh { display: block; font-size: 0.85rem; color: var(--sub); }
 
+  /* Pronunciation */
+  .word-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .word-text { min-width: 0; }
+  .say {
+    flex: none; display: inline-grid; place-items: center;
+    width: 36px; height: 36px; padding: 0;
+    color: var(--sub); background: transparent;
+    border: 1px solid var(--line); border-radius: 999px;
+    cursor: pointer;
+  }
+  .say svg { width: 18px; height: 18px; }
+  @media (hover: hover) { .say:hover { color: var(--accent-ink); background: var(--accent-bg); border-color: var(--accent-bg); } }
+  .say.is-speaking { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+  .prompt-tools { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 6px; }
+  .prompt-tools .hint { margin-top: 0; }
+  .prompt-tools .say { width: 36px; height: 36px; }
+  .reveal .entry .say { width: 32px; height: 32px; align-self: center; }
+  .ex-line { display: flex; align-items: flex-start; gap: 6px; }
+  .ex-line .ex-ja { flex: 0 1 auto; min-width: 0; }
+  .say-sm { width: 28px; height: 28px; margin-top: -3px; }
+  .say-sm svg { width: 15px; height: 15px; }
+
   /* Mask mode */
   .masked tbody tr { cursor: pointer; }
   .masked .mean-t, .masked .ex-zh {
@@ -371,6 +393,8 @@
     tbody tr:last-child { border-bottom: 0; }
     td { padding: 0; border: 0; }
     td.word { grid-area: word; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
+    .word-line { justify-content: flex-start; gap: 12px; }
+    .word-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
     .jw { display: inline; font-size: 1.35rem; }
     .reading { display: inline; font-size: 0.85rem; }
     td.pos-cell { grid-area: pos; align-self: center; }
@@ -442,7 +466,9 @@
           <div class="prompt">
             <p class="prompt-word" id="quizWord" lang="ja">&nbsp;</p>
             <p class="prompt-reading" id="quizReading" lang="ja" hidden></p>
-            <button class="hint" id="quizHint" type="button" aria-controls="quizReading" aria-expanded="false">顯示讀音</button>
+            <div class="prompt-tools">
+              <button class="hint" id="quizHint" type="button" aria-controls="quizReading" aria-expanded="false">顯示讀音</button>
+            </div>
           </div>
           <p class="ask" id="quizAsk">這個字的中文意思是？</p>
           <div class="options" id="quizOptions" role="group" aria-labelledby="quizAsk"></div>
@@ -2307,6 +2333,78 @@
     });
   });
 
+  // Pronunciation via the browser's built-in Japanese speech synthesis.
+  // Readings (kana) are spoken rather than the written form, so kanji with
+  // several readings (一日, 今日…) always come out as listed in the table.
+  const speech = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window ? speechSynthesis : null;
+  const ICON_SAY = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8v4h3l4 3.5v-11L6.5 8z"/><path d="M13.5 7.5a3.5 3.5 0 0 1 0 5M15.5 5a7 7 0 0 1 0 10"/></svg>';
+  let jaVoice = null;
+  let speakingBtn = null;
+  function pickVoice() {
+    const vs = speech.getVoices().filter(v => /^ja([-_]|$)/i.test(v.lang));
+    jaVoice = vs.find(v => /google|natural|online/i.test(v.name)) || vs.find(v => v.localService) || vs[0] || null;
+  }
+  function clearSpeaking() {
+    if (speakingBtn) speakingBtn.classList.remove('is-speaking');
+    speakingBtn = null;
+  }
+  function say(reading, btn) {
+    if (!speech) return;
+    speech.cancel();
+    clearSpeaking();
+    const u = new SpeechSynthesisUtterance(reading.replace(/[／/]/g, '、'));
+    u.lang = 'ja-JP';
+    if (jaVoice) u.voice = jaVoice;
+    u.rate = 0.85;
+    if (btn) {
+      speakingBtn = btn;
+      btn.classList.add('is-speaking');
+      u.onend = u.onerror = () => { if (speakingBtn === btn) clearSpeaking(); };
+    }
+    speech.speak(u);
+  }
+  const sayButton = (w, r, cls = 'say', label = `播放「${w}」的發音`) => speech
+    ? `<button type="button" class="${cls}" data-say="${esc(r)}" aria-label="${esc(label)}" title="播放發音">${ICON_SAY}</button>`
+    : '';
+  if (speech) {
+    pickVoice();
+    speech.addEventListener?.('voiceschanged', pickVoice);
+    document.querySelectorAll('.lex-section td.word').forEach(td => {
+      const jw = td.querySelector('.jw'), rd = td.querySelector('.reading');
+      const line = document.createElement('div');
+      line.className = 'word-line';
+      const text = document.createElement('span');
+      text.className = 'word-text';
+      text.append(jw, rd);
+      line.append(text);
+      line.insertAdjacentHTML('beforeend', sayButton(jw.textContent.trim(), rd.textContent.trim()));
+      td.prepend(line);
+    });
+    // Example sentences are spoken as written; the engine picks the kanji readings.
+    document.querySelectorAll('.lex-section td.example').forEach(td => {
+      const ja = td.querySelector('.ex-ja');
+      if (!ja) return;
+      const line = document.createElement('div');
+      line.className = 'ex-line';
+      ja.before(line);
+      line.append(ja);
+      line.insertAdjacentHTML('beforeend', sayButton('', ja.textContent.trim(), 'say say-sm', '播放例句發音'));
+    });
+    const quizSay = document.createElement('button');
+    quizSay.type = 'button';
+    quizSay.className = 'say';
+    quizSay.id = 'quizSay';
+    quizSay.title = '播放發音';
+    quizSay.innerHTML = ICON_SAY;
+    $('quizHint').before(quizSay);
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('.say');
+      if (!btn) return;
+      e.stopPropagation();
+      say(btn.dataset.say, btn);
+    }, true);
+  }
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -2391,6 +2489,8 @@
     const item = byWord.get(q.w);
     $('quizWord').textContent = item.w;
     $('quizReading').textContent = item.r;
+    const qs = $('quizSay');
+    if (qs) { qs.dataset.say = item.r; qs.setAttribute('aria-label', `播放「${item.w}」的發音`); }
     const kanaOnly = item.w === item.r;
     hintShown = false;
     $('quizReading').hidden = true;
@@ -2416,7 +2516,7 @@
       reveal.innerHTML =
         `<p class="status">${ok ? ICON_OK + '答對了' : ICON_NG + '答錯了，正確答案是：'}</p>` +
         `<p class="entry"><span class="rv-word" lang="ja">${esc(item.w)}</span>` +
-        `<span class="rv-reading" lang="ja">${esc(item.r)}</span><span class="rv-mean">${esc(item.c)}</span></p>`;
+        `<span class="rv-reading" lang="ja">${esc(item.r)}</span>${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>`;
     }
     const next = $('quizNext');
     next.hidden = !answered;
