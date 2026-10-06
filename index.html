@@ -2308,6 +2308,7 @@
   const ROUND_LENGTH = 10;
   const QUIZ_KEY = 'jlptn5.quiz.v2';
   const MASK_KEY = 'jlptn5.mask';
+  const HINT_KEY = 'jlptn5.hint';
 
   const store = {
     get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } },
@@ -2437,7 +2438,13 @@
   }
 
   let round = null;
-  let hintShown = false;
+  // Readings are shown by default; hiding them sticks across questions and visits.
+  let hintShown = store.get(HINT_KEY) !== false;
+  function applyHint() {
+    $('quizReading').hidden = !hintShown;
+    $('quizHint').setAttribute('aria-expanded', String(hintShown));
+    $('quizHint').textContent = hintShown ? '隱藏讀音' : '顯示讀音';
+  }
 
   function newRound(words) {
     const scope = $('quizScope').value;
@@ -2492,11 +2499,9 @@
     const qs = $('quizSay');
     if (qs) { qs.dataset.say = item.r; qs.setAttribute('aria-label', `播放「${item.w}」的發音`); }
     const kanaOnly = item.w === item.r;
-    hintShown = false;
-    $('quizReading').hidden = true;
+    applyHint();
     $('quizHint').hidden = kanaOnly;
-    $('quizHint').setAttribute('aria-expanded', 'false');
-    $('quizHint').textContent = '顯示讀音';
+    if (kanaOnly) $('quizReading').hidden = true;
 
     const answered = q.choice !== null;
     $('quizOptions').innerHTML = q.opts.map((opt, n) => {
@@ -2610,9 +2615,8 @@
   $('quizScope').addEventListener('change', () => newRound());
   $('quizHint').addEventListener('click', () => {
     hintShown = !hintShown;
-    $('quizReading').hidden = !hintShown;
-    $('quizHint').setAttribute('aria-expanded', String(hintShown));
-    $('quizHint').textContent = hintShown ? '隱藏讀音' : '顯示讀音';
+    store.set(HINT_KEY, hintShown);
+    applyHint();
   });
 
   document.addEventListener('keydown', e => {
