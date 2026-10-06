@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JLPT N5 單字整理表</title>
+<style>
+  :root {
+    --ink: #1c1c1e;
+    --sub: #6b6b70;
+    --line: #e5e5ea;
+    --accent: #b5473b;
+    --accent-bg: #fbeeec;
+    --bg: #fafaf8;
+    --card: #ffffff;
+    --ji: #2f6f4f;
+    --ji-bg: #e9f4ee;
+    --ta: #2b5a9e;
+    --ta-bg: #eaf1fb;
+    --jita: #8a5a1f;
+    --jita-bg: #f8efe1;
+    --correct: #2f6f4f;
+    --correct-bg: #e9f4ee;
+    --wrong: #b5473b;
+    --wrong-bg: #fbeeec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Sans", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header {
+    padding: 32px 24px 20px;
+    border-bottom: 1px solid var(--line);
+    background: var(--card);
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+  }
+  header p {
+    margin: 4px 0;
+    color: var(--sub);
+    font-size: 0.92rem;
+  }
+  .note {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    font-size: 0.88rem;
+    color: #7a3a32;
+    border-radius: 4px;
+  }
+  .legend {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--sub);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .legend span.pos { margin-right: 4px; }
+  nav {
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: 0.85rem;
+    z-index: 10;
+  }
+  nav a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  nav a:hover { text-decoration: underline; }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  section {
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 1.15rem;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .count {
+    font-weight: normal;
+    font-size: 0.8rem;
+    color: var(--sub);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f2f0ec;
+    font-size: 0.82rem;
+    color: var(--sub);
+    font-weight: 600;
+  }
+  tr:hover td { background: #fafaf5; }
+  .word {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .reading {
+    display: block;
+    font-weight: normal;
+    font-size: 0.78rem;
+    color: var(--sub);
+  }
+  .pos {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-radius: 10px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .pos-ji { background: var(--ji-bg); color: var(--ji); }
+  .pos-ta { background: var(--ta-bg); color: var(--ta); }
+  .pos-jita { background: var(--jita-bg); color: var(--jita); }
+  .example {
+    color: #333;
+  }
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.8rem;
+    padding: 20px;
+  }
+
+  /* Quiz styles */
+  .quiz-box {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .quiz-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--sub);
+    margin-bottom: 16px;
+  }
+  .quiz-prompt {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 20px 10px;
+    letter-spacing: 0.02em;
+  }
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  @media (max-width: 520px) {
+    .quiz-options { grid-template-columns: 1fr; }
+  }
+  .quiz-option {
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fdfdfb;
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .quiz-option:hover { background: #f2f0ec; }
+  .quiz-option.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+    color: var(--correct);
+    font-weight: 600;
+  }
+  .quiz-option.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong);
+    color: var(--wrong);
+    font-weight: 600;
+  }
+  .quiz-option.disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+  .quiz-reveal {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  .quiz-reveal .kanji {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .quiz-reveal .kreading {
+    color: var(--sub);
+    font-size: 0.9rem;
+  }
+  .quiz-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .quiz-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .quiz-btn:hover { opacity: 0.9; }
+  .quiz-btn-secondary {
+    background: transparent;
+    color: var(--sub);
+    border: 1px solid var(--line);
+  }
+  .quiz-done {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 20px 0;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>JLPT N5 單字整理表</h1>
+  <p>共 277 個單字，依詞性 / 主題分類整理，含讀音、中文意思、詞性、例句</p>
+  <div class="note">
+    ⚠️ 本表為自行編寫整理，並非任何特定網站清單的複製版，也非JLPT官方公告清單（官方並未公開逐字表）。實際範圍約800字，此表涵蓋核心高頻詞彙，供學習參考，正式應考建議搭配市售N5單字書或線上題庫交叉核對。動詞的自動詞／他動詞判斷為常見基本用法，部分動詞（如「休む」）實際上兩種用法皆有，僅標示最常見的一種或標為「自他動詞」。
+  </div>
+  <div class="legend">
+    <span><span class="pos pos-ji">自動詞</span>動作不直接作用於受詞（用が）</span>
+    <span><span class="pos pos-ta">他動詞</span>動作直接作用於受詞（用を）</span>
+    <span><span class="pos pos-jita">自他動詞</span>兩種用法皆常見</span>
+  </div>
+</header>
+<nav>
+  <a href="#quiz">日翻中練習</a> <a href="#動詞">動詞（76）</a> <a href="#い形容詞">い形容詞（38）</a> <a href="#な形容詞">な形容詞（20）</a> <a href="#名詞_人稱家族">名詞：人稱・家族（20）</a> <a href="#名詞_時間">名詞：時間（26）</a> <a href="#名詞_數量金錢">名詞：數量・金錢（13）</a> <a href="#名詞_場所建築">名詞：場所・建築（20）</a> <a href="#名詞_交通">名詞：交通（9）</a> <a href="#名詞_食物">名詞：食物（14）</a> <a href="#名詞_日用品身體">名詞：日用品・身體（18）</a> <a href="#副詞疑問詞">副詞・疑問詞（23）</a>
+</nav>
+<main>
+  
+    <section id="quiz">
+      <h2>日翻中練習 <span class="count">（隨機出題，共 277 字題庫）</span></h2>
+      <div class="quiz-box">
+        <div class="quiz-top">
+          <div class="quiz-progress" id="quizProgress">第 1 / 10 題</div>
+          <div class="quiz-score" id="quizScore">答對：0</div>
+        </div>
+        <div class="quiz-prompt" id="quizPrompt">讀取中…</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-reveal" id="quizReveal" style="display:none;"></div>
+        <div class="quiz-actions">
+          <button id="quizNextBtn" class="quiz-btn" style="display:none;">下一題</button>
+          <button id="quizRestartBtn" class="quiz-btn quiz-btn-secondary">重新出題</button>
+        </div>
+      </div>
+    </section>
+
+  
+    <section id="動詞">
+      <h2>動詞 <span class="count">（76 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">会う<span class="reading">あう</span></td>
+          <td>見面</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">友達に会います。（跟朋友見面。）</td>
+        </tr>
+        <tr>
+          <td class="word">開ける<span class="reading">あける</span></td>
+          <td>打開</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">窓を開けてください。（請打開窗戶。）</td>
+        </tr>
+        <tr>
+          <td class="word">上げる<span class="reading">あげる</span></td>
+          <td>舉起、給</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">手を上げます。（舉手。）</td>
+        </tr>
+        <tr>
+          <td class="word">遊ぶ<span class="reading">あそぶ</span></td>
+          <td>玩</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">公園で遊びます。（在公園玩。）</td>
+        </tr>
+        <tr>
+          <td class="word">洗う<span class="reading">あらう</span></td>
+          <td>洗</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">手を洗います。（洗手。）</td>
+        </tr>
+        <tr>
+          <td class="word">ある<span class="reading">ある</span></td>
+          <td>有（物）</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">机の上に本があります。（桌上有書。）</td>
+        </tr>
+        <tr>
+          <td class="word">歩く<span class="reading">あるく</span></td>
+          <td>走路</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">毎日歩きます。（每天走路。）</td>
+        </tr>
+        <tr>
+          <td class="word">言う<span class="reading">いう</span></td>
+          <td>說</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">名前を言います。（說出名字。）</td>
+        </tr>
+        <tr>
+          <td class="word">行く<span class="reading">いく</span></td>
+          <td>去</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">学校に行きます。（去學校。）</td>
+        </tr>
+        <tr>
+          <td class="word">いる<span class="reading">いる</span></td>
+          <td>有（人、動物）</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">教室に学生がいます。（教室裡有學生。）</td>
+        </tr>
+        <tr>
+          <td class="word">入れる<span class="reading">いれる</span></td>
+          <td>放入</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">かばんに本を入れます。（把書放進包包。）</td>
+        </tr>
+        <tr>
+          <td class="word">歌う<span class="reading">うたう</span></td>
+          <td>唱歌</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">歌を歌います。（唱歌。）</td>
+        </tr>
+        <tr>
+          <td class="word">生まれる<span class="reading">うまれる</span></td>
+          <td>出生</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">2000年に生まれました。（2000年出生。）</td>
+        </tr>
+        <tr>
+          <td class="word">売る<span class="reading">うる</span></td>
+          <td>賣</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">花を売ります。（賣花。）</td>
+        </tr>
+        <tr>
+          <td class="word">起きる<span class="reading">おきる</span></td>
+          <td>起床</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">六時に起きます。（六點起床。）</td>
+        </tr>
+        <tr>
+          <td class="word">置く<span class="reading">おく</span></td>
+          <td>放置</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">かばんを机の上に置きます。（把包包放在桌上。）</td>
+        </tr>
+        <tr>
+          <td class="word">教える<span class="reading">おしえる</span></td>
+          <td>教</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">日本語を教えます。（教日語。）</td>
+        </tr>
+        <tr>
+          <td class="word">押す<span class="reading">おす</span></td>
+          <td>推、按</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">ボタンを押します。（按按鈕。）</td>
+        </tr>
+        <tr>
+          <td class="word">泳ぐ<span class="reading">およぐ</span></td>
+          <td>游泳</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">プールで泳ぎます。（在游泳池游泳。）</td>
+        </tr>
+        <tr>
+          <td class="word">終わる<span class="reading">おわる</span></td>
+          <td>結束</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">仕事が終わります。（工作結束。）</td>
+        </tr>
+        <tr>
+          <td class="word">買う<span class="reading">かう</span></td>
+          <td>買</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">パンを買います。（買麵包。）</td>
+        </tr>
+        <tr>
+          <td class="word">返す<span class="reading">かえす</span></td>
+          <td>歸還</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">本を返します。（還書。）</td>
+        </tr>
+        <tr>
+          <td class="word">帰る<span class="reading">かえる</span></td>
+          <td>回去</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">家に帰ります。（回家。）</td>
+        </tr>
+        <tr>
+          <td class="word">書く<span class="reading">かく</span></td>
+          <td>寫</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">手紙を書きます。（寫信。）</td>
+        </tr>
+        <tr>
+          <td class="word">貸す<span class="reading">かす</span></td>
+          <td>借出</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">友達にお金を貸します。（借錢給朋友。）</td>
+        </tr>
+        <tr>
+          <td class="word">かぶる<span class="reading">かぶる</span></td>
+          <td>戴（帽子）</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">帽子をかぶります。（戴帽子。）</td>
+        </tr>
+        <tr>
+          <td class="word">借りる<span class="reading">かりる</span></td>
+          <td>借入</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">図書館で本を借ります。（在圖書館借書。）</td>
+        </tr>
+        <tr>
+          <td class="word">消える<span class="reading">きえる</span></td>
+          <td>熄滅、消失</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">電気が消えます。（燈熄了。）</td>
+        </tr>
+        <tr>
+          <td class="word">聞く<span class="reading">きく</span></td>
+          <td>聽、問</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">音楽を聞きます。（聽音樂。）</td>
+        </tr>
+        <tr>
+          <td class="word">切る<span class="reading">きる</span></td>
+          <td>切</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">野菜を切ります。（切菜。）</td>
+        </tr>
+        <tr>
+          <td class="word">着る<span class="reading">きる</span></td>
+          <td>穿（上衣）</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">コートを着ます。（穿外套。）</td>
+        </tr>
+        <tr>
+          <td class="word">来る<span class="reading">くる</span></td>
+          <td>來</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">友達が来ます。（朋友要來。）</td>
+        </tr>
+        <tr>
+          <td class="word">消す<span class="reading">けす</span></td>
+          <td>關掉、消除</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">テレビを消します。（關電視。）</td>
+        </tr>
+        <tr>
+          <td class="word">さす<span class="reading">さす</span></td>
+          <td>撐（傘）</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">傘をさします。（撐傘。）</td>
+        </tr>
+        <tr>
+          <td class="word">死ぬ<span class="reading">しぬ</span></td>
+          <td>死</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">犬が死にました。（狗死了。）</td>
+        </tr>
+        <tr>
+          <td class="word">閉める<span class="reading">しめる</span></td>
+          <td>關閉</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">ドアを閉めます。（關門。）</td>
+        </tr>
+        <tr>
+          <td class="word">知る<span class="reading">しる</span></td>
+          <td>知道</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">その話を知っています。（知道那件事。）</td>
+        </tr>
+        <tr>
+          <td class="word">吸う<span class="reading">すう</span></td>
+          <td>吸</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">たばこを吸います。（吸菸。）</td>
+        </tr>
+        <tr>
+          <td class="word">住む<span class="reading">すむ</span></td>
+          <td>居住</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">台湾に住んでいます。（住在台灣。）</td>
+        </tr>
+        <tr>
+          <td class="word">座る<span class="reading">すわる</span></td>
+          <td>坐</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">椅子に座ります。（坐在椅子上。）</td>
+        </tr>
+        <tr>
+          <td class="word">出す<span class="reading">だす</span></td>
+          <td>拿出、寄出</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">手紙を出します。（寄信。）</td>
+        </tr>
+        <tr>
+          <td class="word">立つ<span class="reading">たつ</span></td>
+          <td>站立</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">そこに立ってください。（請站在那裡。）</td>
+        </tr>
+        <tr>
+          <td class="word">食べる<span class="reading">たべる</span></td>
+          <td>吃</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">ご飯を食べます。（吃飯。）</td>
+        </tr>
+        <tr>
+          <td class="word">違う<span class="reading">ちがう</span></td>
+          <td>不同、不對</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">答えが違います。（答案不對。）</td>
+        </tr>
+        <tr>
+          <td class="word">使う<span class="reading">つかう</span></td>
+          <td>使用</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">パソコンを使います。（使用電腦。）</td>
+        </tr>
+        <tr>
+          <td class="word">疲れる<span class="reading">つかれる</span></td>
+          <td>疲累</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">仕事で疲れました。（因工作而累了。）</td>
+        </tr>
+        <tr>
+          <td class="word">着く<span class="reading">つく</span></td>
+          <td>到達</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">駅に着きました。（到達車站了。）</td>
+        </tr>
+        <tr>
+          <td class="word">作る<span class="reading">つくる</span></td>
+          <td>製作</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">料理を作ります。（做菜。）</td>
+        </tr>
+        <tr>
+          <td class="word">勤める<span class="reading">つとめる</span></td>
+          <td>任職</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">会社に勤めています。（在公司上班。）</td>
+        </tr>
+        <tr>
+          <td class="word">出かける<span class="reading">でかける</span></td>
+          <td>外出</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">買い物に出かけます。（出門買東西。）</td>
+        </tr>
+        <tr>
+          <td class="word">出る<span class="reading">でる</span></td>
+          <td>出去</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">家を出ます。（出門。）</td>
+        </tr>
+        <tr>
+          <td class="word">止まる<span class="reading">とまる</span></td>
+          <td>停止</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">バスが止まります。（公車停下。）</td>
+        </tr>
+        <tr>
+          <td class="word">撮る<span class="reading">とる</span></td>
+          <td>拍照</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">写真を撮ります。（拍照。）</td>
+        </tr>
+        <tr>
+          <td class="word">鳴く<span class="reading">なく</span></td>
+          <td>（動物）叫</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">鳥が鳴きます。（鳥叫。）</td>
+        </tr>
+        <tr>
+          <td class="word">習う<span class="reading">ならう</span></td>
+          <td>學習</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">英語を習います。（學英文。）</td>
+        </tr>
+        <tr>
+          <td class="word">並ぶ<span class="reading">ならぶ</span></td>
+          <td>排列、排隊</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">レジに並びます。（在收銀台排隊。）</td>
+        </tr>
+        <tr>
+          <td class="word">寝る<span class="reading">ねる</span></td>
+          <td>睡覺</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">十時に寝ます。（十點睡覺。）</td>
+        </tr>
+        <tr>
+          <td class="word">登る<span class="reading">のぼる</span></td>
+          <td>攀登</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">山に登ります。（爬山。）</td>
+        </tr>
+        <tr>
+          <td class="word">飲む<span class="reading">のむ</span></td>
+          <td>喝</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">水を飲みます。（喝水。）</td>
+        </tr>
+        <tr>
+          <td class="word">乗る<span class="reading">のる</span></td>
+          <td>搭乘</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">電車に乗ります。（搭電車。）</td>
+        </tr>
+        <tr>
+          <td class="word">入る<span class="reading">はいる</span></td>
+          <td>進入</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">部屋に入ります。（進房間。）</td>
+        </tr>
+        <tr>
+          <td class="word">履く<span class="reading">はく</span></td>
+          <td>穿（鞋、褲）</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">靴を履きます。（穿鞋。）</td>
+        </tr>
+        <tr>
+          <td class="word">走る<span class="reading">はしる</span></td>
+          <td>跑步</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">公園を走ります。（在公園跑步。）</td>
+        </tr>
+        <tr>
+          <td class="word">働く<span class="reading">はたらく</span></td>
+          <td>工作</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">会社で働きます。（在公司工作。）</td>
+        </tr>
+        <tr>
+          <td class="word">話す<span class="reading">はなす</span></td>
+          <td>說話</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">日本語で話します。（用日語說話。）</td>
+        </tr>
+        <tr>
+          <td class="word">降る<span class="reading">ふる</span></td>
+          <td>下（雨、雪）</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">雨が降ります。（下雨。）</td>
+        </tr>
+        <tr>
+          <td class="word">勉強する<span class="reading">べんきょうする</span></td>
+          <td>學習</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">日本語を勉強します。（學日語。）</td>
+        </tr>
+        <tr>
+          <td class="word">待つ<span class="reading">まつ</span></td>
+          <td>等待</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">友達を待ちます。（等朋友。）</td>
+        </tr>
+        <tr>
+          <td class="word">磨く<span class="reading">みがく</span></td>
+          <td>刷（牙）</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">歯を磨きます。（刷牙。）</td>
+        </tr>
+        <tr>
+          <td class="word">見せる<span class="reading">みせる</span></td>
+          <td>給人看</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">写真を見せます。（給人看照片。）</td>
+        </tr>
+        <tr>
+          <td class="word">見る<span class="reading">みる</span></td>
+          <td>看</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">映画を見ます。（看電影。）</td>
+        </tr>
+        <tr>
+          <td class="word">持つ<span class="reading">もつ</span></td>
+          <td>拿、持有</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">かばんを持ちます。（拿包包。）</td>
+        </tr>
+        <tr>
+          <td class="word">休む<span class="reading">やすむ</span></td>
+          <td>休息、請假</td>
+          <td><span class="pos pos-jita">自他動詞</span></td>
+          <td class="example">会社を休みます。（跟公司請假。）</td>
+        </tr>
+        <tr>
+          <td class="word">読む<span class="reading">よむ</span></td>
+          <td>閱讀</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">本を読みます。（讀書。）</td>
+        </tr>
+        <tr>
+          <td class="word">わかる<span class="reading">わかる</span></td>
+          <td>明白</td>
+          <td><span class="pos pos-ji">自動詞</span></td>
+          <td class="example">意味がわかります。（明白意思。）</td>
+        </tr>
+        <tr>
+          <td class="word">忘れる<span class="reading">わすれる</span></td>
+          <td>忘記</td>
+          <td><span class="pos pos-ta">他動詞</span></td>
+          <td class="example">名前を忘れました。（忘記名字了。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="い形容詞">
+      <h2>い形容詞 <span class="count">（38 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">青い<span class="reading">あおい</span></td>
+          <td>藍色的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">空が青いです。（天空是藍色的。）</td>
+        </tr>
+        <tr>
+          <td class="word">赤い<span class="reading">あかい</span></td>
+          <td>紅色的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">りんごが赤いです。（蘋果是紅色的。）</td>
+        </tr>
+        <tr>
+          <td class="word">明るい<span class="reading">あかるい</span></td>
+          <td>明亮的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">この部屋は明るいです。（這個房間很明亮。）</td>
+        </tr>
+        <tr>
+          <td class="word">暖かい<span class="reading">あたたかい</span></td>
+          <td>溫暖的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">今日は暖かいです。（今天很溫暖。）</td>
+        </tr>
+        <tr>
+          <td class="word">新しい<span class="reading">あたらしい</span></td>
+          <td>新的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">新しい靴を買いました。（買了新鞋。）</td>
+        </tr>
+        <tr>
+          <td class="word">暑い<span class="reading">あつい</span></td>
+          <td>炎熱的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">夏は暑いです。（夏天很熱。）</td>
+        </tr>
+        <tr>
+          <td class="word">熱い<span class="reading">あつい</span></td>
+          <td>燙的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">お茶が熱いです。（茶很燙。）</td>
+        </tr>
+        <tr>
+          <td class="word">忙しい<span class="reading">いそがしい</span></td>
+          <td>忙碌的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">今週は忙しいです。（這週很忙。）</td>
+        </tr>
+        <tr>
+          <td class="word">痛い<span class="reading">いたい</span></td>
+          <td>痛的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">頭が痛いです。（頭很痛。）</td>
+        </tr>
+        <tr>
+          <td class="word">薄い<span class="reading">うすい</span></td>
+          <td>薄的、淡的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">この本は薄いです。（這本書很薄。）</td>
+        </tr>
+        <tr>
+          <td class="word">美味しい<span class="reading">おいしい</span></td>
+          <td>好吃的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">このケーキは美味しいです。（這蛋糕很好吃。）</td>
+        </tr>
+        <tr>
+          <td class="word">大きい<span class="reading">おおきい</span></td>
+          <td>大的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">家が大きいです。（房子很大。）</td>
+        </tr>
+        <tr>
+          <td class="word">多い<span class="reading">おおい</span></td>
+          <td>多的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">学生が多いです。（學生很多。）</td>
+        </tr>
+        <tr>
+          <td class="word">重い<span class="reading">おもい</span></td>
+          <td>重的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">かばんが重いです。（包包很重。）</td>
+        </tr>
+        <tr>
+          <td class="word">面白い<span class="reading">おもしろい</span></td>
+          <td>有趣的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">映画が面白いです。（電影很有趣。）</td>
+        </tr>
+        <tr>
+          <td class="word">軽い<span class="reading">かるい</span></td>
+          <td>輕的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">このかばんは軽いです。（這包包很輕。）</td>
+        </tr>
+        <tr>
+          <td class="word">かわいい<span class="reading">かわいい</span></td>
+          <td>可愛的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">猫がかわいいです。（貓很可愛。）</td>
+        </tr>
+        <tr>
+          <td class="word">汚い<span class="reading">きたない</span></td>
+          <td>髒的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">部屋が汚いです。（房間很髒。）</td>
+        </tr>
+        <tr>
+          <td class="word">暗い<span class="reading">くらい</span></td>
+          <td>暗的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">夜は暗いです。（夜晚很暗。）</td>
+        </tr>
+        <tr>
+          <td class="word">寒い<span class="reading">さむい</span></td>
+          <td>寒冷的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">冬は寒いです。（冬天很冷。）</td>
+        </tr>
+        <tr>
+          <td class="word">白い<span class="reading">しろい</span></td>
+          <td>白色的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">雪が白いです。（雪是白色的。）</td>
+        </tr>
+        <tr>
+          <td class="word">狭い<span class="reading">せまい</span></td>
+          <td>狹窄的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">部屋が狭いです。（房間很窄。）</td>
+        </tr>
+        <tr>
+          <td class="word">高い<span class="reading">たかい</span></td>
+          <td>高的、貴的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">この時計は高いです。（這隻手錶很貴。）</td>
+        </tr>
+        <tr>
+          <td class="word">楽しい<span class="reading">たのしい</span></td>
+          <td>快樂的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">旅行は楽しいです。（旅行很開心。）</td>
+        </tr>
+        <tr>
+          <td class="word">小さい<span class="reading">ちいさい</span></td>
+          <td>小的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">犬が小さいです。（狗很小。）</td>
+        </tr>
+        <tr>
+          <td class="word">近い<span class="reading">ちかい</span></td>
+          <td>近的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">駅が近いです。（車站很近。）</td>
+        </tr>
+        <tr>
+          <td class="word">強い<span class="reading">つよい</span></td>
+          <td>強壯的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">彼は強いです。（他很強壯。）</td>
+        </tr>
+        <tr>
+          <td class="word">遠い<span class="reading">とおい</span></td>
+          <td>遠的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">学校が遠いです。（學校很遠。）</td>
+        </tr>
+        <tr>
+          <td class="word">長い<span class="reading">ながい</span></td>
+          <td>長的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">髪が長いです。（頭髮很長。）</td>
+        </tr>
+        <tr>
+          <td class="word">低い<span class="reading">ひくい</span></td>
+          <td>矮的、低的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">背が低いです。（身高矮。）</td>
+        </tr>
+        <tr>
+          <td class="word">広い<span class="reading">ひろい</span></td>
+          <td>寬廣的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">公園が広いです。（公園很寬廣。）</td>
+        </tr>
+        <tr>
+          <td class="word">古い<span class="reading">ふるい</span></td>
+          <td>舊的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">この家は古いです。（這房子很舊。）</td>
+        </tr>
+        <tr>
+          <td class="word">難しい<span class="reading">むずかしい</span></td>
+          <td>困難的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">試験が難しいです。（考試很難。）</td>
+        </tr>
+        <tr>
+          <td class="word">易しい<span class="reading">やさしい</span></td>
+          <td>簡單的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">問題が易しいです。（問題很簡單。）</td>
+        </tr>
+        <tr>
+          <td class="word">安い<span class="reading">やすい</span></td>
+          <td>便宜的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">この店は安いです。（這家店很便宜。）</td>
+        </tr>
+        <tr>
+          <td class="word">弱い<span class="reading">よわい</span></td>
+          <td>虛弱的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">体が弱いです。（身體虛弱。）</td>
+        </tr>
+        <tr>
+          <td class="word">悪い<span class="reading">わるい</span></td>
+          <td>不好的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">天気が悪いです。（天氣不好。）</td>
+        </tr>
+        <tr>
+          <td class="word">若い<span class="reading">わかい</span></td>
+          <td>年輕的</td>
+          <td><span class="pos">い形容詞</span></td>
+          <td class="example">彼は若いです。（他很年輕。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="な形容詞">
+      <h2>な形容詞 <span class="count">（20 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">元気な<span class="reading">げんきな</span></td>
+          <td>有精神的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">元気な子供です。（有精神的孩子。）</td>
+        </tr>
+        <tr>
+          <td class="word">静かな<span class="reading">しずかな</span></td>
+          <td>安靜的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">静かな部屋です。（安靜的房間。）</td>
+        </tr>
+        <tr>
+          <td class="word">賑やかな<span class="reading">にぎやかな</span></td>
+          <td>熱鬧的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">賑やかな町です。（熱鬧的城鎮。）</td>
+        </tr>
+        <tr>
+          <td class="word">親切な<span class="reading">しんせつな</span></td>
+          <td>親切的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">親切な人です。（親切的人。）</td>
+        </tr>
+        <tr>
+          <td class="word">有名な<span class="reading">ゆうめいな</span></td>
+          <td>有名的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">有名な歌手です。（有名的歌手。）</td>
+        </tr>
+        <tr>
+          <td class="word">便利な<span class="reading">べんりな</span></td>
+          <td>方便的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">便利な道具です。（方便的工具。）</td>
+        </tr>
+        <tr>
+          <td class="word">不便な<span class="reading">ふべんな</span></td>
+          <td>不方便的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">不便な場所です。（不方便的地方。）</td>
+        </tr>
+        <tr>
+          <td class="word">好きな<span class="reading">すきな</span></td>
+          <td>喜歡的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">音楽が好きです。（喜歡音樂。）</td>
+        </tr>
+        <tr>
+          <td class="word">嫌いな<span class="reading">きらいな</span></td>
+          <td>討厭的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">野菜が嫌いです。（討厭蔬菜。）</td>
+        </tr>
+        <tr>
+          <td class="word">上手な<span class="reading">じょうずな</span></td>
+          <td>擅長的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">歌が上手です。（歌唱得好。）</td>
+        </tr>
+        <tr>
+          <td class="word">下手な<span class="reading">へたな</span></td>
+          <td>不擅長的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">料理が下手です。（不擅長做菜。）</td>
+        </tr>
+        <tr>
+          <td class="word">大丈夫な<span class="reading">だいじょうぶな</span></td>
+          <td>沒問題的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">大丈夫ですか。（沒問題嗎？）</td>
+        </tr>
+        <tr>
+          <td class="word">大切な<span class="reading">たいせつな</span></td>
+          <td>重要的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">大切な話です。（重要的事情。）</td>
+        </tr>
+        <tr>
+          <td class="word">暇な<span class="reading">ひまな</span></td>
+          <td>空閒的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">今日は暇です。（今天很空閒。）</td>
+        </tr>
+        <tr>
+          <td class="word">簡単な<span class="reading">かんたんな</span></td>
+          <td>簡單的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">簡単な問題です。（簡單的問題。）</td>
+        </tr>
+        <tr>
+          <td class="word">複雑な<span class="reading">ふくざつな</span></td>
+          <td>複雜的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">複雑な問題です。（複雜的問題。）</td>
+        </tr>
+        <tr>
+          <td class="word">綺麗な<span class="reading">きれいな</span></td>
+          <td>漂亮的、乾淨的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">部屋が綺麗です。（房間很乾淨。）</td>
+        </tr>
+        <tr>
+          <td class="word">同じ<span class="reading">おなじ</span></td>
+          <td>相同的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">同じ服を着ています。（穿相同的衣服。）</td>
+        </tr>
+        <tr>
+          <td class="word">色々な<span class="reading">いろいろな</span></td>
+          <td>各式各樣的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">色々な国へ行きました。（去了各式各樣的國家。）</td>
+        </tr>
+        <tr>
+          <td class="word">特別な<span class="reading">とくべつな</span></td>
+          <td>特別的</td>
+          <td><span class="pos">な形容詞</span></td>
+          <td class="example">特別な日です。（特別的日子。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_人稱家族">
+      <h2>名詞：人稱・家族 <span class="count">（20 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">私<span class="reading">わたし</span></td>
+          <td>我</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">私は学生です。（我是學生。）</td>
+        </tr>
+        <tr>
+          <td class="word">あなた<span class="reading">あなた</span></td>
+          <td>你</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">あなたの名前は？（你的名字是？）</td>
+        </tr>
+        <tr>
+          <td class="word">彼<span class="reading">かれ</span></td>
+          <td>他</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">彼は先生です。（他是老師。）</td>
+        </tr>
+        <tr>
+          <td class="word">彼女<span class="reading">かのじょ</span></td>
+          <td>她、女朋友</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">彼女は医者です。（她是醫生。）</td>
+        </tr>
+        <tr>
+          <td class="word">友達<span class="reading">ともだち</span></td>
+          <td>朋友</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">友達と遊びます。（跟朋友玩。）</td>
+        </tr>
+        <tr>
+          <td class="word">先生<span class="reading">せんせい</span></td>
+          <td>老師</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">先生に質問します。（向老師提問。）</td>
+        </tr>
+        <tr>
+          <td class="word">学生<span class="reading">がくせい</span></td>
+          <td>學生</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">私は大学の学生です。（我是大學生。）</td>
+        </tr>
+        <tr>
+          <td class="word">父<span class="reading">ちち</span></td>
+          <td>（自己的）父親</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">父は会社員です。（我父親是上班族。）</td>
+        </tr>
+        <tr>
+          <td class="word">母<span class="reading">はは</span></td>
+          <td>（自己的）母親</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">母は主婦です。（我母親是家庭主婦。）</td>
+        </tr>
+        <tr>
+          <td class="word">お父さん<span class="reading">おとうさん</span></td>
+          <td>（別人的）父親</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">お父さんはお元気ですか。（令尊安好嗎？）</td>
+        </tr>
+        <tr>
+          <td class="word">お母さん<span class="reading">おかあさん</span></td>
+          <td>（別人的）母親</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">お母さんによろしく。（代我向令堂問好。）</td>
+        </tr>
+        <tr>
+          <td class="word">兄<span class="reading">あに</span></td>
+          <td>（自己的）哥哥</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">兄は医者です。（我哥哥是醫生。）</td>
+        </tr>
+        <tr>
+          <td class="word">姉<span class="reading">あね</span></td>
+          <td>（自己的）姊姊</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">姉は看護師です。（我姊姊是護理師。）</td>
+        </tr>
+        <tr>
+          <td class="word">弟<span class="reading">おとうと</span></td>
+          <td>弟弟</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">弟は高校生です。（弟弟是高中生。）</td>
+        </tr>
+        <tr>
+          <td class="word">妹<span class="reading">いもうと</span></td>
+          <td>妹妹</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">妹は中学生です。（妹妹是國中生。）</td>
+        </tr>
+        <tr>
+          <td class="word">家族<span class="reading">かぞく</span></td>
+          <td>家人</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">家族と旅行します。（跟家人旅行。）</td>
+        </tr>
+        <tr>
+          <td class="word">子供<span class="reading">こども</span></td>
+          <td>小孩</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">子供が三人います。（有三個小孩。）</td>
+        </tr>
+        <tr>
+          <td class="word">大人<span class="reading">おとな</span></td>
+          <td>大人</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">大人になりました。（長大成人了。）</td>
+        </tr>
+        <tr>
+          <td class="word">外国人<span class="reading">がいこくじん</span></td>
+          <td>外國人</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">彼は外国人です。（他是外國人。）</td>
+        </tr>
+        <tr>
+          <td class="word">名前<span class="reading">なまえ</span></td>
+          <td>名字</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">名前を書いてください。（請寫上名字。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_時間">
+      <h2>名詞：時間 <span class="count">（26 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">今<span class="reading">いま</span></td>
+          <td>現在</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">今何時ですか。（現在幾點？）</td>
+        </tr>
+        <tr>
+          <td class="word">今日<span class="reading">きょう</span></td>
+          <td>今天</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">今日は晴れです。（今天是晴天。）</td>
+        </tr>
+        <tr>
+          <td class="word">明日<span class="reading">あした</span></td>
+          <td>明天</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">明日は休みです。（明天休息。）</td>
+        </tr>
+        <tr>
+          <td class="word">昨日<span class="reading">きのう</span></td>
+          <td>昨天</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">昨日雨が降りました。（昨天下雨了。）</td>
+        </tr>
+        <tr>
+          <td class="word">今朝<span class="reading">けさ</span></td>
+          <td>今天早上</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">今朝早く起きました。（今天早上很早起床。）</td>
+        </tr>
+        <tr>
+          <td class="word">今晩<span class="reading">こんばん</span></td>
+          <td>今晚</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">今晩何をしますか。（今晚要做什麼？）</td>
+        </tr>
+        <tr>
+          <td class="word">毎日<span class="reading">まいにち</span></td>
+          <td>每天</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">毎日勉強します。（每天讀書。）</td>
+        </tr>
+        <tr>
+          <td class="word">毎朝<span class="reading">まいあさ</span></td>
+          <td>每天早上</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">毎朝散歩します。（每天早上散步。）</td>
+        </tr>
+        <tr>
+          <td class="word">毎週<span class="reading">まいしゅう</span></td>
+          <td>每週</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">毎週テストがあります。（每週都有考試。）</td>
+        </tr>
+        <tr>
+          <td class="word">毎月<span class="reading">まいつき</span></td>
+          <td>每個月</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">毎月旅行します。（每個月都去旅行。）</td>
+        </tr>
+        <tr>
+          <td class="word">毎年<span class="reading">まいとし</span></td>
+          <td>每年</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">毎年日本へ行きます。（每年去日本。）</td>
+        </tr>
+        <tr>
+          <td class="word">先週<span class="reading">せんしゅう</span></td>
+          <td>上週</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">先週忙しかったです。（上週很忙。）</td>
+        </tr>
+        <tr>
+          <td class="word">来週<span class="reading">らいしゅう</span></td>
+          <td>下週</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">来週試験があります。（下週有考試。）</td>
+        </tr>
+        <tr>
+          <td class="word">先月<span class="reading">せんげつ</span></td>
+          <td>上個月</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">先月引っ越しました。（上個月搬家了。）</td>
+        </tr>
+        <tr>
+          <td class="word">来月<span class="reading">らいげつ</span></td>
+          <td>下個月</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">来月結婚します。（下個月要結婚。）</td>
+        </tr>
+        <tr>
+          <td class="word">今年<span class="reading">ことし</span></td>
+          <td>今年</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">今年二十歳です。（今年二十歲。）</td>
+        </tr>
+        <tr>
+          <td class="word">去年<span class="reading">きょねん</span></td>
+          <td>去年</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">去年台湾に来ました。（去年來到台灣。）</td>
+        </tr>
+        <tr>
+          <td class="word">来年<span class="reading">らいねん</span></td>
+          <td>明年</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">来年卒業します。（明年畢業。）</td>
+        </tr>
+        <tr>
+          <td class="word">朝<span class="reading">あさ</span></td>
+          <td>早上</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">朝ご飯を食べます。（吃早餐。）</td>
+        </tr>
+        <tr>
+          <td class="word">昼<span class="reading">ひる</span></td>
+          <td>中午</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">昼ご飯は何ですか。（午餐吃什麼？）</td>
+        </tr>
+        <tr>
+          <td class="word">夜<span class="reading">よる</span></td>
+          <td>晚上</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">夜勉強します。（晚上讀書。）</td>
+        </tr>
+        <tr>
+          <td class="word">時間<span class="reading">じかん</span></td>
+          <td>時間</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">時間がありません。（沒有時間。）</td>
+        </tr>
+        <tr>
+          <td class="word">半<span class="reading">はん</span></td>
+          <td>半（點）</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">三時半に会いましょう。（三點半見面吧。）</td>
+        </tr>
+        <tr>
+          <td class="word">週<span class="reading">しゅう</span></td>
+          <td>週</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">一週に一回。（一週一次。）</td>
+        </tr>
+        <tr>
+          <td class="word">月曜日<span class="reading">げつようび</span></td>
+          <td>星期一</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">月曜日に会議があります。（星期一有會議。）</td>
+        </tr>
+        <tr>
+          <td class="word">誕生日<span class="reading">たんじょうび</span></td>
+          <td>生日</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">誕生日おめでとう。（生日快樂。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_數量金錢">
+      <h2>名詞：數量・金錢 <span class="count">（13 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">一つ<span class="reading">ひとつ</span></td>
+          <td>一個</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">りんごを一つください。（請給我一個蘋果。）</td>
+        </tr>
+        <tr>
+          <td class="word">二つ<span class="reading">ふたつ</span></td>
+          <td>兩個</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">二つあります。（有兩個。）</td>
+        </tr>
+        <tr>
+          <td class="word">お金<span class="reading">おかね</span></td>
+          <td>錢</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">お金がありません。（沒有錢。）</td>
+        </tr>
+        <tr>
+          <td class="word">円<span class="reading">えん</span></td>
+          <td>日圓</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">百円です。（一百日圓。）</td>
+        </tr>
+        <tr>
+          <td class="word">値段<span class="reading">ねだん</span></td>
+          <td>價格</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">値段が高いです。（價格很貴。）</td>
+        </tr>
+        <tr>
+          <td class="word">半分<span class="reading">はんぶん</span></td>
+          <td>一半</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">半分食べました。（吃了一半。）</td>
+        </tr>
+        <tr>
+          <td class="word">全部<span class="reading">ぜんぶ</span></td>
+          <td>全部</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">全部で千円です。（總共一千日圓。）</td>
+        </tr>
+        <tr>
+          <td class="word">少し<span class="reading">すこし</span></td>
+          <td>一點點</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">少し休みます。（休息一下。）</td>
+        </tr>
+        <tr>
+          <td class="word">たくさん<span class="reading">たくさん</span></td>
+          <td>很多</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">たくさん食べました。（吃了很多。）</td>
+        </tr>
+        <tr>
+          <td class="word">枚<span class="reading">まい</span></td>
+          <td>（薄物）張、件</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">紙を三枚ください。（請給我三張紙。）</td>
+        </tr>
+        <tr>
+          <td class="word">冊<span class="reading">さつ</span></td>
+          <td>（書）本</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">本を二冊買いました。（買了兩本書。）</td>
+        </tr>
+        <tr>
+          <td class="word">人<span class="reading">にん</span></td>
+          <td>（人數）人</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">三人います。（有三個人。）</td>
+        </tr>
+        <tr>
+          <td class="word">歳<span class="reading">さい</span></td>
+          <td>歲</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">二十歳です。（二十歲。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_場所建築">
+      <h2>名詞：場所・建築 <span class="count">（20 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">家<span class="reading">いえ</span></td>
+          <td>家</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">家に帰ります。（回家。）</td>
+        </tr>
+        <tr>
+          <td class="word">うち<span class="reading">うち</span></td>
+          <td>自己家</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">うちで勉強します。（在家讀書。）</td>
+        </tr>
+        <tr>
+          <td class="word">学校<span class="reading">がっこう</span></td>
+          <td>學校</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">学校へ行きます。（去學校。）</td>
+        </tr>
+        <tr>
+          <td class="word">会社<span class="reading">かいしゃ</span></td>
+          <td>公司</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">会社で働きます。（在公司工作。）</td>
+        </tr>
+        <tr>
+          <td class="word">病院<span class="reading">びょういん</span></td>
+          <td>醫院</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">病院へ行きます。（去醫院。）</td>
+        </tr>
+        <tr>
+          <td class="word">銀行<span class="reading">ぎんこう</span></td>
+          <td>銀行</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">銀行でお金を下ろします。（在銀行領錢。）</td>
+        </tr>
+        <tr>
+          <td class="word">図書館<span class="reading">としょかん</span></td>
+          <td>圖書館</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">図書館で本を借ります。（在圖書館借書。）</td>
+        </tr>
+        <tr>
+          <td class="word">公園<span class="reading">こうえん</span></td>
+          <td>公園</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">公園で遊びます。（在公園玩。）</td>
+        </tr>
+        <tr>
+          <td class="word">店<span class="reading">みせ</span></td>
+          <td>商店</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">店で買い物します。（在店裡購物。）</td>
+        </tr>
+        <tr>
+          <td class="word">駅<span class="reading">えき</span></td>
+          <td>車站</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">駅まで歩きます。（走到車站。）</td>
+        </tr>
+        <tr>
+          <td class="word">空港<span class="reading">くうこう</span></td>
+          <td>機場</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">空港へ迎えに行きます。（去機場接人。）</td>
+        </tr>
+        <tr>
+          <td class="word">部屋<span class="reading">へや</span></td>
+          <td>房間</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">部屋を掃除します。（打掃房間。）</td>
+        </tr>
+        <tr>
+          <td class="word">トイレ<span class="reading">トイレ</span></td>
+          <td>廁所</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">トイレはどこですか。（廁所在哪裡？）</td>
+        </tr>
+        <tr>
+          <td class="word">入り口<span class="reading">いりぐち</span></td>
+          <td>入口</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">入り口はあちらです。（入口在那邊。）</td>
+        </tr>
+        <tr>
+          <td class="word">出口<span class="reading">でぐち</span></td>
+          <td>出口</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">出口を探します。（尋找出口。）</td>
+        </tr>
+        <tr>
+          <td class="word">台湾<span class="reading">たいわん</span></td>
+          <td>台灣</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">台湾に住んでいます。（住在台灣。）</td>
+        </tr>
+        <tr>
+          <td class="word">日本<span class="reading">にほん</span></td>
+          <td>日本</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">日本語を勉強します。（學日語。）</td>
+        </tr>
+        <tr>
+          <td class="word">外国<span class="reading">がいこく</span></td>
+          <td>外國</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">外国へ行きたいです。（想去外國。）</td>
+        </tr>
+        <tr>
+          <td class="word">教室<span class="reading">きょうしつ</span></td>
+          <td>教室</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">教室で勉強します。（在教室讀書。）</td>
+        </tr>
+        <tr>
+          <td class="word">レストラン<span class="reading">レストラン</span></td>
+          <td>餐廳</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">レストランで食べます。（在餐廳吃飯。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_交通">
+      <h2>名詞：交通 <span class="count">（9 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">電車<span class="reading">でんしゃ</span></td>
+          <td>電車</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">電車に乗ります。（搭電車。）</td>
+        </tr>
+        <tr>
+          <td class="word">バス<span class="reading">バス</span></td>
+          <td>公車</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">バスで学校へ行きます。（搭公車去學校。）</td>
+        </tr>
+        <tr>
+          <td class="word">タクシー<span class="reading">タクシー</span></td>
+          <td>計程車</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">タクシーに乗ります。（搭計程車。）</td>
+        </tr>
+        <tr>
+          <td class="word">車<span class="reading">くるま</span></td>
+          <td>車</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">車を運転します。（開車。）</td>
+        </tr>
+        <tr>
+          <td class="word">自転車<span class="reading">じてんしゃ</span></td>
+          <td>腳踏車</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">自転車に乗ります。（騎腳踏車。）</td>
+        </tr>
+        <tr>
+          <td class="word">飛行機<span class="reading">ひこうき</span></td>
+          <td>飛機</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">飛行機で日本へ行きます。（搭飛機去日本。）</td>
+        </tr>
+        <tr>
+          <td class="word">道<span class="reading">みち</span></td>
+          <td>道路</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">道がわかりません。（不知道路。）</td>
+        </tr>
+        <tr>
+          <td class="word">地図<span class="reading">ちず</span></td>
+          <td>地圖</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">地図を見ます。（看地圖。）</td>
+        </tr>
+        <tr>
+          <td class="word">切符<span class="reading">きっぷ</span></td>
+          <td>票</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">切符を買います。（買票。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_食物">
+      <h2>名詞：食物 <span class="count">（14 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">ご飯<span class="reading">ごはん</span></td>
+          <td>米飯、飯</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">ご飯を食べます。（吃飯。）</td>
+        </tr>
+        <tr>
+          <td class="word">パン<span class="reading">パン</span></td>
+          <td>麵包</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">パンを買います。（買麵包。）</td>
+        </tr>
+        <tr>
+          <td class="word">水<span class="reading">みず</span></td>
+          <td>水</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">水を飲みます。（喝水。）</td>
+        </tr>
+        <tr>
+          <td class="word">お茶<span class="reading">おちゃ</span></td>
+          <td>茶</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">お茶を飲みます。（喝茶。）</td>
+        </tr>
+        <tr>
+          <td class="word">コーヒー<span class="reading">コーヒー</span></td>
+          <td>咖啡</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">コーヒーを飲みます。（喝咖啡。）</td>
+        </tr>
+        <tr>
+          <td class="word">肉<span class="reading">にく</span></td>
+          <td>肉</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">肉を食べます。（吃肉。）</td>
+        </tr>
+        <tr>
+          <td class="word">魚<span class="reading">さかな</span></td>
+          <td>魚</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">魚が好きです。（喜歡吃魚。）</td>
+        </tr>
+        <tr>
+          <td class="word">野菜<span class="reading">やさい</span></td>
+          <td>蔬菜</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">野菜を切ります。（切菜。）</td>
+        </tr>
+        <tr>
+          <td class="word">果物<span class="reading">くだもの</span></td>
+          <td>水果</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">果物を食べます。（吃水果。）</td>
+        </tr>
+        <tr>
+          <td class="word">卵<span class="reading">たまご</span></td>
+          <td>蛋</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">卵を焼きます。（煎蛋。）</td>
+        </tr>
+        <tr>
+          <td class="word">料理<span class="reading">りょうり</span></td>
+          <td>料理</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">料理を作ります。（做菜。）</td>
+        </tr>
+        <tr>
+          <td class="word">朝ご飯<span class="reading">あさごはん</span></td>
+          <td>早餐</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">朝ご飯を食べます。（吃早餐。）</td>
+        </tr>
+        <tr>
+          <td class="word">昼ご飯<span class="reading">ひるごはん</span></td>
+          <td>午餐</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">昼ご飯を食べます。（吃午餐。）</td>
+        </tr>
+        <tr>
+          <td class="word">晩ご飯<span class="reading">ばんごはん</span></td>
+          <td>晚餐</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">晩ご飯を食べます。（吃晚餐。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="名詞_日用品身體">
+      <h2>名詞：日用品・身體 <span class="count">（18 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">本<span class="reading">ほん</span></td>
+          <td>書</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">本を読みます。（讀書。）</td>
+        </tr>
+        <tr>
+          <td class="word">ノート<span class="reading">ノート</span></td>
+          <td>筆記本</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">ノートに書きます。（寫在筆記本上。）</td>
+        </tr>
+        <tr>
+          <td class="word">ペン<span class="reading">ペン</span></td>
+          <td>筆</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">ペンで書きます。（用筆寫字。）</td>
+        </tr>
+        <tr>
+          <td class="word">かばん<span class="reading">かばん</span></td>
+          <td>包包</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">かばんを持ちます。（拿包包。）</td>
+        </tr>
+        <tr>
+          <td class="word">時計<span class="reading">とけい</span></td>
+          <td>時鐘、手錶</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">時計を見ます。（看時鐘。）</td>
+        </tr>
+        <tr>
+          <td class="word">眼鏡<span class="reading">めがね</span></td>
+          <td>眼鏡</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">眼鏡をかけます。（戴眼鏡。）</td>
+        </tr>
+        <tr>
+          <td class="word">靴<span class="reading">くつ</span></td>
+          <td>鞋子</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">靴を履きます。（穿鞋。）</td>
+        </tr>
+        <tr>
+          <td class="word">服<span class="reading">ふく</span></td>
+          <td>衣服</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">服を買います。（買衣服。）</td>
+        </tr>
+        <tr>
+          <td class="word">傘<span class="reading">かさ</span></td>
+          <td>傘</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">傘をさします。（撐傘。）</td>
+        </tr>
+        <tr>
+          <td class="word">テレビ<span class="reading">テレビ</span></td>
+          <td>電視</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">テレビを見ます。（看電視。）</td>
+        </tr>
+        <tr>
+          <td class="word">パソコン<span class="reading">パソコン</span></td>
+          <td>電腦</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">パソコンを使います。（使用電腦。）</td>
+        </tr>
+        <tr>
+          <td class="word">携帯電話<span class="reading">けいたいでんわ</span></td>
+          <td>手機</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">携帯電話で話します。（用手機講話。）</td>
+        </tr>
+        <tr>
+          <td class="word">手<span class="reading">て</span></td>
+          <td>手</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">手を洗います。（洗手。）</td>
+        </tr>
+        <tr>
+          <td class="word">足<span class="reading">あし</span></td>
+          <td>腳、腿</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">足が痛いです。（腳很痛。）</td>
+        </tr>
+        <tr>
+          <td class="word">目<span class="reading">め</span></td>
+          <td>眼睛</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">目が悪いです。（視力不好。）</td>
+        </tr>
+        <tr>
+          <td class="word">耳<span class="reading">みみ</span></td>
+          <td>耳朵</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">耳が痛いです。（耳朵痛。）</td>
+        </tr>
+        <tr>
+          <td class="word">頭<span class="reading">あたま</span></td>
+          <td>頭</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">頭が痛いです。（頭痛。）</td>
+        </tr>
+        <tr>
+          <td class="word">口<span class="reading">くち</span></td>
+          <td>嘴巴</td>
+          <td><span class="pos">名詞</span></td>
+          <td class="example">口を開けます。（張開嘴巴。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="副詞疑問詞">
+      <h2>副詞・疑問詞 <span class="count">（23 字）</span></h2>
+      <table>
+        <thead>
+          <tr><th>單字</th><th>中文</th><th>詞性</th><th>例句</th></tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="word">何<span class="reading">なに／なん</span></td>
+          <td>什麼</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">これは何ですか。（這是什麼？）</td>
+        </tr>
+        <tr>
+          <td class="word">誰<span class="reading">だれ</span></td>
+          <td>誰</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">これは誰の本ですか。（這是誰的書？）</td>
+        </tr>
+        <tr>
+          <td class="word">いつ<span class="reading">いつ</span></td>
+          <td>何時</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">いつ日本へ行きますか。（什麼時候去日本？）</td>
+        </tr>
+        <tr>
+          <td class="word">どこ<span class="reading">どこ</span></td>
+          <td>哪裡</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">トイレはどこですか。（廁所在哪裡？）</td>
+        </tr>
+        <tr>
+          <td class="word">どう<span class="reading">どう</span></td>
+          <td>如何</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">味はどうですか。（味道如何？）</td>
+        </tr>
+        <tr>
+          <td class="word">どうして<span class="reading">どうして</span></td>
+          <td>為什麼</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">どうして休みますか。（為什麼要請假？）</td>
+        </tr>
+        <tr>
+          <td class="word">いくら<span class="reading">いくら</span></td>
+          <td>多少錢</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">これはいくらですか。（這個多少錢？）</td>
+        </tr>
+        <tr>
+          <td class="word">いくつ<span class="reading">いくつ</span></td>
+          <td>幾個、幾歲</td>
+          <td><span class="pos">疑問詞</span></td>
+          <td class="example">おいくつですか。（請問幾歲？）</td>
+        </tr>
+        <tr>
+          <td class="word">とても<span class="reading">とても</span></td>
+          <td>非常</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">とても暑いです。（非常熱。）</td>
+        </tr>
+        <tr>
+          <td class="word">あまり<span class="reading">あまり</span></td>
+          <td>不太（後接否定）</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">あまり好きじゃないです。（不太喜歡。）</td>
+        </tr>
+        <tr>
+          <td class="word">よく<span class="reading">よく</span></td>
+          <td>經常、好好地</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">よく映画を見ます。（經常看電影。）</td>
+        </tr>
+        <tr>
+          <td class="word">たくさん<span class="reading">たくさん</span></td>
+          <td>很多</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">たくさん食べます。（吃很多。）</td>
+        </tr>
+        <tr>
+          <td class="word">少し<span class="reading">すこし</span></td>
+          <td>一點</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">少し寒いです。（有點冷。）</td>
+        </tr>
+        <tr>
+          <td class="word">すぐ<span class="reading">すぐ</span></td>
+          <td>馬上</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">すぐ行きます。（馬上就去。）</td>
+        </tr>
+        <tr>
+          <td class="word">もう<span class="reading">もう</span></td>
+          <td>已經</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">もう食べました。（已經吃了。）</td>
+        </tr>
+        <tr>
+          <td class="word">まだ<span class="reading">まだ</span></td>
+          <td>還、尚未</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">まだ食べていません。（還沒吃。）</td>
+        </tr>
+        <tr>
+          <td class="word">いつも<span class="reading">いつも</span></td>
+          <td>總是</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">いつも忙しいです。（總是很忙。）</td>
+        </tr>
+        <tr>
+          <td class="word">時々<span class="reading">ときどき</span></td>
+          <td>有時候</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">時々映画を見ます。（有時候看電影。）</td>
+        </tr>
+        <tr>
+          <td class="word">ちょっと<span class="reading">ちょっと</span></td>
+          <td>稍微</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">ちょっと待ってください。（請等一下。）</td>
+        </tr>
+        <tr>
+          <td class="word">一緒に<span class="reading">いっしょに</span></td>
+          <td>一起</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">一緒に行きましょう。（一起去吧。）</td>
+        </tr>
+        <tr>
+          <td class="word">すぐに<span class="reading">すぐに</span></td>
+          <td>立刻</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">すぐに来てください。（請立刻過來。）</td>
+        </tr>
+        <tr>
+          <td class="word">ゆっくり<span class="reading">ゆっくり</span></td>
+          <td>慢慢地</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">ゆっくり話してください。（請慢慢說。）</td>
+        </tr>
+        <tr>
+          <td class="word">初めて<span class="reading">はじめて</span></td>
+          <td>第一次</td>
+          <td><span class="pos">副詞</span></td>
+          <td class="example">初めて日本へ行きます。（第一次去日本。）</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+</main>
+<footer>製作日期：2026年8月</footer>
+
+<script>
+const QUIZ_DATA = [{"w": "会う", "r": "あう", "c": "見面"}, {"w": "開ける", "r": "あける", "c": "打開"}, {"w": "上げる", "r": "あげる", "c": "舉起、給"}, {"w": "遊ぶ", "r": "あそぶ", "c": "玩"}, {"w": "洗う", "r": "あらう", "c": "洗"}, {"w": "ある", "r": "ある", "c": "有（物）"}, {"w": "歩く", "r": "あるく", "c": "走路"}, {"w": "言う", "r": "いう", "c": "說"}, {"w": "行く", "r": "いく", "c": "去"}, {"w": "いる", "r": "いる", "c": "有（人、動物）"}, {"w": "入れる", "r": "いれる", "c": "放入"}, {"w": "歌う", "r": "うたう", "c": "唱歌"}, {"w": "生まれる", "r": "うまれる", "c": "出生"}, {"w": "売る", "r": "うる", "c": "賣"}, {"w": "起きる", "r": "おきる", "c": "起床"}, {"w": "置く", "r": "おく", "c": "放置"}, {"w": "教える", "r": "おしえる", "c": "教"}, {"w": "押す", "r": "おす", "c": "推、按"}, {"w": "泳ぐ", "r": "およぐ", "c": "游泳"}, {"w": "終わる", "r": "おわる", "c": "結束"}, {"w": "買う", "r": "かう", "c": "買"}, {"w": "返す", "r": "かえす", "c": "歸還"}, {"w": "帰る", "r": "かえる", "c": "回去"}, {"w": "書く", "r": "かく", "c": "寫"}, {"w": "貸す", "r": "かす", "c": "借出"}, {"w": "かぶる", "r": "かぶる", "c": "戴（帽子）"}, {"w": "借りる", "r": "かりる", "c": "借入"}, {"w": "消える", "r": "きえる", "c": "熄滅、消失"}, {"w": "聞く", "r": "きく", "c": "聽、問"}, {"w": "切る", "r": "きる", "c": "切"}, {"w": "着る", "r": "きる", "c": "穿（上衣）"}, {"w": "来る", "r": "くる", "c": "來"}, {"w": "消す", "r": "けす", "c": "關掉、消除"}, {"w": "さす", "r": "さす", "c": "撐（傘）"}, {"w": "死ぬ", "r": "しぬ", "c": "死"}, {"w": "閉める", "r": "しめる", "c": "關閉"}, {"w": "知る", "r": "しる", "c": "知道"}, {"w": "吸う", "r": "すう", "c": "吸"}, {"w": "住む", "r": "すむ", "c": "居住"}, {"w": "座る", "r": "すわる", "c": "坐"}, {"w": "出す", "r": "だす", "c": "拿出、寄出"}, {"w": "立つ", "r": "たつ", "c": "站立"}, {"w": "食べる", "r": "たべる", "c": "吃"}, {"w": "違う", "r": "ちがう", "c": "不同、不對"}, {"w": "使う", "r": "つかう", "c": "使用"}, {"w": "疲れる", "r": "つかれる", "c": "疲累"}, {"w": "着く", "r": "つく", "c": "到達"}, {"w": "作る", "r": "つくる", "c": "製作"}, {"w": "勤める", "r": "つとめる", "c": "任職"}, {"w": "出かける", "r": "でかける", "c": "外出"}, {"w": "出る", "r": "でる", "c": "出去"}, {"w": "止まる", "r": "とまる", "c": "停止"}, {"w": "撮る", "r": "とる", "c": "拍照"}, {"w": "鳴く", "r": "なく", "c": "（動物）叫"}, {"w": "習う", "r": "ならう", "c": "學習"}, {"w": "並ぶ", "r": "ならぶ", "c": "排列、排隊"}, {"w": "寝る", "r": "ねる", "c": "睡覺"}, {"w": "登る", "r": "のぼる", "c": "攀登"}, {"w": "飲む", "r": "のむ", "c": "喝"}, {"w": "乗る", "r": "のる", "c": "搭乘"}, {"w": "入る", "r": "はいる", "c": "進入"}, {"w": "履く", "r": "はく", "c": "穿（鞋、褲）"}, {"w": "走る", "r": "はしる", "c": "跑步"}, {"w": "働く", "r": "はたらく", "c": "工作"}, {"w": "話す", "r": "はなす", "c": "說話"}, {"w": "降る", "r": "ふる", "c": "下（雨、雪）"}, {"w": "勉強する", "r": "べんきょうする", "c": "學習"}, {"w": "待つ", "r": "まつ", "c": "等待"}, {"w": "磨く", "r": "みがく", "c": "刷（牙）"}, {"w": "見せる", "r": "みせる", "c": "給人看"}, {"w": "見る", "r": "みる", "c": "看"}, {"w": "持つ", "r": "もつ", "c": "拿、持有"}, {"w": "休む", "r": "やすむ", "c": "休息、請假"}, {"w": "読む", "r": "よむ", "c": "閱讀"}, {"w": "わかる", "r": "わかる", "c": "明白"}, {"w": "忘れる", "r": "わすれる", "c": "忘記"}, {"w": "青い", "r": "あおい", "c": "藍色的"}, {"w": "赤い", "r": "あかい", "c": "紅色的"}, {"w": "明るい", "r": "あかるい", "c": "明亮的"}, {"w": "暖かい", "r": "あたたかい", "c": "溫暖的"}, {"w": "新しい", "r": "あたらしい", "c": "新的"}, {"w": "暑い", "r": "あつい", "c": "炎熱的"}, {"w": "熱い", "r": "あつい", "c": "燙的"}, {"w": "忙しい", "r": "いそがしい", "c": "忙碌的"}, {"w": "痛い", "r": "いたい", "c": "痛的"}, {"w": "薄い", "r": "うすい", "c": "薄的、淡的"}, {"w": "美味しい", "r": "おいしい", "c": "好吃的"}, {"w": "大きい", "r": "おおきい", "c": "大的"}, {"w": "多い", "r": "おおい", "c": "多的"}, {"w": "重い", "r": "おもい", "c": "重的"}, {"w": "面白い", "r": "おもしろい", "c": "有趣的"}, {"w": "軽い", "r": "かるい", "c": "輕的"}, {"w": "かわいい", "r": "かわいい", "c": "可愛的"}, {"w": "汚い", "r": "きたない", "c": "髒的"}, {"w": "暗い", "r": "くらい", "c": "暗的"}, {"w": "寒い", "r": "さむい", "c": "寒冷的"}, {"w": "白い", "r": "しろい", "c": "白色的"}, {"w": "狭い", "r": "せまい", "c": "狹窄的"}, {"w": "高い", "r": "たかい", "c": "高的、貴的"}, {"w": "楽しい", "r": "たのしい", "c": "快樂的"}, {"w": "小さい", "r": "ちいさい", "c": "小的"}, {"w": "近い", "r": "ちかい", "c": "近的"}, {"w": "強い", "r": "つよい", "c": "強壯的"}, {"w": "遠い", "r": "とおい", "c": "遠的"}, {"w": "長い", "r": "ながい", "c": "長的"}, {"w": "低い", "r": "ひくい", "c": "矮的、低的"}, {"w": "広い", "r": "ひろい", "c": "寬廣的"}, {"w": "古い", "r": "ふるい", "c": "舊的"}, {"w": "難しい", "r": "むずかしい", "c": "困難的"}, {"w": "易しい", "r": "やさしい", "c": "簡單的"}, {"w": "安い", "r": "やすい", "c": "便宜的"}, {"w": "弱い", "r": "よわい", "c": "虛弱的"}, {"w": "悪い", "r": "わるい", "c": "不好的"}, {"w": "若い", "r": "わかい", "c": "年輕的"}, {"w": "元気な", "r": "げんきな", "c": "有精神的"}, {"w": "静かな", "r": "しずかな", "c": "安靜的"}, {"w": "賑やかな", "r": "にぎやかな", "c": "熱鬧的"}, {"w": "親切な", "r": "しんせつな", "c": "親切的"}, {"w": "有名な", "r": "ゆうめいな", "c": "有名的"}, {"w": "便利な", "r": "べんりな", "c": "方便的"}, {"w": "不便な", "r": "ふべんな", "c": "不方便的"}, {"w": "好きな", "r": "すきな", "c": "喜歡的"}, {"w": "嫌いな", "r": "きらいな", "c": "討厭的"}, {"w": "上手な", "r": "じょうずな", "c": "擅長的"}, {"w": "下手な", "r": "へたな", "c": "不擅長的"}, {"w": "大丈夫な", "r": "だいじょうぶな", "c": "沒問題的"}, {"w": "大切な", "r": "たいせつな", "c": "重要的"}, {"w": "暇な", "r": "ひまな", "c": "空閒的"}, {"w": "簡単な", "r": "かんたんな", "c": "簡單的"}, {"w": "複雑な", "r": "ふくざつな", "c": "複雜的"}, {"w": "綺麗な", "r": "きれいな", "c": "漂亮的、乾淨的"}, {"w": "同じ", "r": "おなじ", "c": "相同的"}, {"w": "色々な", "r": "いろいろな", "c": "各式各樣的"}, {"w": "特別な", "r": "とくべつな", "c": "特別的"}, {"w": "私", "r": "わたし", "c": "我"}, {"w": "あなた", "r": "あなた", "c": "你"}, {"w": "彼", "r": "かれ", "c": "他"}, {"w": "彼女", "r": "かのじょ", "c": "她、女朋友"}, {"w": "友達", "r": "ともだち", "c": "朋友"}, {"w": "先生", "r": "せんせい", "c": "老師"}, {"w": "学生", "r": "がくせい", "c": "學生"}, {"w": "父", "r": "ちち", "c": "（自己的）父親"}, {"w": "母", "r": "はは", "c": "（自己的）母親"}, {"w": "お父さん", "r": "おとうさん", "c": "（別人的）父親"}, {"w": "お母さん", "r": "おかあさん", "c": "（別人的）母親"}, {"w": "兄", "r": "あに", "c": "（自己的）哥哥"}, {"w": "姉", "r": "あね", "c": "（自己的）姊姊"}, {"w": "弟", "r": "おとうと", "c": "弟弟"}, {"w": "妹", "r": "いもうと", "c": "妹妹"}, {"w": "家族", "r": "かぞく", "c": "家人"}, {"w": "子供", "r": "こども", "c": "小孩"}, {"w": "大人", "r": "おとな", "c": "大人"}, {"w": "外国人", "r": "がいこくじん", "c": "外國人"}, {"w": "名前", "r": "なまえ", "c": "名字"}, {"w": "今", "r": "いま", "c": "現在"}, {"w": "今日", "r": "きょう", "c": "今天"}, {"w": "明日", "r": "あした", "c": "明天"}, {"w": "昨日", "r": "きのう", "c": "昨天"}, {"w": "今朝", "r": "けさ", "c": "今天早上"}, {"w": "今晩", "r": "こんばん", "c": "今晚"}, {"w": "毎日", "r": "まいにち", "c": "每天"}, {"w": "毎朝", "r": "まいあさ", "c": "每天早上"}, {"w": "毎週", "r": "まいしゅう", "c": "每週"}, {"w": "毎月", "r": "まいつき", "c": "每個月"}, {"w": "毎年", "r": "まいとし", "c": "每年"}, {"w": "先週", "r": "せんしゅう", "c": "上週"}, {"w": "来週", "r": "らいしゅう", "c": "下週"}, {"w": "先月", "r": "せんげつ", "c": "上個月"}, {"w": "来月", "r": "らいげつ", "c": "下個月"}, {"w": "今年", "r": "ことし", "c": "今年"}, {"w": "去年", "r": "きょねん", "c": "去年"}, {"w": "来年", "r": "らいねん", "c": "明年"}, {"w": "朝", "r": "あさ", "c": "早上"}, {"w": "昼", "r": "ひる", "c": "中午"}, {"w": "夜", "r": "よる", "c": "晚上"}, {"w": "時間", "r": "じかん", "c": "時間"}, {"w": "半", "r": "はん", "c": "半（點）"}, {"w": "週", "r": "しゅう", "c": "週"}, {"w": "月曜日", "r": "げつようび", "c": "星期一"}, {"w": "誕生日", "r": "たんじょうび", "c": "生日"}, {"w": "一つ", "r": "ひとつ", "c": "一個"}, {"w": "二つ", "r": "ふたつ", "c": "兩個"}, {"w": "お金", "r": "おかね", "c": "錢"}, {"w": "円", "r": "えん", "c": "日圓"}, {"w": "値段", "r": "ねだん", "c": "價格"}, {"w": "半分", "r": "はんぶん", "c": "一半"}, {"w": "全部", "r": "ぜんぶ", "c": "全部"}, {"w": "少し", "r": "すこし", "c": "一點點"}, {"w": "たくさん", "r": "たくさん", "c": "很多"}, {"w": "枚", "r": "まい", "c": "（薄物）張、件"}, {"w": "冊", "r": "さつ", "c": "（書）本"}, {"w": "人", "r": "にん", "c": "（人數）人"}, {"w": "歳", "r": "さい", "c": "歲"}, {"w": "家", "r": "いえ", "c": "家"}, {"w": "うち", "r": "うち", "c": "自己家"}, {"w": "学校", "r": "がっこう", "c": "學校"}, {"w": "会社", "r": "かいしゃ", "c": "公司"}, {"w": "病院", "r": "びょういん", "c": "醫院"}, {"w": "銀行", "r": "ぎんこう", "c": "銀行"}, {"w": "図書館", "r": "としょかん", "c": "圖書館"}, {"w": "公園", "r": "こうえん", "c": "公園"}, {"w": "店", "r": "みせ", "c": "商店"}, {"w": "駅", "r": "えき", "c": "車站"}, {"w": "空港", "r": "くうこう", "c": "機場"}, {"w": "部屋", "r": "へや", "c": "房間"}, {"w": "トイレ", "r": "トイレ", "c": "廁所"}, {"w": "入り口", "r": "いりぐち", "c": "入口"}, {"w": "出口", "r": "でぐち", "c": "出口"}, {"w": "台湾", "r": "たいわん", "c": "台灣"}, {"w": "日本", "r": "にほん", "c": "日本"}, {"w": "外国", "r": "がいこく", "c": "外國"}, {"w": "教室", "r": "きょうしつ", "c": "教室"}, {"w": "レストラン", "r": "レストラン", "c": "餐廳"}, {"w": "電車", "r": "でんしゃ", "c": "電車"}, {"w": "バス", "r": "バス", "c": "公車"}, {"w": "タクシー", "r": "タクシー", "c": "計程車"}, {"w": "車", "r": "くるま", "c": "車"}, {"w": "自転車", "r": "じてんしゃ", "c": "腳踏車"}, {"w": "飛行機", "r": "ひこうき", "c": "飛機"}, {"w": "道", "r": "みち", "c": "道路"}, {"w": "地図", "r": "ちず", "c": "地圖"}, {"w": "切符", "r": "きっぷ", "c": "票"}, {"w": "ご飯", "r": "ごはん", "c": "米飯、飯"}, {"w": "パン", "r": "パン", "c": "麵包"}, {"w": "水", "r": "みず", "c": "水"}, {"w": "お茶", "r": "おちゃ", "c": "茶"}, {"w": "コーヒー", "r": "コーヒー", "c": "咖啡"}, {"w": "肉", "r": "にく", "c": "肉"}, {"w": "魚", "r": "さかな", "c": "魚"}, {"w": "野菜", "r": "やさい", "c": "蔬菜"}, {"w": "果物", "r": "くだもの", "c": "水果"}, {"w": "卵", "r": "たまご", "c": "蛋"}, {"w": "料理", "r": "りょうり", "c": "料理"}, {"w": "朝ご飯", "r": "あさごはん", "c": "早餐"}, {"w": "昼ご飯", "r": "ひるごはん", "c": "午餐"}, {"w": "晩ご飯", "r": "ばんごはん", "c": "晚餐"}, {"w": "本", "r": "ほん", "c": "書"}, {"w": "ノート", "r": "ノート", "c": "筆記本"}, {"w": "ペン", "r": "ペン", "c": "筆"}, {"w": "かばん", "r": "かばん", "c": "包包"}, {"w": "時計", "r": "とけい", "c": "時鐘、手錶"}, {"w": "眼鏡", "r": "めがね", "c": "眼鏡"}, {"w": "靴", "r": "くつ", "c": "鞋子"}, {"w": "服", "r": "ふく", "c": "衣服"}, {"w": "傘", "r": "かさ", "c": "傘"}, {"w": "テレビ", "r": "テレビ", "c": "電視"}, {"w": "パソコン", "r": "パソコン", "c": "電腦"}, {"w": "携帯電話", "r": "けいたいでんわ", "c": "手機"}, {"w": "手", "r": "て", "c": "手"}, {"w": "足", "r": "あし", "c": "腳、腿"}, {"w": "目", "r": "め", "c": "眼睛"}, {"w": "耳", "r": "みみ", "c": "耳朵"}, {"w": "頭", "r": "あたま", "c": "頭"}, {"w": "口", "r": "くち", "c": "嘴巴"}, {"w": "何", "r": "なに／なん", "c": "什麼"}, {"w": "誰", "r": "だれ", "c": "誰"}, {"w": "いつ", "r": "いつ", "c": "何時"}, {"w": "どこ", "r": "どこ", "c": "哪裡"}, {"w": "どう", "r": "どう", "c": "如何"}, {"w": "どうして", "r": "どうして", "c": "為什麼"}, {"w": "いくら", "r": "いくら", "c": "多少錢"}, {"w": "いくつ", "r": "いくつ", "c": "幾個、幾歲"}, {"w": "とても", "r": "とても", "c": "非常"}, {"w": "あまり", "r": "あまり", "c": "不太（後接否定）"}, {"w": "よく", "r": "よく", "c": "經常、好好地"}, {"w": "たくさん", "r": "たくさん", "c": "很多"}, {"w": "少し", "r": "すこし", "c": "一點"}, {"w": "すぐ", "r": "すぐ", "c": "馬上"}, {"w": "もう", "r": "もう", "c": "已經"}, {"w": "まだ", "r": "まだ", "c": "還、尚未"}, {"w": "いつも", "r": "いつも", "c": "總是"}, {"w": "時々", "r": "ときどき", "c": "有時候"}, {"w": "ちょっと", "r": "ちょっと", "c": "稍微"}, {"w": "一緒に", "r": "いっしょに", "c": "一起"}, {"w": "すぐに", "r": "すぐに", "c": "立刻"}, {"w": "ゆっくり", "r": "ゆっくり", "c": "慢慢地"}, {"w": "初めて", "r": "はじめて", "c": "第一次"}];
+const QUIZ_LENGTH = 10;
+
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestion(correctItem) {
+  const distractorPool = QUIZ_DATA.filter(item => item.c !== correctItem.c);
+  const distractors = shuffle(distractorPool).slice(0, 3);
+  const options = shuffle([correctItem, ...distractors]);
+  return {
+    reading: correctItem.r,
+    kanji: correctItem.w,
+    correctText: correctItem.c,
+    options: options.map(o => o.c)
+  };
+}
+
+function startQuiz() {
+  const picked = shuffle(QUIZ_DATA).slice(0, QUIZ_LENGTH);
+  quizQuestions = picked.map(buildQuestion);
+  currentIndex = 0;
+  score = 0;
+  answered = false;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const revealEl = document.getElementById('quizReveal');
+  const nextBtn = document.getElementById('quizNextBtn');
+  revealEl.style.display = 'none';
+  nextBtn.style.display = 'none';
+  answered = false;
+
+  if (currentIndex >= quizQuestions.length) {
+    document.getElementById('quizPrompt').innerHTML = '';
+    document.getElementById('quizOptions').innerHTML =
+      `<div class="quiz-done">練習結束！本輪答對 ${score} / ${quizQuestions.length} 題</div>`;
+    document.getElementById('quizProgress').textContent = '已完成';
+    return;
+  }
+
+  const q = quizQuestions[currentIndex];
+  document.getElementById('quizProgress').textContent =
+    `第 ${currentIndex + 1} / ${quizQuestions.length} 題`;
+  document.getElementById('quizScore').textContent = `答對：${score}`;
+  document.getElementById('quizPrompt').textContent = q.reading;
+
+  const optionsEl = document.getElementById('quizOptions');
+  optionsEl.innerHTML = '';
+  q.options.forEach(optText => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = optText;
+    btn.addEventListener('click', () => selectAnswer(optText, btn));
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(selectedText, btnEl) {
+  if (answered) return;
+  answered = true;
+  const q = quizQuestions[currentIndex];
+  const isCorrect = selectedText === q.correctText;
+  if (isCorrect) score++;
+
+  const optionButtons = document.querySelectorAll('#quizOptions .quiz-option');
+  optionButtons.forEach(btn => {
+    btn.classList.add('disabled');
+    if (btn.textContent === q.correctText) {
+      btn.classList.add('correct');
+    } else if (btn === btnEl) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  const revealEl = document.getElementById('quizReveal');
+  revealEl.style.display = 'block';
+  revealEl.innerHTML =
+    `<span class="kanji">${q.kanji}</span><span class="kreading">（${q.reading}）</span> — ${q.correctText}` +
+    (isCorrect ? ' ✅ 答對了！' : ' ❌ 答錯了，再確認一下。');
+
+  document.getElementById('quizScore').textContent = `答對：${score}`;
+  document.getElementById('quizNextBtn').style.display = 'inline-block';
+}
+
+document.getElementById('quizNextBtn').addEventListener('click', () => {
+  currentIndex++;
+  renderQuestion();
+});
+document.getElementById('quizRestartBtn').addEventListener('click', startQuiz);
+
+startQuiz();
+</script>
+</body>
+</html>
