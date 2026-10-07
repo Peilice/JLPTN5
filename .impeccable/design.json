@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-06T08:47:26.093Z",
+  "generatedAt": "2026-10-07T14:44:31.960Z",
   "title": "Design System: JLPT N5 單字整理表",
   "extensions": {
     "colorMeta": {
@@ -737,7 +737,7 @@
       "refersTo": "button-primary",
       "description": "畫面上唯一的主要動作：下一題、看結果、複習錯題。",
       "html": "<button class=\"ds-btn-primary\" type=\"button\">下一題</button>",
-      "css": ".ds-btn-primary{min-height:52px;padding:0 28px;font:600 1rem/1 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--on-accent, #fffdf8);background:var(--accent, #b5473b);border:1px solid transparent;border-radius:12px;cursor:pointer}.ds-btn-primary:hover{background:var(--accent-ink, #9e3b30)}.ds-btn-primary:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}"
+      "css": ".ds-btn-primary{min-height:52px;padding:0 28px;font:600 1rem/1 \"PingFang TC\",\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif;color:var(--card, #fffdf8);background:var(--ink, #1f1d1a);border:1px solid transparent;border-radius:12px;cursor:pointer}.ds-btn-primary:hover{background:var(--ink-2, #3b3732)}.ds-btn-primary:focus-visible{outline:2px solid var(--accent, #b5473b);outline-offset:2px}"
     },
     {
       "name": "Secondary Button",
@@ -810,7 +810,7 @@
     "rules": [
       {
         "name": "The 朱筆 Rule",
-        "body": "朱紅只標記兩件事：使用者的下一步，以及要特別注意的字。不拿來當裝飾、背景或大面積色塊（朱印是唯一例外）。",
+        "body": "朱紅是老師的批改筆，只標記要特別注意的地方：答錯、例句裡的目標單字，以及一輪結束的朱印。使用者的下一步（主要按鈕）用墨色，讓答錯的紅不會和「下一題」混在一起。不拿來當裝飾、背景或大面積色塊（朱印是唯一例外）。",
         "section": "colors"
       },
       {
