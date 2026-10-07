@@ -34,7 +34,7 @@
     --wrong: #a83f33;
     --wrong-bg: #f8e4df;
     --shadow: 0 1px 2px rgba(28, 24, 20, 0.05), 0 2px 6px -2px rgba(28, 24, 20, 0.08);
-    --nav-h: 60px;
+    --nav-h: 100px;
     --fs-xs: 0.78rem;
     --fs-sm: 0.85rem;
     --fs-md: 0.92rem;
@@ -285,7 +285,9 @@
     background: var(--bg);
     border-bottom: 1px solid var(--line);
   }
-  .nav-row { display: flex; align-items: center; gap: 10px; height: var(--nav-h); }
+  /* Two rows: the 詞性／主題 switch and the mask toggle, then that group's chips. */
+  .nav-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 52px; padding-top: 6px; }
+  .nav-row { display: flex; align-items: center; height: calc(var(--nav-h) - 52px); }
   .chips {
     flex: 1; min-width: 0;
     display: flex; align-items: center; gap: 4px;
@@ -319,17 +321,10 @@
   .chip[aria-current="true"] { background: var(--ink); color: var(--bg); }
   .chip[aria-current="true"] .n { color: inherit; opacity: 0.7; }
   .mask-toggle {
-    flex: none; min-height: 40px; padding: 0 14px;
+    flex: none; margin-left: auto; min-height: 40px; padding: 0 14px;
     font: inherit; font-size: var(--fs-sm); color: var(--ink);
     background: var(--card); border: 1px solid var(--line-strong); border-radius: var(--r-pill);
     cursor: pointer;
-  }
-  @media (max-width: 420px) {
-    .nav-row { gap: 6px; }
-    .seg-btn { padding: 0 10px; }
-    .mask-toggle { padding: 0 10px; }
-    .chip { padding: 0 9px; }
-    .chip .n { display: none; }
   }
   .mask-toggle[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .lex-body { padding-top: 8px; padding-bottom: 24px; }
@@ -654,11 +649,14 @@
 
   <div class="lexicon" id="lexicon">
     <nav class="lexicon-nav" aria-label="單字分類">
-      <div class="wrap nav-row">
+      <div class="wrap nav-top">
         <div class="seg" id="navSeg" role="group" aria-label="分類方式" hidden>
           <button type="button" class="seg-btn" data-group="pos" aria-pressed="true">詞性</button>
           <button type="button" class="seg-btn" data-group="theme" aria-pressed="false">主題</button>
         </div>
+        <button class="mask-toggle" id="maskToggle" type="button" aria-pressed="false">遮住答案</button>
+      </div>
+      <div class="wrap nav-row">
         <div class="chips" id="chips">
           <a class="chip chip-quiz" href="#quiz">練習</a>
           <span class="chip-set" data-group="pos">
@@ -693,7 +691,6 @@
             <a class="chip" href="#主題_外來語">外來語<span class="n">44</span></a>
           </span>
         </div>
-        <button class="mask-toggle" id="maskToggle" type="button" aria-pressed="false">遮住答案</button>
       </div>
     </nav>
     <div class="wrap lex-body">
@@ -3690,7 +3687,7 @@
   }
   if ('IntersectionObserver' in window) {
     const visible = new Set();
-    const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 60;
+    const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 100;
     const io = new IntersectionObserver(entries => {
       entries.forEach(en => en.isIntersecting ? visible.add(en.target.id) : visible.delete(en.target.id));
       const firstVisible = [...document.querySelectorAll('.lex-section')].find(s => visible.has(s.id));
