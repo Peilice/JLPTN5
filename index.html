@@ -164,6 +164,7 @@
     letter-spacing: 0.02em;
     overflow-wrap: anywhere;
   }
+  .prompt-gloss { margin: 6px 0 0; font-size: var(--fs-base); color: var(--ink-2); }
   .prompt-reading { margin: 4px 0 0; font-size: var(--fs-lg); color: var(--sub); letter-spacing: 0.06em; }
   .hint {
     margin-top: 6px; min-height: 36px; padding: 0 12px;
@@ -295,6 +296,18 @@
     scroll-behavior: smooth;
   }
   .chips::-webkit-scrollbar { display: none; }
+  .chip-set { display: contents; }
+  .seg {
+    flex: none; display: inline-flex; padding: 3px; gap: 2px;
+    background: var(--surface-2); border-radius: var(--r-pill);
+  }
+  .seg-btn {
+    min-height: 36px; padding: 0 12px;
+    font: inherit; font-size: var(--fs-sm); color: var(--ink-2);
+    background: transparent; border: 0; border-radius: var(--r-pill);
+    cursor: pointer;
+  }
+  .seg-btn[aria-pressed="true"] { background: var(--card); color: var(--ink); font-weight: 600; box-shadow: var(--shadow); }
   .chip {
     flex: none; display: inline-flex; align-items: center; gap: 6px;
     min-height: 40px; padding: 0 12px; border-radius: var(--r-pill);
@@ -310,6 +323,13 @@
     font: inherit; font-size: var(--fs-sm); color: var(--ink);
     background: var(--card); border: 1px solid var(--line-strong); border-radius: var(--r-pill);
     cursor: pointer;
+  }
+  @media (max-width: 420px) {
+    .nav-row { gap: 6px; }
+    .seg-btn { padding: 0 10px; }
+    .mask-toggle { padding: 0 10px; }
+    .chip { padding: 0 9px; }
+    .chip .n { display: none; }
   }
   .mask-toggle[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .lex-body { padding-top: 8px; padding-bottom: 24px; }
@@ -339,27 +359,27 @@
   .legend > div { display: flex; align-items: center; gap: 6px; }
   .legend dt, .legend dd { margin: 0; }
 
-  table {
+  .word-table {
     width: 100%;
     border-collapse: separate; border-spacing: 0;
     font-size: var(--fs-md);
   }
-  th, td {
+  .word-table th, .word-table td {
     padding: 12px 14px;
     border-bottom: 1px solid var(--line);
     text-align: left; vertical-align: top;
   }
-  th {
+  .word-table th {
     position: sticky; top: var(--nav-h); z-index: 1;
     padding-top: 8px; padding-bottom: 8px;
     background: var(--bg);
     border-bottom-color: var(--line-strong);
     font-size: var(--fs-sm); font-weight: 600; color: var(--sub);
   }
-  th:first-child, td:first-child { padding-left: 2px; }
-  th:nth-child(1) { width: 22%; }
-  th:nth-child(2) { width: 20%; }
-  th:nth-child(3) { width: 13%; }
+  .word-table th:first-child, .word-table td:first-child { padding-left: 2px; }
+  .word-table th:nth-child(1) { width: 22%; }
+  .word-table th:nth-child(2) { width: 20%; }
+  .word-table th:nth-child(3) { width: 13%; }
   .jw { display: block; font-family: var(--font-ja-head); font-weight: 600; font-size: var(--fs-xl); line-height: 1.3; }
   .reading { display: block; font-size: var(--fs-sm); color: var(--sub); }
   .mean { color: var(--ink); }
@@ -374,6 +394,86 @@
   .ex-ja { display: block; color: var(--ink); }
   .ex-ja .hl { font-weight: 700; color: var(--accent-ink); }
   .ex-zh { display: block; font-size: var(--fs-sm); color: var(--sub); }
+
+  /* Groups */
+  .lex-group + .lex-group { margin-top: 48px; }
+  .group-head { margin-top: 20px; scroll-margin-top: calc(var(--nav-h) + 8px); }
+  .group-kicker {
+    margin: 0; font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0.12em; color: var(--accent-ink);
+  }
+  .group-intro { margin: 2px 0 0; max-width: 60ch; font-size: var(--fs-md); color: var(--ink-2); }
+  .chg { font-weight: 700; color: var(--accent-ink); }
+
+  /* Theme sections: tiles and grids */
+  .rule { margin: 0 0 6px; max-width: 64ch; font-size: var(--fs-md); color: var(--ink-2); }
+  .block { margin-top: 18px; }
+  .block h3 { margin: 0 0 8px; font-size: var(--fs-sm); font-weight: 600; color: var(--sub); }
+  .tiles { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .tiles-num { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+  .tiles-word { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); }
+  .tiles-phrase { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .tile { position: relative; }
+  .tiles .tile {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-surface);
+  }
+  .tiles .tile.irr { border-color: var(--accent-bg); box-shadow: inset 3px 0 0 var(--accent); }
+  .tile-btn {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+    width: 100%; height: 100%; padding: 9px 12px 10px;
+    font: inherit; color: inherit; text-align: left;
+    background: transparent; border: 0; border-radius: inherit;
+    cursor: pointer;
+  }
+  .no-js-tile { display: flex; flex-direction: column; padding: 9px 12px 10px; }
+  @media (hover: hover) { .tile-btn:hover { background: var(--surface-2); } }
+  .tile-btn:active { background: var(--surface-2); }
+  .tile-btn.is-speaking { background: var(--accent-bg); }
+  .t-w { font-family: var(--font-ja-head); font-weight: 600; font-size: var(--fs-2xl); line-height: 1.25; }
+  .tiles-phrase .t-w { font-size: var(--fs-xl); }
+  .t-alt { font-family: var(--font-ja-head); font-size: var(--fs-sm); color: var(--sub); }
+  .t-r { font-size: var(--fs-md); color: var(--ink-2); overflow-wrap: anywhere; }
+  .t-c { font-size: var(--fs-sm); color: var(--sub); }
+  .tiles:not(.tiles-num) .t-c { font-size: var(--fs-md); color: var(--ink); }
+  .t-c.dup { display: none; }
+
+  .grid-wrap { overflow-x: auto; }
+  .grid-wrap:has(.grid-2, .grid-3) { max-width: 600px; }
+  .grid {
+    width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-surface);
+    overflow: hidden;
+  }
+  .grid th, .grid td { border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+  .grid tbody tr:last-child > * { border-bottom: 0; }
+  .grid td + td, .grid th + th, .grid th + td, .grid td + th { border-left: 1px solid var(--line); }
+  .grid thead th {
+    padding: 8px 10px; background: var(--surface-2);
+    font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2);
+  }
+  .grid .g-corner { width: 3.6em; background: var(--surface-2); }
+  .grid-2 .g-corner, .grid-3 .g-corner { width: 3em; }
+  .g-h { display: block; font-family: var(--font-ja-head); font-size: var(--fs-lg); color: var(--ink); }
+  .g-sub { display: block; font-weight: 400; font-size: var(--fs-xs); color: var(--sub); }
+  .grid tbody th {
+    padding: 10px 8px; background: var(--surface-2);
+    font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums;
+  }
+  .grid td.tile { padding: 0; }
+  .grid td.tile.irr { box-shadow: inset 3px 0 0 var(--accent); }
+  .grid .tile-btn, .grid .no-js-tile { padding: 8px 10px; }
+  .grid .t-w { font-size: var(--fs-lg); }
+  .grid .t-r { font-size: var(--fs-sm); }
+  .grid:not(.grid-num) .t-c { font-size: var(--fs-sm); color: var(--ink); }
+  .grid td.empty { padding: 8px 10px; font-size: var(--fs-sm); color: var(--sub); }
+  @media (max-width: 640px) {
+    .grid .tile-btn, .grid .no-js-tile { padding: 7px 6px; }
+    .grid thead th { padding: 7px 6px; }
+    .grid tbody th { padding: 8px 4px; text-align: center; }
+    .grid .g-corner { width: 2.6em; }
+    .grid-4 .t-w { font-size: var(--fs-base); }
+    .grid-4 .g-corner { width: 3.4em; }
+    .grid-4 .t-r { font-size: var(--fs-xs); }
+  }
 
   /* Pronunciation */
   .word-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -401,7 +501,7 @@
   .say-sm svg { width: 15px; height: 15px; }
 
   /* Mask mode */
-  .masked tbody tr { cursor: pointer; }
+  .masked .word-table tbody tr { cursor: pointer; }
   .masked .mean-t, .masked .ex-zh {
     display: inline-block; min-width: 4.5em;
     color: transparent; background: var(--mask); border-radius: var(--r-hair);
@@ -410,14 +510,21 @@
   .masked .ex-zh { display: table; margin-top: 2px; }
   .masked tr.peek .mean-t, .masked tr.peek .ex-zh { color: inherit; background: transparent; user-select: auto; }
   .masked tr.peek .ex-zh { color: var(--sub); }
+  .masked .theme[data-mode="reading"] .tile:not(.peek) .t-r,
+  .masked .theme[data-mode="meaning"] .tile:not(.peek) .t-c:not(.sr-only) {
+    align-self: stretch; min-width: 3em;
+    color: transparent; background: var(--mask); border-radius: var(--r-hair);
+    user-select: none;
+  }
+  .masked .theme .tile:not(.peek) .t-r .chg { color: transparent; }
 
   /* Phone: rows become stacked entries */
   @media (max-width: 640px) {
     .wrap { padding: 0 16px; }
     .quiz-card { padding: 16px 14px 6px; border-radius: var(--r-sheet); }
-    table, tbody, tr, td { display: block; }
-    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-    tbody tr {
+    .word-table, .word-table tbody, .word-table tr, .word-table td { display: block; }
+    .word-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .word-table tbody tr {
       display: grid;
       grid-template-columns: 1fr auto;
       grid-template-areas: "word pos" "mean mean" "ex ex";
@@ -425,7 +532,7 @@
       padding: 14px 2px;
       border-bottom: 1px solid var(--line);
     }
-    td { padding: 0; border: 0; }
+    .word-table td { padding: 0; border: 0; }
     td.word { grid-area: word; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
     .word-line { justify-content: flex-start; gap: 12px; }
     .word-text { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
@@ -447,7 +554,8 @@
     .quiz, .lexicon-nav, .mask-hint, .about-more { display: none !important; }
     .lexicon { border: 0; }
     .masked .mean-t, .masked .ex-zh { color: inherit !important; background: none !important; }
-    th { position: static; }
+    .word-table th { position: static; }
+    .tile, .grid tr { break-inside: avoid; }
     tr { break-inside: avoid; }
     .lex-section { break-before: auto; }
   }
@@ -458,9 +566,10 @@
   <div class="wrap">
     <h1>JLPT N5 單字整理表</h1>
     <details class="about" id="about">
-      <summary><span>自行整理・收錄 275 個核心單字・約佔 N5 範圍的三分之一</span><span class="about-more">說明</span></summary>
+      <summary><span>自行整理・275 個核心單字＋16 類主題對照表</span><span class="about-more">說明</span></summary>
       <div class="about-body">
         <p>依詞性 / 主題分類整理，含讀音、中文意思、詞性、例句。<span lang="ja">たくさん</span>、<span lang="ja">少し</span>同時列在「名詞：數量・金錢」與「副詞・疑問詞」兩類，因此各分類合計為 277 筆。</p>
+        <p>主題對照表另外整理數字、日期、時刻、量詞等成套出現的字，共 460 筆。和詞性分類重複的字（例如<span lang="ja">今日</span>、<span lang="ja">先生</span>）兩邊都保留，方便各自複習。</p>
         <p>本表為自行編寫整理，並非任何特定網站清單的複製版，也非JLPT官方公告清單（官方並未公開逐字表）。實際範圍約800字，此表涵蓋核心高頻詞彙，供學習參考，正式應考建議搭配市售N5單字書或線上題庫交叉核對。動詞的自動詞／他動詞判斷為常見基本用法，部分動詞（如「休む」）實際上兩種用法皆有，僅標示最常見的一種或標為「自他動詞」。</p>
       </div>
     </details>
@@ -471,22 +580,42 @@
   <section id="quiz" class="quiz" aria-labelledby="quizTitle">
     <div class="wrap">
       <div class="quiz-head">
-        <h2 id="quizTitle">日翻中練習</h2>
+        <h2 id="quizTitle">單字練習</h2>
         <label class="scope">
           <span>範圍</span>
           <select id="quizScope">
               <option value="all">全部（275）</option>
-              <option value="動詞">動詞（76）</option>
-              <option value="い形容詞">い形容詞（38）</option>
-              <option value="な形容詞">な形容詞（20）</option>
-              <option value="名詞_人稱家族">名詞：人稱・家族（20）</option>
-              <option value="名詞_時間">名詞：時間（26）</option>
-              <option value="名詞_數量金錢">名詞：數量・金錢（13）</option>
-              <option value="名詞_場所建築">名詞：場所・建築（20）</option>
-              <option value="名詞_交通">名詞：交通（9）</option>
-              <option value="名詞_食物">名詞：食物（14）</option>
-              <option value="名詞_日用品身體">名詞：日用品・身體（18）</option>
-              <option value="副詞疑問詞">副詞・疑問詞（23）</option>
+              <optgroup label="詞性分類">
+                <option value="動詞">動詞（76）</option>
+                <option value="い形容詞">い形容詞（38）</option>
+                <option value="な形容詞">な形容詞（20）</option>
+                <option value="名詞_人稱家族">名詞：人稱・家族（20）</option>
+                <option value="名詞_時間">名詞：時間（26）</option>
+                <option value="名詞_數量金錢">名詞：數量・金錢（13）</option>
+                <option value="名詞_場所建築">名詞：場所・建築（20）</option>
+                <option value="名詞_交通">名詞：交通（9）</option>
+                <option value="名詞_食物">名詞：食物（14）</option>
+                <option value="名詞_日用品身體">名詞：日用品・身體（18）</option>
+                <option value="副詞疑問詞">副詞・疑問詞（23）</option>
+              </optgroup>
+              <optgroup label="主題對照表">
+                <option value="主題_數字">數字（40）</option>
+                <option value="主題_日期">日期（32）</option>
+                <option value="主題_月份">月份（13）</option>
+                <option value="主題_星期">星期（9）</option>
+                <option value="主題_時刻">時刻（29）</option>
+                <option value="主題_期間">期間（24）</option>
+                <option value="主題_相對時間">相對時間（30）</option>
+                <option value="主題_量詞">量詞（118）</option>
+                <option value="主題_方位位置">方位・位置（17）</option>
+                <option value="主題_指示詞">指示詞（20）</option>
+                <option value="主題_顏色">顏色（14）</option>
+                <option value="主題_天氣季節">天氣・季節（17）</option>
+                <option value="主題_寒暄語">寒暄語（20）</option>
+                <option value="主題_學校工作">學校・工作（22）</option>
+                <option value="主題_動物自然">動物・自然（11）</option>
+                <option value="主題_外來語">片假名外來語（44）</option>
+              </optgroup>
           </select>
         </label>
       </div>
@@ -500,6 +629,7 @@
           <div class="prompt">
             <p class="prompt-word" id="quizWord" lang="ja">&nbsp;</p>
             <p class="prompt-reading" id="quizReading" lang="ja" hidden></p>
+            <p class="prompt-gloss" id="quizGloss" hidden></p>
             <div class="prompt-tools">
               <button class="hint" id="quizHint" type="button" aria-controls="quizReading" aria-expanded="false">顯示讀音</button>
             </div>
@@ -525,25 +655,55 @@
   <div class="lexicon" id="lexicon">
     <nav class="lexicon-nav" aria-label="單字分類">
       <div class="wrap nav-row">
+        <div class="seg" id="navSeg" role="group" aria-label="分類方式" hidden>
+          <button type="button" class="seg-btn" data-group="pos" aria-pressed="true">詞性</button>
+          <button type="button" class="seg-btn" data-group="theme" aria-pressed="false">主題</button>
+        </div>
         <div class="chips" id="chips">
           <a class="chip chip-quiz" href="#quiz">練習</a>
-          <a class="chip" href="#動詞">動詞<span class="n">76</span></a>
-          <a class="chip" href="#い形容詞">い形容詞<span class="n">38</span></a>
-          <a class="chip" href="#な形容詞">な形容詞<span class="n">20</span></a>
-          <a class="chip" href="#名詞_人稱家族">名詞：人稱・家族<span class="n">20</span></a>
-          <a class="chip" href="#名詞_時間">名詞：時間<span class="n">26</span></a>
-          <a class="chip" href="#名詞_數量金錢">名詞：數量・金錢<span class="n">13</span></a>
-          <a class="chip" href="#名詞_場所建築">名詞：場所・建築<span class="n">20</span></a>
-          <a class="chip" href="#名詞_交通">名詞：交通<span class="n">9</span></a>
-          <a class="chip" href="#名詞_食物">名詞：食物<span class="n">14</span></a>
-          <a class="chip" href="#名詞_日用品身體">名詞：日用品・身體<span class="n">18</span></a>
-          <a class="chip" href="#副詞疑問詞">副詞・疑問詞<span class="n">23</span></a>
+          <span class="chip-set" data-group="pos">
+            <a class="chip" href="#動詞">動詞<span class="n">76</span></a>
+            <a class="chip" href="#い形容詞">い形容詞<span class="n">38</span></a>
+            <a class="chip" href="#な形容詞">な形容詞<span class="n">20</span></a>
+            <a class="chip" href="#名詞_人稱家族">名詞：人稱・家族<span class="n">20</span></a>
+            <a class="chip" href="#名詞_時間">名詞：時間<span class="n">26</span></a>
+            <a class="chip" href="#名詞_數量金錢">名詞：數量・金錢<span class="n">13</span></a>
+            <a class="chip" href="#名詞_場所建築">名詞：場所・建築<span class="n">20</span></a>
+            <a class="chip" href="#名詞_交通">名詞：交通<span class="n">9</span></a>
+            <a class="chip" href="#名詞_食物">名詞：食物<span class="n">14</span></a>
+            <a class="chip" href="#名詞_日用品身體">名詞：日用品・身體<span class="n">18</span></a>
+            <a class="chip" href="#副詞疑問詞">副詞・疑問詞<span class="n">23</span></a>
+          </span>
+          <span class="chip-set" data-group="theme">
+            <a class="chip" href="#主題_數字">數字<span class="n">40</span></a>
+            <a class="chip" href="#主題_日期">日期<span class="n">32</span></a>
+            <a class="chip" href="#主題_月份">月份<span class="n">13</span></a>
+            <a class="chip" href="#主題_星期">星期<span class="n">9</span></a>
+            <a class="chip" href="#主題_時刻">時刻<span class="n">29</span></a>
+            <a class="chip" href="#主題_期間">期間<span class="n">24</span></a>
+            <a class="chip" href="#主題_相對時間">相對時間<span class="n">30</span></a>
+            <a class="chip" href="#主題_量詞">量詞<span class="n">118</span></a>
+            <a class="chip" href="#主題_方位位置">方位・位置<span class="n">17</span></a>
+            <a class="chip" href="#主題_指示詞">指示詞<span class="n">20</span></a>
+            <a class="chip" href="#主題_顏色">顏色<span class="n">14</span></a>
+            <a class="chip" href="#主題_天氣季節">天氣・季節<span class="n">17</span></a>
+            <a class="chip" href="#主題_寒暄語">寒暄語<span class="n">20</span></a>
+            <a class="chip" href="#主題_學校工作">學校・工作<span class="n">22</span></a>
+            <a class="chip" href="#主題_動物自然">動物・自然<span class="n">11</span></a>
+            <a class="chip" href="#主題_外來語">外來語<span class="n">44</span></a>
+          </span>
         </div>
-        <button class="mask-toggle" id="maskToggle" type="button" aria-pressed="false">遮住中文</button>
+        <button class="mask-toggle" id="maskToggle" type="button" aria-pressed="false">遮住答案</button>
       </div>
     </nav>
     <div class="wrap lex-body">
-      <p class="mask-hint" id="maskHint" hidden>中文已遮住：先想想意思，再點一下該列看答案。</p>
+      <p class="mask-hint" id="maskHint" hidden>答案已遮住：單字表遮中文；數字、日期、量詞這類對照表遮讀音，其他遮中文。先想一想，再點一下看答案。</p>
+
+      <div class="lex-group" data-group="pos">
+      <header class="group-head" id="group-pos">
+        <p class="group-kicker">詞性分類</p>
+        <p class="group-intro">依詞性與名詞主題整理，每個字附讀音、中文、詞性和例句。</p>
+      </header>
 
       <section id="動詞" class="lex-section" data-name="動詞">
         <h2>動詞 <span class="count">76 字</span></h2>
@@ -552,7 +712,7 @@
           <div><dt><span class="pos pos-ta">他動詞</span></dt><dd>動作直接作用於受詞（用<span lang="ja">を</span>）</dd></div>
           <div><dt><span class="pos pos-jita">自他動詞</span></dt><dd>兩種用法皆常見</dd></div>
         </dl>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1019,7 +1179,7 @@
 
       <section id="い形容詞" class="lex-section" data-name="い形容詞">
         <h2>い形容詞 <span class="count">38 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1258,7 +1418,7 @@
 
       <section id="な形容詞" class="lex-section" data-name="な形容詞">
         <h2>な形容詞 <span class="count">20 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1389,7 +1549,7 @@
 
       <section id="名詞_人稱家族" class="lex-section" data-name="名詞：人稱・家族">
         <h2>名詞：人稱・家族 <span class="count">20 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1520,7 +1680,7 @@
 
       <section id="名詞_時間" class="lex-section" data-name="名詞：時間">
         <h2>名詞：時間 <span class="count">26 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1687,7 +1847,7 @@
 
       <section id="名詞_數量金錢" class="lex-section" data-name="名詞：數量・金錢">
         <h2>名詞：數量・金錢 <span class="count">13 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1776,7 +1936,7 @@
 
       <section id="名詞_場所建築" class="lex-section" data-name="名詞：場所・建築">
         <h2>名詞：場所・建築 <span class="count">20 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1907,7 +2067,7 @@
 
       <section id="名詞_交通" class="lex-section" data-name="名詞：交通">
         <h2>名詞：交通 <span class="count">9 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -1972,7 +2132,7 @@
 
       <section id="名詞_食物" class="lex-section" data-name="名詞：食物">
         <h2>名詞：食物 <span class="count">14 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -2067,7 +2227,7 @@
 
       <section id="名詞_日用品身體" class="lex-section" data-name="名詞：日用品・身體">
         <h2>名詞：日用品・身體 <span class="count">18 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -2186,7 +2346,7 @@
 
       <section id="副詞疑問詞" class="lex-section" data-name="副詞・疑問詞">
         <h2>副詞・疑問詞 <span class="count">23 字</span></h2>
-        <table>
+        <table class="word-table">
           <thead>
             <tr><th scope="col">單字</th><th scope="col">中文</th><th scope="col">詞性</th><th scope="col">例句</th></tr>
           </thead>
@@ -2332,6 +2492,718 @@
           </tbody>
         </table>
       </section>
+      </div>
+
+      <div class="lex-group" data-group="theme">
+      <header class="group-head" id="group-theme">
+        <p class="group-kicker">主題對照表</p>
+        <p class="group-intro">數字、日期、量詞這類成套的字排成對照表。點任一格可以聽發音；<b class="chg">朱色</b>是念法特殊或會音變的地方，最常考。</p>
+      </header>
+
+      <section id="主題_數字" class="lex-section theme" data-name="數字" data-mode="reading">
+        <h2>數字 <span class="count">40 字</span></h2>
+        <p class="rule">4、7、9 有兩種念法：單獨數數時多用<span lang="ja">よん、なな、きゅう</span>；時刻、月份等固定說法才用<span lang="ja">し、しち、く</span>。百、千遇到 3、6、8 會音變；一萬一定要念<span lang="ja">いちまん</span>，不能只說<span lang="ja">まん</span>。</p>
+        <div class="block">
+          <h3>0〜10</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile"><span class="t-w" lang="ja">0</span><span class="t-alt" lang="ja">零</span><span class="t-r" lang="ja">ゼロ／れい</span><span class="t-c dup">零</span></li>
+            <li class="tile"><span class="t-w" lang="ja">1</span><span class="t-alt" lang="ja">一</span><span class="t-r" lang="ja">いち</span><span class="t-c dup">一</span></li>
+            <li class="tile"><span class="t-w" lang="ja">2</span><span class="t-alt" lang="ja">二</span><span class="t-r" lang="ja">に</span><span class="t-c dup">二</span></li>
+            <li class="tile"><span class="t-w" lang="ja">3</span><span class="t-alt" lang="ja">三</span><span class="t-r" lang="ja">さん</span><span class="t-c dup">三</span></li>
+            <li class="tile irr"><span class="t-w" lang="ja">4</span><span class="t-alt" lang="ja">四</span><span class="t-r" lang="ja"><b class="chg">よん／し</b></span><span class="t-c dup">四</span></li>
+            <li class="tile"><span class="t-w" lang="ja">5</span><span class="t-alt" lang="ja">五</span><span class="t-r" lang="ja">ご</span><span class="t-c dup">五</span></li>
+            <li class="tile"><span class="t-w" lang="ja">6</span><span class="t-alt" lang="ja">六</span><span class="t-r" lang="ja">ろく</span><span class="t-c dup">六</span></li>
+            <li class="tile irr"><span class="t-w" lang="ja">7</span><span class="t-alt" lang="ja">七</span><span class="t-r" lang="ja"><b class="chg">なな／しち</b></span><span class="t-c dup">七</span></li>
+            <li class="tile"><span class="t-w" lang="ja">8</span><span class="t-alt" lang="ja">八</span><span class="t-r" lang="ja">はち</span><span class="t-c dup">八</span></li>
+            <li class="tile irr"><span class="t-w" lang="ja">9</span><span class="t-alt" lang="ja">九</span><span class="t-r" lang="ja"><b class="chg">きゅう／く</b></span><span class="t-c dup">九</span></li>
+            <li class="tile"><span class="t-w" lang="ja">10</span><span class="t-alt" lang="ja">十</span><span class="t-r" lang="ja">じゅう</span><span class="t-c dup">十</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>20〜90</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile"><span class="t-w" lang="ja">20</span><span class="t-alt" lang="ja">二十</span><span class="t-r" lang="ja">にじゅう</span><span class="t-c dup">二十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">30</span><span class="t-alt" lang="ja">三十</span><span class="t-r" lang="ja">さんじゅう</span><span class="t-c dup">三十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">40</span><span class="t-alt" lang="ja">四十</span><span class="t-r" lang="ja">よんじゅう</span><span class="t-c dup">四十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">50</span><span class="t-alt" lang="ja">五十</span><span class="t-r" lang="ja">ごじゅう</span><span class="t-c dup">五十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">60</span><span class="t-alt" lang="ja">六十</span><span class="t-r" lang="ja">ろくじゅう</span><span class="t-c dup">六十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">70</span><span class="t-alt" lang="ja">七十</span><span class="t-r" lang="ja">ななじゅう</span><span class="t-c dup">七十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">80</span><span class="t-alt" lang="ja">八十</span><span class="t-r" lang="ja">はちじゅう</span><span class="t-c dup">八十</span></li>
+            <li class="tile"><span class="t-w" lang="ja">90</span><span class="t-alt" lang="ja">九十</span><span class="t-r" lang="ja">きゅうじゅう</span><span class="t-c dup">九十</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>百：3、6、8 會音變</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="いちひゃく・いっぴゃく"><span class="t-w" lang="ja">100</span><span class="t-alt" lang="ja">百</span><span class="t-r" lang="ja">ひゃく</span><span class="t-c dup">一百</span></li>
+            <li class="tile" data-trap="にびゃく・にぴゃく"><span class="t-w" lang="ja">200</span><span class="t-alt" lang="ja">二百</span><span class="t-r" lang="ja">にひゃく</span><span class="t-c">兩百</span></li>
+            <li class="tile irr" data-trap="さんひゃく・さんぴゃく"><span class="t-w" lang="ja">300</span><span class="t-alt" lang="ja">三百</span><span class="t-r" lang="ja">さん<b class="chg">び</b>ゃく</span><span class="t-c dup">三百</span></li>
+            <li class="tile" data-trap="よんびゃく・しひゃく"><span class="t-w" lang="ja">400</span><span class="t-alt" lang="ja">四百</span><span class="t-r" lang="ja">よんひゃく</span><span class="t-c dup">四百</span></li>
+            <li class="tile" data-trap="ごびゃく・ごぴゃく"><span class="t-w" lang="ja">500</span><span class="t-alt" lang="ja">五百</span><span class="t-r" lang="ja">ごひゃく</span><span class="t-c dup">五百</span></li>
+            <li class="tile irr" data-trap="ろくひゃく・ろくぴゃく"><span class="t-w" lang="ja">600</span><span class="t-alt" lang="ja">六百</span><span class="t-r" lang="ja">ろ<b class="chg">っぴ</b>ゃく</span><span class="t-c dup">六百</span></li>
+            <li class="tile" data-trap="しちびゃく・ななびゃく"><span class="t-w" lang="ja">700</span><span class="t-alt" lang="ja">七百</span><span class="t-r" lang="ja">ななひゃく</span><span class="t-c dup">七百</span></li>
+            <li class="tile irr" data-trap="はちひゃく・はちぴゃく"><span class="t-w" lang="ja">800</span><span class="t-alt" lang="ja">八百</span><span class="t-r" lang="ja">は<b class="chg">っぴ</b>ゃく</span><span class="t-c dup">八百</span></li>
+            <li class="tile" data-trap="くひゃく・きゅうびゃく"><span class="t-w" lang="ja">900</span><span class="t-alt" lang="ja">九百</span><span class="t-r" lang="ja">きゅうひゃく</span><span class="t-c dup">九百</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>千：3、8 會音變</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="ぜん・いちぜん"><span class="t-w" lang="ja">1000</span><span class="t-alt" lang="ja">千</span><span class="t-r" lang="ja">せん</span><span class="t-c dup">一千</span></li>
+            <li class="tile" data-trap="にぜん"><span class="t-w" lang="ja">2000</span><span class="t-alt" lang="ja">二千</span><span class="t-r" lang="ja">にせん</span><span class="t-c">兩千</span></li>
+            <li class="tile irr" data-trap="さんせん・さんぜい"><span class="t-w" lang="ja">3000</span><span class="t-alt" lang="ja">三千</span><span class="t-r" lang="ja">さん<b class="chg">ぜ</b>ん</span><span class="t-c dup">三千</span></li>
+            <li class="tile" data-trap="よんぜん"><span class="t-w" lang="ja">4000</span><span class="t-alt" lang="ja">四千</span><span class="t-r" lang="ja">よんせん</span><span class="t-c dup">四千</span></li>
+            <li class="tile" data-trap="ごぜん"><span class="t-w" lang="ja">5000</span><span class="t-alt" lang="ja">五千</span><span class="t-r" lang="ja">ごせん</span><span class="t-c dup">五千</span></li>
+            <li class="tile" data-trap="ろっせん・ろくぜん"><span class="t-w" lang="ja">6000</span><span class="t-alt" lang="ja">六千</span><span class="t-r" lang="ja">ろくせん</span><span class="t-c dup">六千</span></li>
+            <li class="tile" data-trap="ななぜん"><span class="t-w" lang="ja">7000</span><span class="t-alt" lang="ja">七千</span><span class="t-r" lang="ja">ななせん</span><span class="t-c dup">七千</span></li>
+            <li class="tile irr" data-trap="はちせん・はちぜん"><span class="t-w" lang="ja">8000</span><span class="t-alt" lang="ja">八千</span><span class="t-r" lang="ja">は<b class="chg">っ</b>せん</span><span class="t-c dup">八千</span></li>
+            <li class="tile" data-trap="きゅうぜん"><span class="t-w" lang="ja">9000</span><span class="t-alt" lang="ja">九千</span><span class="t-r" lang="ja">きゅうせん</span><span class="t-c dup">九千</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>萬</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile irr" data-trap="まん・いっまん"><span class="t-w" lang="ja">1万</span><span class="t-alt" lang="ja">一万</span><span class="t-r" lang="ja"><b class="chg">いち</b>まん</span><span class="t-c">一萬</span></li>
+            <li class="tile" data-trap="じゅうばん"><span class="t-w" lang="ja">10万</span><span class="t-alt" lang="ja">十万</span><span class="t-r" lang="ja">じゅうまん</span><span class="t-c">十萬</span></li>
+            <li class="tile" data-trap="ひゃくばん"><span class="t-w" lang="ja">100万</span><span class="t-alt" lang="ja">百万</span><span class="t-r" lang="ja">ひゃくまん</span><span class="t-c">一百萬</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_日期" class="lex-section theme" data-name="日期" data-mode="reading">
+        <h2>日期 <span class="count">32 字</span></h2>
+        <p class="rule">1〜10 號和 14、20、24 號用特殊念法，其他日期都是「數字＋<span lang="ja">にち</span>」。17、19 號念<span lang="ja">しち、く</span>，不念<span lang="ja">なな、きゅう</span>。「1日」當「一天」時念<span lang="ja">いちにち</span>；2〜10日 也可以表示「N 天」，請見「期間」。</p>
+        <div class="block">
+          <h3>1〜10 號：全部特殊</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile irr" data-trap="いちにち・いっか"><span class="t-w" lang="ja">1日</span><span class="t-r" lang="ja"><b class="chg">ついたち</b></span><span class="t-c">1號</span></li>
+            <li class="tile irr" data-trap="ににち・ふたか"><span class="t-w" lang="ja">2日</span><span class="t-r" lang="ja"><b class="chg">ふつか</b></span><span class="t-c">2號</span></li>
+            <li class="tile irr" data-trap="さんにち・みつか"><span class="t-w" lang="ja">3日</span><span class="t-r" lang="ja"><b class="chg">みっか</b></span><span class="t-c">3號</span></li>
+            <li class="tile irr" data-trap="よんにち・よんか"><span class="t-w" lang="ja">4日</span><span class="t-r" lang="ja"><b class="chg">よっか</b></span><span class="t-c">4號</span></li>
+            <li class="tile irr" data-trap="ごにち・いっか"><span class="t-w" lang="ja">5日</span><span class="t-r" lang="ja"><b class="chg">いつか</b></span><span class="t-c">5號</span></li>
+            <li class="tile irr" data-trap="ろくにち・むっか"><span class="t-w" lang="ja">6日</span><span class="t-r" lang="ja"><b class="chg">むいか</b></span><span class="t-c">6號</span></li>
+            <li class="tile irr" data-trap="しちにち・ななか"><span class="t-w" lang="ja">7日</span><span class="t-r" lang="ja"><b class="chg">なのか</b></span><span class="t-c">7號</span></li>
+            <li class="tile irr" data-trap="はちにち・やっか"><span class="t-w" lang="ja">8日</span><span class="t-r" lang="ja"><b class="chg">ようか</b></span><span class="t-c">8號</span></li>
+            <li class="tile irr" data-trap="くにち・きゅうにち"><span class="t-w" lang="ja">9日</span><span class="t-r" lang="ja"><b class="chg">ここのか</b></span><span class="t-c">9號</span></li>
+            <li class="tile irr" data-trap="じゅうにち・とうか"><span class="t-w" lang="ja">10日</span><span class="t-r" lang="ja"><b class="chg">とおか</b></span><span class="t-c">10號</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>11〜20 號</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="じゅういっか"><span class="t-w" lang="ja">11日</span><span class="t-r" lang="ja">じゅういちにち</span><span class="t-c">11號</span></li>
+            <li class="tile" data-trap="じゅうふつか"><span class="t-w" lang="ja">12日</span><span class="t-r" lang="ja">じゅうににち</span><span class="t-c">12號</span></li>
+            <li class="tile" data-trap="じゅうみっか"><span class="t-w" lang="ja">13日</span><span class="t-r" lang="ja">じゅうさんにち</span><span class="t-c">13號</span></li>
+            <li class="tile irr" data-trap="じゅうよんにち・じゅうしにち"><span class="t-w" lang="ja">14日</span><span class="t-r" lang="ja">じゅう<b class="chg">よっか</b></span><span class="t-c">14號</span></li>
+            <li class="tile" data-trap="じゅういつか"><span class="t-w" lang="ja">15日</span><span class="t-r" lang="ja">じゅうごにち</span><span class="t-c">15號</span></li>
+            <li class="tile" data-trap="じゅうむいか"><span class="t-w" lang="ja">16日</span><span class="t-r" lang="ja">じゅうろくにち</span><span class="t-c">16號</span></li>
+            <li class="tile" data-trap="じゅうなのか"><span class="t-w" lang="ja">17日</span><span class="t-r" lang="ja">じゅうしちにち</span><span class="t-c">17號</span></li>
+            <li class="tile" data-trap="じゅうようか"><span class="t-w" lang="ja">18日</span><span class="t-r" lang="ja">じゅうはちにち</span><span class="t-c">18號</span></li>
+            <li class="tile" data-trap="じゅうここのか"><span class="t-w" lang="ja">19日</span><span class="t-r" lang="ja">じゅうくにち</span><span class="t-c">19號</span></li>
+            <li class="tile irr" data-trap="にじゅうにち・はたち"><span class="t-w" lang="ja">20日</span><span class="t-r" lang="ja"><b class="chg">はつか</b></span><span class="t-c">20號</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>21〜31 號</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile"><span class="t-w" lang="ja">21日</span><span class="t-r" lang="ja">にじゅういちにち</span><span class="t-c">21號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">22日</span><span class="t-r" lang="ja">にじゅうににち</span><span class="t-c">22號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">23日</span><span class="t-r" lang="ja">にじゅうさんにち</span><span class="t-c">23號</span></li>
+            <li class="tile irr" data-trap="にじゅうよんにち・にじゅうしにち"><span class="t-w" lang="ja">24日</span><span class="t-r" lang="ja">にじゅう<b class="chg">よっか</b></span><span class="t-c">24號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">25日</span><span class="t-r" lang="ja">にじゅうごにち</span><span class="t-c">25號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">26日</span><span class="t-r" lang="ja">にじゅうろくにち</span><span class="t-c">26號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">27日</span><span class="t-r" lang="ja">にじゅうしちにち</span><span class="t-c">27號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">28日</span><span class="t-r" lang="ja">にじゅうはちにち</span><span class="t-c">28號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">29日</span><span class="t-r" lang="ja">にじゅうくにち</span><span class="t-c">29號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">30日</span><span class="t-r" lang="ja">さんじゅうにち</span><span class="t-c">30號</span></li>
+            <li class="tile"><span class="t-w" lang="ja">31日</span><span class="t-r" lang="ja">さんじゅういちにち</span><span class="t-c">31號</span></li>
+            <li class="tile" data-trap="なにび・なんび"><span class="t-w" lang="ja">何日</span><span class="t-r" lang="ja">なんにち</span><span class="t-c">幾號</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_月份" class="lex-section theme" data-name="月份" data-mode="reading">
+        <h2>月份 <span class="count">13 字</span></h2>
+        <p class="rule">月份是「數字＋<span lang="ja">がつ</span>」。只有 4、7、9 月要念<span lang="ja">し、しち、く</span>，不念<span lang="ja">よん、なな、きゅう</span>。「幾個月」請見「期間」的<span lang="ja">〜か月</span>。</p>
+        <div class="block">
+          <h3>1〜12 月</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="いちげつ"><span class="t-w" lang="ja">1月</span><span class="t-r" lang="ja">いちがつ</span><span class="t-c">一月</span></li>
+            <li class="tile" data-trap="にげつ"><span class="t-w" lang="ja">2月</span><span class="t-r" lang="ja">にがつ</span><span class="t-c">二月</span></li>
+            <li class="tile" data-trap="さんげつ"><span class="t-w" lang="ja">3月</span><span class="t-r" lang="ja">さんがつ</span><span class="t-c">三月</span></li>
+            <li class="tile irr" data-trap="よんがつ・よがつ"><span class="t-w" lang="ja">4月</span><span class="t-r" lang="ja"><b class="chg">し</b>がつ</span><span class="t-c">四月</span></li>
+            <li class="tile" data-trap="ごげつ"><span class="t-w" lang="ja">5月</span><span class="t-r" lang="ja">ごがつ</span><span class="t-c">五月</span></li>
+            <li class="tile" data-trap="ろっがつ"><span class="t-w" lang="ja">6月</span><span class="t-r" lang="ja">ろくがつ</span><span class="t-c">六月</span></li>
+            <li class="tile irr" data-trap="なながつ・しちげつ"><span class="t-w" lang="ja">7月</span><span class="t-r" lang="ja"><b class="chg">しち</b>がつ</span><span class="t-c">七月</span></li>
+            <li class="tile" data-trap="はっがつ"><span class="t-w" lang="ja">8月</span><span class="t-r" lang="ja">はちがつ</span><span class="t-c">八月</span></li>
+            <li class="tile irr" data-trap="きゅうがつ・くげつ"><span class="t-w" lang="ja">9月</span><span class="t-r" lang="ja"><b class="chg">く</b>がつ</span><span class="t-c">九月</span></li>
+            <li class="tile" data-trap="じゅっがつ"><span class="t-w" lang="ja">10月</span><span class="t-r" lang="ja">じゅうがつ</span><span class="t-c">十月</span></li>
+            <li class="tile" data-trap="じゅういっがつ"><span class="t-w" lang="ja">11月</span><span class="t-r" lang="ja">じゅういちがつ</span><span class="t-c">十一月</span></li>
+            <li class="tile" data-trap="じゅうにげつ"><span class="t-w" lang="ja">12月</span><span class="t-r" lang="ja">じゅうにがつ</span><span class="t-c">十二月</span></li>
+            <li class="tile" data-trap="なにがつ・なんげつ"><span class="t-w" lang="ja">何月</span><span class="t-r" lang="ja">なんがつ</span><span class="t-c">幾月</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_星期" class="lex-section theme" data-name="星期" data-mode="meaning">
+        <h2>星期 <span class="count">9 字</span></h2>
+        <p class="rule">順序口訣：月、火、水、木、金、土、日。問「星期幾」用<span lang="ja">何曜日</span>。</p>
+        <div class="block">
+          <h3>星期一〜星期日</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">月曜日</span><span class="t-r" lang="ja">げつようび</span><span class="t-c">星期一</span></li>
+            <li class="tile"><span class="t-w" lang="ja">火曜日</span><span class="t-r" lang="ja">かようび</span><span class="t-c">星期二</span></li>
+            <li class="tile"><span class="t-w" lang="ja">水曜日</span><span class="t-r" lang="ja">すいようび</span><span class="t-c">星期三</span></li>
+            <li class="tile"><span class="t-w" lang="ja">木曜日</span><span class="t-r" lang="ja">もくようび</span><span class="t-c">星期四</span></li>
+            <li class="tile"><span class="t-w" lang="ja">金曜日</span><span class="t-r" lang="ja">きんようび</span><span class="t-c">星期五</span></li>
+            <li class="tile"><span class="t-w" lang="ja">土曜日</span><span class="t-r" lang="ja">どようび</span><span class="t-c">星期六</span></li>
+            <li class="tile"><span class="t-w" lang="ja">日曜日</span><span class="t-r" lang="ja">にちようび</span><span class="t-c">星期日</span></li>
+            <li class="tile"><span class="t-w" lang="ja">何曜日</span><span class="t-r" lang="ja">なんようび</span><span class="t-c">星期幾</span></li>
+            <li class="tile"><span class="t-w" lang="ja">週末</span><span class="t-r" lang="ja">しゅうまつ</span><span class="t-c">週末</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_時刻" class="lex-section theme" data-name="時刻" data-mode="reading">
+        <h2>時刻 <span class="count">29 字</span></h2>
+        <p class="rule">「〜時」的 4、7、9 念<span lang="ja">よ、しち、く</span>。「〜分」會在<span lang="ja">ふん／ぷん</span>之間變化：1、3、4、6、8、10 分念<span lang="ja">ぷん</span>（1、6、8、10 前面還會變成促音<span lang="ja">っ</span>），其他念<span lang="ja">ふん</span>。10 分也可以念<span lang="ja">じっぷん</span>。</p>
+        <div class="block">
+          <h3>〜時（幾點）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="いっじ・ひとじ"><span class="t-w" lang="ja">1時</span><span class="t-r" lang="ja">いちじ</span><span class="t-c">1點</span></li>
+            <li class="tile" data-trap="ふたじ"><span class="t-w" lang="ja">2時</span><span class="t-r" lang="ja">にじ</span><span class="t-c">2點</span></li>
+            <li class="tile" data-trap="さんし"><span class="t-w" lang="ja">3時</span><span class="t-r" lang="ja">さんじ</span><span class="t-c">3點</span></li>
+            <li class="tile irr" data-trap="よんじ・しじ"><span class="t-w" lang="ja">4時</span><span class="t-r" lang="ja"><b class="chg">よ</b>じ</span><span class="t-c">4點</span></li>
+            <li class="tile" data-trap="ごし"><span class="t-w" lang="ja">5時</span><span class="t-r" lang="ja">ごじ</span><span class="t-c">5點</span></li>
+            <li class="tile" data-trap="ろっじ"><span class="t-w" lang="ja">6時</span><span class="t-r" lang="ja">ろくじ</span><span class="t-c">6點</span></li>
+            <li class="tile irr" data-trap="ななじ"><span class="t-w" lang="ja">7時</span><span class="t-r" lang="ja"><b class="chg">しち</b>じ</span><span class="t-c">7點</span></li>
+            <li class="tile" data-trap="はっじ"><span class="t-w" lang="ja">8時</span><span class="t-r" lang="ja">はちじ</span><span class="t-c">8點</span></li>
+            <li class="tile irr" data-trap="きゅうじ"><span class="t-w" lang="ja">9時</span><span class="t-r" lang="ja"><b class="chg">く</b>じ</span><span class="t-c">9點</span></li>
+            <li class="tile" data-trap="じゅっじ"><span class="t-w" lang="ja">10時</span><span class="t-r" lang="ja">じゅうじ</span><span class="t-c">10點</span></li>
+            <li class="tile"><span class="t-w" lang="ja">11時</span><span class="t-r" lang="ja">じゅういちじ</span><span class="t-c">11點</span></li>
+            <li class="tile"><span class="t-w" lang="ja">12時</span><span class="t-r" lang="ja">じゅうにじ</span><span class="t-c">12點</span></li>
+            <li class="tile" data-trap="なにじ"><span class="t-w" lang="ja">何時</span><span class="t-r" lang="ja">なんじ</span><span class="t-c">幾點</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>〜分（幾分）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile irr" data-trap="いちふん・いちぷん"><span class="t-w" lang="ja">1分</span><span class="t-r" lang="ja">い<b class="chg">っぷ</b>ん</span><span class="t-c">1分</span></li>
+            <li class="tile" data-trap="にぷん"><span class="t-w" lang="ja">2分</span><span class="t-r" lang="ja">にふん</span><span class="t-c">2分</span></li>
+            <li class="tile irr" data-trap="さんふん"><span class="t-w" lang="ja">3分</span><span class="t-r" lang="ja">さん<b class="chg">ぷ</b>ん</span><span class="t-c">3分</span></li>
+            <li class="tile irr" data-trap="よんふん"><span class="t-w" lang="ja">4分</span><span class="t-r" lang="ja">よん<b class="chg">ぷ</b>ん</span><span class="t-c">4分</span></li>
+            <li class="tile" data-trap="ごぷん"><span class="t-w" lang="ja">5分</span><span class="t-r" lang="ja">ごふん</span><span class="t-c">5分</span></li>
+            <li class="tile irr" data-trap="ろくふん"><span class="t-w" lang="ja">6分</span><span class="t-r" lang="ja">ろ<b class="chg">っぷ</b>ん</span><span class="t-c">6分</span></li>
+            <li class="tile" data-trap="ななぷん"><span class="t-w" lang="ja">7分</span><span class="t-r" lang="ja">ななふん</span><span class="t-c">7分</span></li>
+            <li class="tile irr" data-trap="はちぷん"><span class="t-w" lang="ja">8分</span><span class="t-r" lang="ja">は<b class="chg">っぷ</b>ん</span><span class="t-c">8分</span></li>
+            <li class="tile" data-trap="きゅうぷん"><span class="t-w" lang="ja">9分</span><span class="t-r" lang="ja">きゅうふん</span><span class="t-c">9分</span></li>
+            <li class="tile irr" data-trap="じゅうふん"><span class="t-w" lang="ja">10分</span><span class="t-r" lang="ja">じゅ<b class="chg">っぷ</b>ん</span><span class="t-c">10分</span></li>
+            <li class="tile" data-trap="じゅうごぷん"><span class="t-w" lang="ja">15分</span><span class="t-r" lang="ja">じゅうごふん</span><span class="t-c">15分</span></li>
+            <li class="tile irr" data-trap="さんじゅうふん"><span class="t-w" lang="ja">30分</span><span class="t-r" lang="ja">さんじゅ<b class="chg">っぷ</b>ん</span><span class="t-c">30分</span></li>
+            <li class="tile irr" data-trap="なんふん"><span class="t-w" lang="ja">何分</span><span class="t-r" lang="ja">なん<b class="chg">ぷ</b>ん</span><span class="t-c">幾分</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>其他</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="ばん"><span class="t-w" lang="ja">半</span><span class="t-r" lang="ja">はん</span><span class="t-c">半（30 分）</span></li>
+            <li class="tile" data-trap="ごまえ"><span class="t-w" lang="ja">午前</span><span class="t-r" lang="ja">ごぜん</span><span class="t-c">上午</span></li>
+            <li class="tile" data-trap="ごあと"><span class="t-w" lang="ja">午後</span><span class="t-r" lang="ja">ごご</span><span class="t-c">下午</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_期間" class="lex-section theme" data-name="期間" data-mode="reading">
+        <h2>期間 <span class="count">24 字</span></h2>
+        <p class="rule">期間表示「多久」：<span lang="ja">2時</span>是兩點，<span lang="ja">2時間</span>是兩個小時。2〜10 天沿用日期的念法（<span lang="ja">ふつか、みっか…</span>），後面也可以加<span lang="ja">間</span>。月數要用<span lang="ja">〜か月</span>，不能用<span lang="ja">〜月</span>。</p>
+        <div class="block">
+          <h3>〜時間（幾小時）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="いっじかん"><span class="t-w" lang="ja">1時間</span><span class="t-r" lang="ja">いちじかん</span><span class="t-c">1 小時</span></li>
+            <li class="tile" data-trap="ふたじかん"><span class="t-w" lang="ja">2時間</span><span class="t-r" lang="ja">にじかん</span><span class="t-c">2 小時</span></li>
+            <li class="tile irr" data-trap="よんじかん"><span class="t-w" lang="ja">4時間</span><span class="t-r" lang="ja"><b class="chg">よ</b>じかん</span><span class="t-c">4 小時</span></li>
+            <li class="tile irr" data-trap="きゅうじかん"><span class="t-w" lang="ja">9時間</span><span class="t-r" lang="ja"><b class="chg">く</b>じかん</span><span class="t-c">9 小時</span></li>
+            <li class="tile" data-trap="なにじかん"><span class="t-w" lang="ja">何時間</span><span class="t-r" lang="ja">なんじかん</span><span class="t-c">幾個小時</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>〜日（幾天）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="ついたち・いっか"><span class="t-w" lang="ja">1日</span><span class="t-r" lang="ja">いちにち</span><span class="t-c">一天</span></li>
+            <li class="tile irr" data-trap="ににち・ふたにち"><span class="t-w" lang="ja">2日</span><span class="t-r" lang="ja"><b class="chg">ふつか</b></span><span class="t-c">兩天</span></li>
+            <li class="tile irr" data-trap="さんにち"><span class="t-w" lang="ja">3日</span><span class="t-r" lang="ja"><b class="chg">みっか</b></span><span class="t-c">三天</span></li>
+            <li class="tile irr" data-trap="よんにちかん"><span class="t-w" lang="ja">4日間</span><span class="t-r" lang="ja"><b class="chg">よっか</b>かん</span><span class="t-c">四天</span></li>
+            <li class="tile" data-trap="なにか"><span class="t-w" lang="ja">何日</span><span class="t-r" lang="ja">なんにち</span><span class="t-c">幾天</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>〜週間（幾週）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile irr" data-trap="いちしゅうかん"><span class="t-w" lang="ja">1週間</span><span class="t-r" lang="ja">い<b class="chg">っ</b>しゅうかん</span><span class="t-c">1 週</span></li>
+            <li class="tile" data-trap="ふたしゅうかん"><span class="t-w" lang="ja">2週間</span><span class="t-r" lang="ja">にしゅうかん</span><span class="t-c">2 週</span></li>
+            <li class="tile" data-trap="さんじゅうかん"><span class="t-w" lang="ja">3週間</span><span class="t-r" lang="ja">さんしゅうかん</span><span class="t-c">3 週</span></li>
+            <li class="tile" data-trap="なにしゅうかん"><span class="t-w" lang="ja">何週間</span><span class="t-r" lang="ja">なんしゅうかん</span><span class="t-c">幾週</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>〜か月（幾個月）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile irr" data-trap="いちかげつ・いちがつ"><span class="t-w" lang="ja">1か月</span><span class="t-r" lang="ja">い<b class="chg">っ</b>かげつ</span><span class="t-c">1 個月</span></li>
+            <li class="tile" data-trap="にがつ"><span class="t-w" lang="ja">2か月</span><span class="t-r" lang="ja">にかげつ</span><span class="t-c">2 個月</span></li>
+            <li class="tile" data-trap="さんがつ"><span class="t-w" lang="ja">3か月</span><span class="t-r" lang="ja">さんかげつ</span><span class="t-c">3 個月</span></li>
+            <li class="tile irr" data-trap="ろくかげつ"><span class="t-w" lang="ja">6か月</span><span class="t-r" lang="ja">ろ<b class="chg">っ</b>かげつ</span><span class="t-c">6 個月</span></li>
+            <li class="tile irr" data-trap="じゅうかげつ"><span class="t-w" lang="ja">10か月</span><span class="t-r" lang="ja">じゅ<b class="chg">っ</b>かげつ</span><span class="t-c">10 個月</span></li>
+            <li class="tile" data-trap="なんがつ"><span class="t-w" lang="ja">何か月</span><span class="t-r" lang="ja">なんかげつ</span><span class="t-c">幾個月</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>〜年（幾年）</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile" data-trap="いっねん"><span class="t-w" lang="ja">1年</span><span class="t-r" lang="ja">いちねん</span><span class="t-c">1 年</span></li>
+            <li class="tile irr" data-trap="よんねん・しねん"><span class="t-w" lang="ja">4年</span><span class="t-r" lang="ja"><b class="chg">よ</b>ねん</span><span class="t-c">4 年</span></li>
+            <li class="tile" data-trap="はんねん"><span class="t-w" lang="ja">半年</span><span class="t-r" lang="ja">はんとし</span><span class="t-c">半年</span></li>
+            <li class="tile" data-trap="なにねん"><span class="t-w" lang="ja">何年</span><span class="t-r" lang="ja">なんねん</span><span class="t-c">幾年</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_相對時間" class="lex-section theme" data-name="相對時間" data-mode="meaning">
+        <h2>相對時間 <span class="count">30 字</span></h2>
+        <p class="rule">日、週、月、年各佔一欄，由上往下依照「前前、上一、這、下一、下下」排列。朱色是要特別記的念法：<span lang="ja">今日、明日、昨日、今年、今朝</span>都不照字面念。</p>
+        <div class="block">
+          <h3>時間軸對照</h3>
+          <div class="grid-wrap"><table class="grid grid-4">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">日</span></th><th scope="col"><span class="g-h" lang="ja">週</span></th><th scope="col"><span class="g-h" lang="ja">月</span></th><th scope="col"><span class="g-h" lang="ja">年</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">前前</th><td class="tile"><span class="t-w" lang="ja">おととい</span><span class="t-c">前天</span></td><td class="tile"><span class="t-w" lang="ja">先々週</span><span class="t-r" lang="ja">せんせんしゅう</span><span class="t-c">上上週</span></td><td class="tile"><span class="t-w" lang="ja">先々月</span><span class="t-r" lang="ja">せんせんげつ</span><span class="t-c">上上個月</span></td><td class="tile"><span class="t-w" lang="ja">おととし</span><span class="t-c">前年</span></td></tr>
+              <tr><th scope="row">上一</th><td class="tile irr"><span class="t-w" lang="ja">昨日</span><span class="t-r" lang="ja"><b class="chg">きのう</b></span><span class="t-c">昨天</span></td><td class="tile"><span class="t-w" lang="ja">先週</span><span class="t-r" lang="ja">せんしゅう</span><span class="t-c">上週</span></td><td class="tile"><span class="t-w" lang="ja">先月</span><span class="t-r" lang="ja">せんげつ</span><span class="t-c">上個月</span></td><td class="tile"><span class="t-w" lang="ja">去年</span><span class="t-r" lang="ja">きょねん</span><span class="t-c">去年</span></td></tr>
+              <tr><th scope="row">這</th><td class="tile irr"><span class="t-w" lang="ja">今日</span><span class="t-r" lang="ja"><b class="chg">きょう</b></span><span class="t-c">今天</span></td><td class="tile"><span class="t-w" lang="ja">今週</span><span class="t-r" lang="ja">こんしゅう</span><span class="t-c">這週</span></td><td class="tile"><span class="t-w" lang="ja">今月</span><span class="t-r" lang="ja">こんげつ</span><span class="t-c">這個月</span></td><td class="tile irr"><span class="t-w" lang="ja">今年</span><span class="t-r" lang="ja"><b class="chg">ことし</b></span><span class="t-c">今年</span></td></tr>
+              <tr><th scope="row">下一</th><td class="tile irr"><span class="t-w" lang="ja">明日</span><span class="t-r" lang="ja"><b class="chg">あした</b></span><span class="t-c">明天</span></td><td class="tile"><span class="t-w" lang="ja">来週</span><span class="t-r" lang="ja">らいしゅう</span><span class="t-c">下週</span></td><td class="tile"><span class="t-w" lang="ja">来月</span><span class="t-r" lang="ja">らいげつ</span><span class="t-c">下個月</span></td><td class="tile"><span class="t-w" lang="ja">来年</span><span class="t-r" lang="ja">らいねん</span><span class="t-c">明年</span></td></tr>
+              <tr><th scope="row">下下</th><td class="tile"><span class="t-w" lang="ja">あさって</span><span class="t-c">後天</span></td><td class="tile"><span class="t-w" lang="ja">再来週</span><span class="t-r" lang="ja">さらいしゅう</span><span class="t-c">下下週</span></td><td class="tile"><span class="t-w" lang="ja">再来月</span><span class="t-r" lang="ja">さらいげつ</span><span class="t-c">下下個月</span></td><td class="tile"><span class="t-w" lang="ja">再来年</span><span class="t-r" lang="ja">さらいねん</span><span class="t-c">後年</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <h3>每〜</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">毎朝</span><span class="t-r" lang="ja">まいあさ</span><span class="t-c">每天早上</span></li>
+            <li class="tile"><span class="t-w" lang="ja">毎晩</span><span class="t-r" lang="ja">まいばん</span><span class="t-c">每天晚上</span></li>
+            <li class="tile"><span class="t-w" lang="ja">毎日</span><span class="t-r" lang="ja">まいにち</span><span class="t-c">每天</span></li>
+            <li class="tile"><span class="t-w" lang="ja">毎週</span><span class="t-r" lang="ja">まいしゅう</span><span class="t-c">每週</span></li>
+            <li class="tile irr"><span class="t-w" lang="ja">毎月</span><span class="t-r" lang="ja">まい<b class="chg">つき</b></span><span class="t-c">每個月</span></li>
+            <li class="tile"><span class="t-w" lang="ja">毎年</span><span class="t-r" lang="ja">まいとし／まいねん</span><span class="t-c">每年</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>今〜</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">今</span><span class="t-r" lang="ja">いま</span><span class="t-c">現在</span></li>
+            <li class="tile irr"><span class="t-w" lang="ja">今朝</span><span class="t-r" lang="ja"><b class="chg">けさ</b></span><span class="t-c">今天早上</span></li>
+            <li class="tile"><span class="t-w" lang="ja">今晩</span><span class="t-r" lang="ja">こんばん</span><span class="t-c">今晚</span></li>
+            <li class="tile"><span class="t-w" lang="ja">今夜</span><span class="t-r" lang="ja">こんや</span><span class="t-c">今天夜裡</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_量詞" class="lex-section theme" data-name="量詞" data-mode="reading">
+        <h2>量詞 <span class="count">118 字</span></h2>
+        <p class="rule">量詞前面的 1、6、8、10 常變成促音（<span lang="ja">いっ、ろっ、はっ、じゅっ</span>），3 和「何」後面常變成濁音（<span lang="ja">ぼん、ばい、びき、がい</span>）。10 的促音也可以念<span lang="ja">じっ</span>。數東西的<span lang="ja">〜つ</span>和 1、2 個人用日本固有的念法。</p>
+        <div class="block">
+          <h3>〜つ（東西）・〜人（人數）</h3>
+          <div class="grid-wrap"><table class="grid grid-2 grid-num">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">〜つ</span><span class="g-sub">東西、年紀（十以內）</span></th><th scope="col"><span class="g-h" lang="ja">〜人</span><span class="g-sub">人數</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1</th><td class="tile" data-trap="いちつ・ひとっつ"><span class="t-w" lang="ja">一つ</span><span class="t-r" lang="ja">ひとつ</span><span class="t-c sr-only">1個</span></td><td class="tile irr" data-trap="いちにん・ひとにん"><span class="t-w" lang="ja">一人</span><span class="t-r" lang="ja"><b class="chg">ひとり</b></span><span class="t-c sr-only">1個人</span></td></tr>
+              <tr><th scope="row">2</th><td class="tile" data-trap="につ・ふたっつ"><span class="t-w" lang="ja">二つ</span><span class="t-r" lang="ja">ふたつ</span><span class="t-c sr-only">2個</span></td><td class="tile irr" data-trap="ににん・ふたにん"><span class="t-w" lang="ja">二人</span><span class="t-r" lang="ja"><b class="chg">ふたり</b></span><span class="t-c sr-only">2個人</span></td></tr>
+              <tr><th scope="row">3</th><td class="tile" data-trap="さんつ・みつ"><span class="t-w" lang="ja">三つ</span><span class="t-r" lang="ja">みっつ</span><span class="t-c sr-only">3個</span></td><td class="tile" data-trap="みにん"><span class="t-w" lang="ja">三人</span><span class="t-r" lang="ja">さんにん</span><span class="t-c sr-only">3個人</span></td></tr>
+              <tr><th scope="row">4</th><td class="tile" data-trap="よんつ・よつ"><span class="t-w" lang="ja">四つ</span><span class="t-r" lang="ja">よっつ</span><span class="t-c sr-only">4個</span></td><td class="tile irr" data-trap="よんにん・しにん"><span class="t-w" lang="ja">四人</span><span class="t-r" lang="ja"><b class="chg">よ</b>にん</span><span class="t-c sr-only">4個人</span></td></tr>
+              <tr><th scope="row">5</th><td class="tile" data-trap="ごつ・いつっつ"><span class="t-w" lang="ja">五つ</span><span class="t-r" lang="ja">いつつ</span><span class="t-c sr-only">5個</span></td><td class="tile"><span class="t-w" lang="ja">五人</span><span class="t-r" lang="ja">ごにん</span><span class="t-c sr-only">5個人</span></td></tr>
+              <tr><th scope="row">6</th><td class="tile" data-trap="ろくつ・むつ"><span class="t-w" lang="ja">六つ</span><span class="t-r" lang="ja">むっつ</span><span class="t-c sr-only">6個</span></td><td class="tile"><span class="t-w" lang="ja">六人</span><span class="t-r" lang="ja">ろくにん</span><span class="t-c sr-only">6個人</span></td></tr>
+              <tr><th scope="row">7</th><td class="tile" data-trap="しちつ"><span class="t-w" lang="ja">七つ</span><span class="t-r" lang="ja">ななつ</span><span class="t-c sr-only">7個</span></td><td class="tile"><span class="t-w" lang="ja">七人</span><span class="t-r" lang="ja">ななにん／しちにん</span><span class="t-c sr-only">7個人</span></td></tr>
+              <tr><th scope="row">8</th><td class="tile" data-trap="はちつ・やつ"><span class="t-w" lang="ja">八つ</span><span class="t-r" lang="ja">やっつ</span><span class="t-c sr-only">8個</span></td><td class="tile"><span class="t-w" lang="ja">八人</span><span class="t-r" lang="ja">はちにん</span><span class="t-c sr-only">8個人</span></td></tr>
+              <tr><th scope="row">9</th><td class="tile" data-trap="きゅうつ・ここのっつ"><span class="t-w" lang="ja">九つ</span><span class="t-r" lang="ja">ここのつ</span><span class="t-c sr-only">9個</span></td><td class="tile" data-trap="くにん"><span class="t-w" lang="ja">九人</span><span class="t-r" lang="ja">きゅうにん</span><span class="t-c sr-only">9個人</span></td></tr>
+              <tr><th scope="row">10</th><td class="tile" data-trap="じゅう・とおつ"><span class="t-w" lang="ja">十</span><span class="t-r" lang="ja">とお</span><span class="t-c sr-only">10個</span></td><td class="tile"><span class="t-w" lang="ja">十人</span><span class="t-r" lang="ja">じゅうにん</span><span class="t-c sr-only">10個人</span></td></tr>
+              <tr><th scope="row">幾</th><td class="tile" data-trap="なんこ・いくっつ"><span class="t-w" lang="ja">いくつ</span><span class="t-c sr-only">幾個</span></td><td class="tile" data-trap="なにじん"><span class="t-w" lang="ja">何人</span><span class="t-r" lang="ja">なんにん</span><span class="t-c sr-only">幾個人</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <h3>〜本・〜杯・〜匹：ほ／ぼ／ぽ 三種變化</h3>
+          <div class="grid-wrap"><table class="grid grid-3 grid-num">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">〜本</span><span class="g-sub">筆、瓶子、傘</span></th><th scope="col"><span class="g-h" lang="ja">〜杯</span><span class="g-sub">杯、碗</span></th><th scope="col"><span class="g-h" lang="ja">〜匹</span><span class="g-sub">小動物、魚</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1</th><td class="tile irr" data-trap="いちほん・いっほん"><span class="t-w" lang="ja">1本</span><span class="t-r" lang="ja">い<b class="chg">っぽ</b>ん</span><span class="t-c sr-only">1枝</span></td><td class="tile irr" data-trap="いちはい・いっはい"><span class="t-w" lang="ja">1杯</span><span class="t-r" lang="ja">い<b class="chg">っぱ</b>い</span><span class="t-c sr-only">1杯</span></td><td class="tile irr" data-trap="いちひき・いっひき"><span class="t-w" lang="ja">1匹</span><span class="t-r" lang="ja">い<b class="chg">っぴ</b>き</span><span class="t-c sr-only">1隻</span></td></tr>
+              <tr><th scope="row">2</th><td class="tile" data-trap="にぼん"><span class="t-w" lang="ja">2本</span><span class="t-r" lang="ja">にほん</span><span class="t-c sr-only">2枝</span></td><td class="tile" data-trap="にばい"><span class="t-w" lang="ja">2杯</span><span class="t-r" lang="ja">にはい</span><span class="t-c sr-only">2杯</span></td><td class="tile" data-trap="にびき"><span class="t-w" lang="ja">2匹</span><span class="t-r" lang="ja">にひき</span><span class="t-c sr-only">2隻</span></td></tr>
+              <tr><th scope="row">3</th><td class="tile irr" data-trap="さんほん・さんぽん"><span class="t-w" lang="ja">3本</span><span class="t-r" lang="ja">さん<b class="chg">ぼ</b>ん</span><span class="t-c sr-only">3枝</span></td><td class="tile irr" data-trap="さんはい・さんぱい"><span class="t-w" lang="ja">3杯</span><span class="t-r" lang="ja">さん<b class="chg">ば</b>い</span><span class="t-c sr-only">3杯</span></td><td class="tile irr" data-trap="さんひき・さんぴき"><span class="t-w" lang="ja">3匹</span><span class="t-r" lang="ja">さん<b class="chg">び</b>き</span><span class="t-c sr-only">3隻</span></td></tr>
+              <tr><th scope="row">4</th><td class="tile" data-trap="よんぼん"><span class="t-w" lang="ja">4本</span><span class="t-r" lang="ja">よんほん</span><span class="t-c sr-only">4枝</span></td><td class="tile"><span class="t-w" lang="ja">4杯</span><span class="t-r" lang="ja">よんはい</span><span class="t-c sr-only">4杯</span></td><td class="tile"><span class="t-w" lang="ja">4匹</span><span class="t-r" lang="ja">よんひき</span><span class="t-c sr-only">4隻</span></td></tr>
+              <tr><th scope="row">5</th><td class="tile"><span class="t-w" lang="ja">5本</span><span class="t-r" lang="ja">ごほん</span><span class="t-c sr-only">5枝</span></td><td class="tile"><span class="t-w" lang="ja">5杯</span><span class="t-r" lang="ja">ごはい</span><span class="t-c sr-only">5杯</span></td><td class="tile"><span class="t-w" lang="ja">5匹</span><span class="t-r" lang="ja">ごひき</span><span class="t-c sr-only">5隻</span></td></tr>
+              <tr><th scope="row">6</th><td class="tile irr" data-trap="ろくほん・ろっほん"><span class="t-w" lang="ja">6本</span><span class="t-r" lang="ja">ろ<b class="chg">っぽ</b>ん</span><span class="t-c sr-only">6枝</span></td><td class="tile irr" data-trap="ろくはい"><span class="t-w" lang="ja">6杯</span><span class="t-r" lang="ja">ろ<b class="chg">っぱ</b>い</span><span class="t-c sr-only">6杯</span></td><td class="tile irr" data-trap="ろくひき"><span class="t-w" lang="ja">6匹</span><span class="t-r" lang="ja">ろ<b class="chg">っぴ</b>き</span><span class="t-c sr-only">6隻</span></td></tr>
+              <tr><th scope="row">7</th><td class="tile"><span class="t-w" lang="ja">7本</span><span class="t-r" lang="ja">ななほん</span><span class="t-c sr-only">7枝</span></td><td class="tile"><span class="t-w" lang="ja">7杯</span><span class="t-r" lang="ja">ななはい</span><span class="t-c sr-only">7杯</span></td><td class="tile"><span class="t-w" lang="ja">7匹</span><span class="t-r" lang="ja">ななひき</span><span class="t-c sr-only">7隻</span></td></tr>
+              <tr><th scope="row">8</th><td class="tile irr" data-trap="はちほん・はちぽん"><span class="t-w" lang="ja">8本</span><span class="t-r" lang="ja">は<b class="chg">っぽ</b>ん</span><span class="t-c sr-only">8枝</span></td><td class="tile irr" data-trap="はちはい"><span class="t-w" lang="ja">8杯</span><span class="t-r" lang="ja">は<b class="chg">っぱ</b>い</span><span class="t-c sr-only">8杯</span></td><td class="tile irr" data-trap="はちひき"><span class="t-w" lang="ja">8匹</span><span class="t-r" lang="ja">は<b class="chg">っぴ</b>き</span><span class="t-c sr-only">8隻</span></td></tr>
+              <tr><th scope="row">9</th><td class="tile"><span class="t-w" lang="ja">9本</span><span class="t-r" lang="ja">きゅうほん</span><span class="t-c sr-only">9枝</span></td><td class="tile"><span class="t-w" lang="ja">9杯</span><span class="t-r" lang="ja">きゅうはい</span><span class="t-c sr-only">9杯</span></td><td class="tile"><span class="t-w" lang="ja">9匹</span><span class="t-r" lang="ja">きゅうひき</span><span class="t-c sr-only">9隻</span></td></tr>
+              <tr><th scope="row">10</th><td class="tile irr" data-trap="じゅうほん"><span class="t-w" lang="ja">10本</span><span class="t-r" lang="ja">じゅ<b class="chg">っぽ</b>ん</span><span class="t-c sr-only">10枝</span></td><td class="tile irr" data-trap="じゅうはい"><span class="t-w" lang="ja">10杯</span><span class="t-r" lang="ja">じゅ<b class="chg">っぱ</b>い</span><span class="t-c sr-only">10杯</span></td><td class="tile irr" data-trap="じゅうひき"><span class="t-w" lang="ja">10匹</span><span class="t-r" lang="ja">じゅ<b class="chg">っぴ</b>き</span><span class="t-c sr-only">10隻</span></td></tr>
+              <tr><th scope="row">幾</th><td class="tile irr" data-trap="なんほん・なんぽん"><span class="t-w" lang="ja">何本</span><span class="t-r" lang="ja">なん<b class="chg">ぼ</b>ん</span><span class="t-c sr-only">幾枝</span></td><td class="tile irr" data-trap="なんはい・なんぱい"><span class="t-w" lang="ja">何杯</span><span class="t-r" lang="ja">なん<b class="chg">ば</b>い</span><span class="t-c sr-only">幾杯</span></td><td class="tile irr" data-trap="なんひき・なんぴき"><span class="t-w" lang="ja">何匹</span><span class="t-r" lang="ja">なん<b class="chg">び</b>き</span><span class="t-c sr-only">幾隻</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <h3>〜個・〜回・〜階：回數和樓層很像，3 樓要變音</h3>
+          <div class="grid-wrap"><table class="grid grid-3 grid-num">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">〜個</span><span class="g-sub">小東西</span></th><th scope="col"><span class="g-h" lang="ja">〜回</span><span class="g-sub">次數</span></th><th scope="col"><span class="g-h" lang="ja">〜階</span><span class="g-sub">樓層</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1</th><td class="tile irr" data-trap="いちこ"><span class="t-w" lang="ja">1個</span><span class="t-r" lang="ja">い<b class="chg">っ</b>こ</span><span class="t-c sr-only">1個</span></td><td class="tile irr" data-trap="いちかい"><span class="t-w" lang="ja">1回</span><span class="t-r" lang="ja">い<b class="chg">っ</b>かい</span><span class="t-c sr-only">1次</span></td><td class="tile irr" data-trap="いちかい"><span class="t-w" lang="ja">1階</span><span class="t-r" lang="ja">い<b class="chg">っ</b>かい</span><span class="t-c sr-only">1樓</span></td></tr>
+              <tr><th scope="row">2</th><td class="tile"><span class="t-w" lang="ja">2個</span><span class="t-r" lang="ja">にこ</span><span class="t-c sr-only">2個</span></td><td class="tile"><span class="t-w" lang="ja">2回</span><span class="t-r" lang="ja">にかい</span><span class="t-c sr-only">2次</span></td><td class="tile"><span class="t-w" lang="ja">2階</span><span class="t-r" lang="ja">にかい</span><span class="t-c sr-only">2樓</span></td></tr>
+              <tr><th scope="row">3</th><td class="tile" data-trap="さんご"><span class="t-w" lang="ja">3個</span><span class="t-r" lang="ja">さんこ</span><span class="t-c sr-only">3個</span></td><td class="tile" data-trap="さんがい"><span class="t-w" lang="ja">3回</span><span class="t-r" lang="ja">さんかい</span><span class="t-c sr-only">3次</span></td><td class="tile irr" data-trap="さんかい"><span class="t-w" lang="ja">3階</span><span class="t-r" lang="ja">さん<b class="chg">が</b>い</span><span class="t-c sr-only">3樓</span></td></tr>
+              <tr><th scope="row">4</th><td class="tile"><span class="t-w" lang="ja">4個</span><span class="t-r" lang="ja">よんこ</span><span class="t-c sr-only">4個</span></td><td class="tile"><span class="t-w" lang="ja">4回</span><span class="t-r" lang="ja">よんかい</span><span class="t-c sr-only">4次</span></td><td class="tile"><span class="t-w" lang="ja">4階</span><span class="t-r" lang="ja">よんかい</span><span class="t-c sr-only">4樓</span></td></tr>
+              <tr><th scope="row">5</th><td class="tile"><span class="t-w" lang="ja">5個</span><span class="t-r" lang="ja">ごこ</span><span class="t-c sr-only">5個</span></td><td class="tile"><span class="t-w" lang="ja">5回</span><span class="t-r" lang="ja">ごかい</span><span class="t-c sr-only">5次</span></td><td class="tile"><span class="t-w" lang="ja">5階</span><span class="t-r" lang="ja">ごかい</span><span class="t-c sr-only">5樓</span></td></tr>
+              <tr><th scope="row">6</th><td class="tile irr" data-trap="ろくこ"><span class="t-w" lang="ja">6個</span><span class="t-r" lang="ja">ろ<b class="chg">っ</b>こ</span><span class="t-c sr-only">6個</span></td><td class="tile irr" data-trap="ろくかい"><span class="t-w" lang="ja">6回</span><span class="t-r" lang="ja">ろ<b class="chg">っ</b>かい</span><span class="t-c sr-only">6次</span></td><td class="tile irr" data-trap="ろくかい"><span class="t-w" lang="ja">6階</span><span class="t-r" lang="ja">ろ<b class="chg">っ</b>かい</span><span class="t-c sr-only">6樓</span></td></tr>
+              <tr><th scope="row">7</th><td class="tile"><span class="t-w" lang="ja">7個</span><span class="t-r" lang="ja">ななこ</span><span class="t-c sr-only">7個</span></td><td class="tile"><span class="t-w" lang="ja">7回</span><span class="t-r" lang="ja">ななかい</span><span class="t-c sr-only">7次</span></td><td class="tile"><span class="t-w" lang="ja">7階</span><span class="t-r" lang="ja">ななかい</span><span class="t-c sr-only">7樓</span></td></tr>
+              <tr><th scope="row">8</th><td class="tile irr" data-trap="はちこ"><span class="t-w" lang="ja">8個</span><span class="t-r" lang="ja">は<b class="chg">っ</b>こ</span><span class="t-c sr-only">8個</span></td><td class="tile irr"><span class="t-w" lang="ja">8回</span><span class="t-r" lang="ja">は<b class="chg">っ</b>かい</span><span class="t-c sr-only">8次</span></td><td class="tile irr"><span class="t-w" lang="ja">8階</span><span class="t-r" lang="ja">は<b class="chg">っ</b>かい／はちかい</span><span class="t-c sr-only">8樓</span></td></tr>
+              <tr><th scope="row">9</th><td class="tile"><span class="t-w" lang="ja">9個</span><span class="t-r" lang="ja">きゅうこ</span><span class="t-c sr-only">9個</span></td><td class="tile"><span class="t-w" lang="ja">9回</span><span class="t-r" lang="ja">きゅうかい</span><span class="t-c sr-only">9次</span></td><td class="tile"><span class="t-w" lang="ja">9階</span><span class="t-r" lang="ja">きゅうかい</span><span class="t-c sr-only">9樓</span></td></tr>
+              <tr><th scope="row">10</th><td class="tile irr" data-trap="じゅうこ"><span class="t-w" lang="ja">10個</span><span class="t-r" lang="ja">じゅ<b class="chg">っ</b>こ</span><span class="t-c sr-only">10個</span></td><td class="tile irr" data-trap="じゅうかい"><span class="t-w" lang="ja">10回</span><span class="t-r" lang="ja">じゅ<b class="chg">っ</b>かい</span><span class="t-c sr-only">10次</span></td><td class="tile irr" data-trap="じゅうかい"><span class="t-w" lang="ja">10階</span><span class="t-r" lang="ja">じゅ<b class="chg">っ</b>かい</span><span class="t-c sr-only">10樓</span></td></tr>
+              <tr><th scope="row">幾</th><td class="tile" data-trap="なんご"><span class="t-w" lang="ja">何個</span><span class="t-r" lang="ja">なんこ</span><span class="t-c sr-only">幾個</span></td><td class="tile" data-trap="なんがい"><span class="t-w" lang="ja">何回</span><span class="t-r" lang="ja">なんかい</span><span class="t-c sr-only">幾次</span></td><td class="tile irr" data-trap="なんかい"><span class="t-w" lang="ja">何階</span><span class="t-r" lang="ja">なん<b class="chg">が</b>い</span><span class="t-c sr-only">幾樓</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <h3>〜冊・〜歳</h3>
+          <div class="grid-wrap"><table class="grid grid-2 grid-num">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">〜冊</span><span class="g-sub">書、筆記本</span></th><th scope="col"><span class="g-h" lang="ja">〜歳</span><span class="g-sub">年齡</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1</th><td class="tile irr" data-trap="いちさつ"><span class="t-w" lang="ja">1冊</span><span class="t-r" lang="ja">い<b class="chg">っ</b>さつ</span><span class="t-c sr-only">1本</span></td><td class="tile irr" data-trap="いちさい"><span class="t-w" lang="ja">1歳</span><span class="t-r" lang="ja">い<b class="chg">っ</b>さい</span><span class="t-c sr-only">1歲</span></td></tr>
+              <tr><th scope="row">2</th><td class="tile"><span class="t-w" lang="ja">2冊</span><span class="t-r" lang="ja">にさつ</span><span class="t-c sr-only">2本</span></td><td class="tile"><span class="t-w" lang="ja">2歳</span><span class="t-r" lang="ja">にさい</span><span class="t-c sr-only">2歲</span></td></tr>
+              <tr><th scope="row">3</th><td class="tile" data-trap="さんざつ"><span class="t-w" lang="ja">3冊</span><span class="t-r" lang="ja">さんさつ</span><span class="t-c sr-only">3本</span></td><td class="tile" data-trap="さんざい"><span class="t-w" lang="ja">3歳</span><span class="t-r" lang="ja">さんさい</span><span class="t-c sr-only">3歲</span></td></tr>
+              <tr><th scope="row">4</th><td class="tile"><span class="t-w" lang="ja">4冊</span><span class="t-r" lang="ja">よんさつ</span><span class="t-c sr-only">4本</span></td><td class="tile" data-trap="しさい"><span class="t-w" lang="ja">4歳</span><span class="t-r" lang="ja">よんさい</span><span class="t-c sr-only">4歲</span></td></tr>
+              <tr><th scope="row">5</th><td class="tile"><span class="t-w" lang="ja">5冊</span><span class="t-r" lang="ja">ごさつ</span><span class="t-c sr-only">5本</span></td><td class="tile"><span class="t-w" lang="ja">5歳</span><span class="t-r" lang="ja">ごさい</span><span class="t-c sr-only">5歲</span></td></tr>
+              <tr><th scope="row">6</th><td class="tile"><span class="t-w" lang="ja">6冊</span><span class="t-r" lang="ja">ろくさつ</span><span class="t-c sr-only">6本</span></td><td class="tile"><span class="t-w" lang="ja">6歳</span><span class="t-r" lang="ja">ろくさい</span><span class="t-c sr-only">6歲</span></td></tr>
+              <tr><th scope="row">7</th><td class="tile"><span class="t-w" lang="ja">7冊</span><span class="t-r" lang="ja">ななさつ</span><span class="t-c sr-only">7本</span></td><td class="tile"><span class="t-w" lang="ja">7歳</span><span class="t-r" lang="ja">ななさい</span><span class="t-c sr-only">7歲</span></td></tr>
+              <tr><th scope="row">8</th><td class="tile irr" data-trap="はちさつ"><span class="t-w" lang="ja">8冊</span><span class="t-r" lang="ja">は<b class="chg">っ</b>さつ</span><span class="t-c sr-only">8本</span></td><td class="tile irr"><span class="t-w" lang="ja">8歳</span><span class="t-r" lang="ja">は<b class="chg">っ</b>さい</span><span class="t-c sr-only">8歲</span></td></tr>
+              <tr><th scope="row">9</th><td class="tile"><span class="t-w" lang="ja">9冊</span><span class="t-r" lang="ja">きゅうさつ</span><span class="t-c sr-only">9本</span></td><td class="tile"><span class="t-w" lang="ja">9歳</span><span class="t-r" lang="ja">きゅうさい</span><span class="t-c sr-only">9歲</span></td></tr>
+              <tr><th scope="row">10</th><td class="tile irr" data-trap="じゅうさつ"><span class="t-w" lang="ja">10冊</span><span class="t-r" lang="ja">じゅ<b class="chg">っ</b>さつ</span><span class="t-c sr-only">10本</span></td><td class="tile irr"><span class="t-w" lang="ja">10歳</span><span class="t-r" lang="ja">じゅ<b class="chg">っ</b>さい</span><span class="t-c sr-only">10歲</span></td></tr>
+              <tr><th scope="row">幾</th><td class="tile" data-trap="なんざつ"><span class="t-w" lang="ja">何冊</span><span class="t-r" lang="ja">なんさつ</span><span class="t-c sr-only">幾本</span></td><td class="tile" data-trap="なんざい"><span class="t-w" lang="ja">何歳</span><span class="t-r" lang="ja">なんさい</span><span class="t-c sr-only">幾歲</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="block">
+          <h3>其他常用量詞</h3>
+          <ul class="tiles tiles-num">
+            <li class="tile irr" data-trap="にじゅっさい・はつか"><span class="t-w" lang="ja">20歳</span><span class="t-r" lang="ja"><b class="chg">はたち</b></span><span class="t-c">20 歲</span></li>
+            <li class="tile" data-trap="いっまい・ひとまい"><span class="t-w" lang="ja">1枚</span><span class="t-r" lang="ja">いちまい</span><span class="t-c">1 張（紙、襯衫等薄的東西）</span></li>
+            <li class="tile" data-trap="さんばい"><span class="t-w" lang="ja">3枚</span><span class="t-r" lang="ja">さんまい</span><span class="t-c">3 張</span></li>
+            <li class="tile" data-trap="なんばい"><span class="t-w" lang="ja">何枚</span><span class="t-r" lang="ja">なんまい</span><span class="t-c">幾張</span></li>
+            <li class="tile" data-trap="いったい・いちたい"><span class="t-w" lang="ja">1台</span><span class="t-r" lang="ja">いちだい</span><span class="t-c">1 台（車、機器）</span></li>
+            <li class="tile" data-trap="なんたい"><span class="t-w" lang="ja">何台</span><span class="t-r" lang="ja">なんだい</span><span class="t-c">幾台</span></li>
+            <li class="tile" data-trap="いっばん・ひとばん"><span class="t-w" lang="ja">1番</span><span class="t-r" lang="ja">いちばん</span><span class="t-c">第 1 號、最</span></li>
+            <li class="tile" data-trap="なんぱん"><span class="t-w" lang="ja">何番</span><span class="t-r" lang="ja">なんばん</span><span class="t-c">幾號</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_方位位置" class="lex-section theme" data-name="方位・位置" data-mode="meaning">
+        <h2>方位・位置 <span class="count">17 字</span></h2>
+        <p class="rule">說「在哪裡」用「名詞＋<span lang="ja">の</span>＋方位＋<span lang="ja">に</span>」，例如<span lang="ja">机の上に</span>（在桌子上）。</p>
+        <div class="block">
+          <h3>上下・前後・左右・裡外</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">上</span><span class="t-r" lang="ja">うえ</span><span class="t-c">上面</span></li>
+            <li class="tile"><span class="t-w" lang="ja">下</span><span class="t-r" lang="ja">した</span><span class="t-c">下面</span></li>
+            <li class="tile"><span class="t-w" lang="ja">前</span><span class="t-r" lang="ja">まえ</span><span class="t-c">前面</span></li>
+            <li class="tile"><span class="t-w" lang="ja">後ろ</span><span class="t-r" lang="ja">うしろ</span><span class="t-c">後面</span></li>
+            <li class="tile"><span class="t-w" lang="ja">右</span><span class="t-r" lang="ja">みぎ</span><span class="t-c">右邊</span></li>
+            <li class="tile"><span class="t-w" lang="ja">左</span><span class="t-r" lang="ja">ひだり</span><span class="t-c">左邊</span></li>
+            <li class="tile"><span class="t-w" lang="ja">中</span><span class="t-r" lang="ja">なか</span><span class="t-c">裡面</span></li>
+            <li class="tile"><span class="t-w" lang="ja">外</span><span class="t-r" lang="ja">そと</span><span class="t-c">外面</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>旁邊・附近</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">横</span><span class="t-r" lang="ja">よこ</span><span class="t-c">側邊、橫</span></li>
+            <li class="tile"><span class="t-w" lang="ja">隣</span><span class="t-r" lang="ja">となり</span><span class="t-c">隔壁、旁邊</span></li>
+            <li class="tile"><span class="t-w" lang="ja">近く</span><span class="t-r" lang="ja">ちかく</span><span class="t-c">附近</span></li>
+            <li class="tile"><span class="t-w" lang="ja">間</span><span class="t-r" lang="ja">あいだ</span><span class="t-c">之間</span></li>
+            <li class="tile"><span class="t-w" lang="ja">向こう</span><span class="t-r" lang="ja">むこう</span><span class="t-c">對面、那邊</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>東西南北</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">東</span><span class="t-r" lang="ja">ひがし</span><span class="t-c">東</span></li>
+            <li class="tile"><span class="t-w" lang="ja">西</span><span class="t-r" lang="ja">にし</span><span class="t-c">西</span></li>
+            <li class="tile"><span class="t-w" lang="ja">南</span><span class="t-r" lang="ja">みなみ</span><span class="t-c">南</span></li>
+            <li class="tile"><span class="t-w" lang="ja">北</span><span class="t-r" lang="ja">きた</span><span class="t-c">北</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_指示詞" class="lex-section theme" data-name="指示詞" data-mode="meaning">
+        <h2>指示詞 <span class="count">20 字</span></h2>
+        <p class="rule"><span lang="ja">こ</span>＝靠近說話的人，<span lang="ja">そ</span>＝靠近聽話的人，<span lang="ja">あ</span>＝離兩人都遠，<span lang="ja">ど</span>＝疑問。<span lang="ja">この、その、あの、どの</span>後面一定要接名詞。</p>
+        <div class="block">
+          <h3>こ・そ・あ・ど 對照</h3>
+          <div class="grid-wrap"><table class="grid grid-4">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">こ</span><span class="g-sub">近我</span></th><th scope="col"><span class="g-h" lang="ja">そ</span><span class="g-sub">近你</span></th><th scope="col"><span class="g-h" lang="ja">あ</span><span class="g-sub">都遠</span></th><th scope="col"><span class="g-h" lang="ja">ど</span><span class="g-sub">疑問</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">東西</th><td class="tile"><span class="t-w" lang="ja">これ</span><span class="t-c">這個</span></td><td class="tile"><span class="t-w" lang="ja">それ</span><span class="t-c">那個</span></td><td class="tile"><span class="t-w" lang="ja">あれ</span><span class="t-c">那個（遠）</span></td><td class="tile"><span class="t-w" lang="ja">どれ</span><span class="t-c">哪個</span></td></tr>
+              <tr><th scope="row">地方</th><td class="tile"><span class="t-w" lang="ja">ここ</span><span class="t-c">這裡</span></td><td class="tile"><span class="t-w" lang="ja">そこ</span><span class="t-c">那裡</span></td><td class="tile"><span class="t-w" lang="ja">あそこ</span><span class="t-c">那裡（遠）</span></td><td class="tile"><span class="t-w" lang="ja">どこ</span><span class="t-c">哪裡</span></td></tr>
+              <tr><th scope="row">方向</th><td class="tile"><span class="t-w" lang="ja">こちら</span><span class="t-c">這邊</span></td><td class="tile"><span class="t-w" lang="ja">そちら</span><span class="t-c">那邊</span></td><td class="tile"><span class="t-w" lang="ja">あちら</span><span class="t-c">那邊（遠）</span></td><td class="tile"><span class="t-w" lang="ja">どちら</span><span class="t-c">哪邊</span></td></tr>
+              <tr><th scope="row">名詞前</th><td class="tile"><span class="t-w" lang="ja">この</span><span class="t-c">這～</span></td><td class="tile"><span class="t-w" lang="ja">その</span><span class="t-c">那～</span></td><td class="tile"><span class="t-w" lang="ja">あの</span><span class="t-c">那～（遠）</span></td><td class="tile"><span class="t-w" lang="ja">どの</span><span class="t-c">哪～</span></td></tr>
+              <tr><th scope="row">樣子</th><td class="tile"><span class="t-w" lang="ja">こんな</span><span class="t-c">這樣的</span></td><td class="tile"><span class="t-w" lang="ja">そんな</span><span class="t-c">那樣的</span></td><td class="tile"><span class="t-w" lang="ja">あんな</span><span class="t-c">那樣的（遠）</span></td><td class="tile"><span class="t-w" lang="ja">どんな</span><span class="t-c">什麼樣的</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <section id="主題_顏色" class="lex-section theme" data-name="顏色" data-mode="meaning">
+        <h2>顏色 <span class="count">14 字</span></h2>
+        <p class="rule">顏色名詞加上<span lang="ja">い</span>就變成い形容詞：<span lang="ja">赤</span>→<span lang="ja">赤い</span>。<span lang="ja">黄色、茶色</span>也是加<span lang="ja">い</span>；<span lang="ja">緑</span>沒有い形容詞，要說<span lang="ja">緑の</span>。</p>
+        <div class="block">
+          <h3>總稱</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">色</span><span class="t-r" lang="ja">いろ</span><span class="t-c">顏色</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>名詞與い形容詞</h3>
+          <div class="grid-wrap"><table class="grid grid-2">
+            <thead><tr><td class="g-corner"></td><th scope="col"><span class="g-h" lang="ja">名詞</span><span class="g-sub">紅色</span></th><th scope="col"><span class="g-h" lang="ja">い形容詞</span><span class="g-sub">紅色的</span></th></tr></thead>
+            <tbody>
+              <tr><th scope="row">紅</th><td class="tile"><span class="t-w" lang="ja">赤</span><span class="t-r" lang="ja">あか</span><span class="t-c">紅色</span></td><td class="tile"><span class="t-w" lang="ja">赤い</span><span class="t-r" lang="ja">あかい</span><span class="t-c">紅色的</span></td></tr>
+              <tr><th scope="row">藍</th><td class="tile"><span class="t-w" lang="ja">青</span><span class="t-r" lang="ja">あお</span><span class="t-c">藍色</span></td><td class="tile"><span class="t-w" lang="ja">青い</span><span class="t-r" lang="ja">あおい</span><span class="t-c">藍色的</span></td></tr>
+              <tr><th scope="row">白</th><td class="tile"><span class="t-w" lang="ja">白</span><span class="t-r" lang="ja">しろ</span><span class="t-c">白色</span></td><td class="tile"><span class="t-w" lang="ja">白い</span><span class="t-r" lang="ja">しろい</span><span class="t-c">白色的</span></td></tr>
+              <tr><th scope="row">黑</th><td class="tile"><span class="t-w" lang="ja">黒</span><span class="t-r" lang="ja">くろ</span><span class="t-c">黑色</span></td><td class="tile"><span class="t-w" lang="ja">黒い</span><span class="t-r" lang="ja">くろい</span><span class="t-c">黑色的</span></td></tr>
+              <tr><th scope="row">黃</th><td class="tile"><span class="t-w" lang="ja">黄色</span><span class="t-r" lang="ja">きいろ</span><span class="t-c">黃色</span></td><td class="tile"><span class="t-w" lang="ja">黄色い</span><span class="t-r" lang="ja">きいろい</span><span class="t-c">黃色的</span></td></tr>
+              <tr><th scope="row">咖啡</th><td class="tile"><span class="t-w" lang="ja">茶色</span><span class="t-r" lang="ja">ちゃいろ</span><span class="t-c">咖啡色</span></td><td class="tile"><span class="t-w" lang="ja">茶色い</span><span class="t-r" lang="ja">ちゃいろい</span><span class="t-c">咖啡色的</span></td></tr>
+              <tr><th scope="row">綠</th><td class="tile"><span class="t-w" lang="ja">緑</span><span class="t-r" lang="ja">みどり</span><span class="t-c">綠色</span></td><td class="empty">沒有い形容詞，說<span lang="ja">緑の</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <section id="主題_天氣季節" class="lex-section theme" data-name="天氣・季節" data-mode="meaning">
+        <h2>天氣・季節 <span class="count">17 字</span></h2>
+        <p class="rule">雨、雪用<span lang="ja">降る</span>（<span lang="ja">雨が降ります</span>），風用<span lang="ja">吹く</span>（<span lang="ja">風が吹きます</span>）。天氣熱是<span lang="ja">暑い</span>，摸起來燙是<span lang="ja">熱い</span>。</p>
+        <div class="block">
+          <h3>四季</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">春</span><span class="t-r" lang="ja">はる</span><span class="t-c">春天</span></li>
+            <li class="tile"><span class="t-w" lang="ja">夏</span><span class="t-r" lang="ja">なつ</span><span class="t-c">夏天</span></li>
+            <li class="tile"><span class="t-w" lang="ja">秋</span><span class="t-r" lang="ja">あき</span><span class="t-c">秋天</span></li>
+            <li class="tile"><span class="t-w" lang="ja">冬</span><span class="t-r" lang="ja">ふゆ</span><span class="t-c">冬天</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>天氣</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">天気</span><span class="t-r" lang="ja">てんき</span><span class="t-c">天氣</span></li>
+            <li class="tile"><span class="t-w" lang="ja">晴れ</span><span class="t-r" lang="ja">はれ</span><span class="t-c">晴天</span></li>
+            <li class="tile"><span class="t-w" lang="ja">曇り</span><span class="t-r" lang="ja">くもり</span><span class="t-c">陰天</span></li>
+            <li class="tile"><span class="t-w" lang="ja">雨</span><span class="t-r" lang="ja">あめ</span><span class="t-c">雨</span></li>
+            <li class="tile"><span class="t-w" lang="ja">雪</span><span class="t-r" lang="ja">ゆき</span><span class="t-c">雪</span></li>
+            <li class="tile"><span class="t-w" lang="ja">風</span><span class="t-r" lang="ja">かぜ</span><span class="t-c">風</span></li>
+            <li class="tile"><span class="t-w" lang="ja">空</span><span class="t-r" lang="ja">そら</span><span class="t-c">天空</span></li>
+            <li class="tile"><span class="t-w" lang="ja">降る</span><span class="t-r" lang="ja">ふる</span><span class="t-c">下（雨、雪）</span></li>
+            <li class="tile"><span class="t-w" lang="ja">吹く</span><span class="t-r" lang="ja">ふく</span><span class="t-c">吹（風）</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>冷熱</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">暑い</span><span class="t-r" lang="ja">あつい</span><span class="t-c">（天氣）熱</span></li>
+            <li class="tile"><span class="t-w" lang="ja">寒い</span><span class="t-r" lang="ja">さむい</span><span class="t-c">（天氣）冷</span></li>
+            <li class="tile"><span class="t-w" lang="ja">暖かい</span><span class="t-r" lang="ja">あたたかい</span><span class="t-c">溫暖</span></li>
+            <li class="tile"><span class="t-w" lang="ja">涼しい</span><span class="t-r" lang="ja">すずしい</span><span class="t-c">涼爽</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_寒暄語" class="lex-section theme" data-name="寒暄語" data-mode="meaning">
+        <h2>寒暄語 <span class="count">20 句</span></h2>
+        <p class="rule">寒暄語大多成對出現，同一組一起記：說<span lang="ja">いってきます</span>的人會聽到<span lang="ja">いってらっしゃい</span>。</p>
+        <div class="block">
+          <h3>見面・道別</h3>
+          <ul class="tiles tiles-phrase">
+            <li class="tile"><span class="t-w" lang="ja">おはようございます</span><span class="t-c">早安</span></li>
+            <li class="tile"><span class="t-w" lang="ja">こんにちは</span><span class="t-c">你好（白天）</span></li>
+            <li class="tile"><span class="t-w" lang="ja">こんばんは</span><span class="t-c">晚上好</span></li>
+            <li class="tile"><span class="t-w" lang="ja">おやすみなさい</span><span class="t-c">晚安（睡前）</span></li>
+            <li class="tile"><span class="t-w" lang="ja">さようなら</span><span class="t-c">再見</span></li>
+            <li class="tile"><span class="t-w" lang="ja">お元気ですか</span><span class="t-r" lang="ja">おげんきですか</span><span class="t-c">你好嗎？</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>感謝・道歉</h3>
+          <ul class="tiles tiles-phrase">
+            <li class="tile"><span class="t-w" lang="ja">ありがとうございます</span><span class="t-c">謝謝</span></li>
+            <li class="tile"><span class="t-w" lang="ja">どういたしまして</span><span class="t-c">不客氣</span></li>
+            <li class="tile"><span class="t-w" lang="ja">すみません</span><span class="t-c">不好意思、對不起</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ごめんなさい</span><span class="t-c">對不起</span></li>
+            <li class="tile"><span class="t-w" lang="ja">お願いします</span><span class="t-r" lang="ja">おねがいします</span><span class="t-c">麻煩你了、拜託</span></li>
+            <li class="tile"><span class="t-w" lang="ja">失礼します</span><span class="t-r" lang="ja">しつれいします</span><span class="t-c">打擾了</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>用餐・出門回家</h3>
+          <ul class="tiles tiles-phrase">
+            <li class="tile"><span class="t-w" lang="ja">いただきます</span><span class="t-c">開動了</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ごちそうさまでした</span><span class="t-c">謝謝招待（吃飽了）</span></li>
+            <li class="tile"><span class="t-w" lang="ja">いってきます</span><span class="t-c">我出門了</span></li>
+            <li class="tile"><span class="t-w" lang="ja">いってらっしゃい</span><span class="t-c">路上小心</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ただいま</span><span class="t-c">我回來了</span></li>
+            <li class="tile"><span class="t-w" lang="ja">おかえりなさい</span><span class="t-c">歡迎回來</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>初次見面</h3>
+          <ul class="tiles tiles-phrase">
+            <li class="tile"><span class="t-w" lang="ja">はじめまして</span><span class="t-c">初次見面</span></li>
+            <li class="tile"><span class="t-w" lang="ja">どうぞよろしく</span><span class="t-c">請多指教</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_學校工作" class="lex-section theme" data-name="學校・工作" data-mode="meaning">
+        <h2>學校・工作 <span class="count">22 字</span></h2>
+        <p class="rule"><span lang="ja">勉強、質問</span>這類名詞加上<span lang="ja">します</span>就變成動詞：<span lang="ja">勉強します</span>（讀書）、<span lang="ja">質問します</span>（發問）。</p>
+        <div class="block">
+          <h3>學校</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">学校</span><span class="t-r" lang="ja">がっこう</span><span class="t-c">學校</span></li>
+            <li class="tile"><span class="t-w" lang="ja">大学</span><span class="t-r" lang="ja">だいがく</span><span class="t-c">大學</span></li>
+            <li class="tile"><span class="t-w" lang="ja">教室</span><span class="t-r" lang="ja">きょうしつ</span><span class="t-c">教室</span></li>
+            <li class="tile"><span class="t-w" lang="ja">先生</span><span class="t-r" lang="ja">せんせい</span><span class="t-c">老師</span></li>
+            <li class="tile"><span class="t-w" lang="ja">学生</span><span class="t-r" lang="ja">がくせい</span><span class="t-c">學生</span></li>
+            <li class="tile"><span class="t-w" lang="ja">留学生</span><span class="t-r" lang="ja">りゅうがくせい</span><span class="t-c">留學生</span></li>
+            <li class="tile"><span class="t-w" lang="ja">授業</span><span class="t-r" lang="ja">じゅぎょう</span><span class="t-c">上課、課程</span></li>
+            <li class="tile"><span class="t-w" lang="ja">宿題</span><span class="t-r" lang="ja">しゅくだい</span><span class="t-c">作業</span></li>
+            <li class="tile"><span class="t-w" lang="ja">試験</span><span class="t-r" lang="ja">しけん</span><span class="t-c">考試</span></li>
+            <li class="tile"><span class="t-w" lang="ja">テスト</span><span class="t-c">測驗</span></li>
+            <li class="tile"><span class="t-w" lang="ja">勉強</span><span class="t-r" lang="ja">べんきょう</span><span class="t-c">讀書、學習</span></li>
+            <li class="tile"><span class="t-w" lang="ja">夏休み</span><span class="t-r" lang="ja">なつやすみ</span><span class="t-c">暑假</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>語言</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">言葉</span><span class="t-r" lang="ja">ことば</span><span class="t-c">語言、詞語</span></li>
+            <li class="tile"><span class="t-w" lang="ja">漢字</span><span class="t-r" lang="ja">かんじ</span><span class="t-c">漢字</span></li>
+            <li class="tile"><span class="t-w" lang="ja">意味</span><span class="t-r" lang="ja">いみ</span><span class="t-c">意思</span></li>
+            <li class="tile"><span class="t-w" lang="ja">辞書</span><span class="t-r" lang="ja">じしょ</span><span class="t-c">字典</span></li>
+            <li class="tile"><span class="t-w" lang="ja">質問</span><span class="t-r" lang="ja">しつもん</span><span class="t-c">提問</span></li>
+            <li class="tile"><span class="t-w" lang="ja">問題</span><span class="t-r" lang="ja">もんだい</span><span class="t-c">題目、問題</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>工作</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">仕事</span><span class="t-r" lang="ja">しごと</span><span class="t-c">工作</span></li>
+            <li class="tile"><span class="t-w" lang="ja">会社</span><span class="t-r" lang="ja">かいしゃ</span><span class="t-c">公司</span></li>
+            <li class="tile"><span class="t-w" lang="ja">会社員</span><span class="t-r" lang="ja">かいしゃいん</span><span class="t-c">公司職員</span></li>
+            <li class="tile"><span class="t-w" lang="ja">医者</span><span class="t-r" lang="ja">いしゃ</span><span class="t-c">醫生</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_動物自然" class="lex-section theme" data-name="動物・自然" data-mode="meaning">
+        <h2>動物・自然 <span class="count">11 字</span></h2>
+        <p class="rule">數小動物和魚用<span lang="ja">〜匹</span>：<span lang="ja">犬が二匹います</span>（有兩隻狗）。說動物「在」要用<span lang="ja">います</span>，花草樹木用<span lang="ja">あります</span>。</p>
+        <div class="block">
+          <h3>動物</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">動物</span><span class="t-r" lang="ja">どうぶつ</span><span class="t-c">動物</span></li>
+            <li class="tile"><span class="t-w" lang="ja">犬</span><span class="t-r" lang="ja">いぬ</span><span class="t-c">狗</span></li>
+            <li class="tile"><span class="t-w" lang="ja">猫</span><span class="t-r" lang="ja">ねこ</span><span class="t-c">貓</span></li>
+            <li class="tile"><span class="t-w" lang="ja">鳥</span><span class="t-r" lang="ja">とり</span><span class="t-c">鳥</span></li>
+            <li class="tile"><span class="t-w" lang="ja">魚</span><span class="t-r" lang="ja">さかな</span><span class="t-c">魚</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>自然</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">花</span><span class="t-r" lang="ja">はな</span><span class="t-c">花</span></li>
+            <li class="tile"><span class="t-w" lang="ja">木</span><span class="t-r" lang="ja">き</span><span class="t-c">樹</span></li>
+            <li class="tile"><span class="t-w" lang="ja">山</span><span class="t-r" lang="ja">やま</span><span class="t-c">山</span></li>
+            <li class="tile"><span class="t-w" lang="ja">川</span><span class="t-r" lang="ja">かわ</span><span class="t-c">河</span></li>
+            <li class="tile"><span class="t-w" lang="ja">海</span><span class="t-r" lang="ja">うみ</span><span class="t-c">海</span></li>
+            <li class="tile"><span class="t-w" lang="ja">池</span><span class="t-r" lang="ja">いけ</span><span class="t-c">池塘</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="主題_外來語" class="lex-section theme" data-name="片假名外來語" data-mode="meaning">
+        <h2>片假名外來語 <span class="count">44 字</span></h2>
+        <p class="rule">外來語用片假名寫，照字面念就好；長音「ー」要拉長一拍，<span lang="ja">ビル</span>（大樓）和<span lang="ja">ビール</span>（啤酒）意思不同。</p>
+        <div class="block">
+          <h3>生活用品</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">テレビ</span><span class="t-c">電視</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ラジオ</span><span class="t-c">收音機</span></li>
+            <li class="tile"><span class="t-w" lang="ja">カメラ</span><span class="t-c">相機</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ノート</span><span class="t-c">筆記本</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ペン</span><span class="t-c">筆</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ボールペン</span><span class="t-c">原子筆</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ページ</span><span class="t-c">頁</span></li>
+            <li class="tile"><span class="t-w" lang="ja">テーブル</span><span class="t-c">桌子</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ベッド</span><span class="t-c">床</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ドア</span><span class="t-c">門</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ストーブ</span><span class="t-c">暖爐</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ハンカチ</span><span class="t-c">手帕</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>衣物</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">シャツ</span><span class="t-c">襯衫</span></li>
+            <li class="tile"><span class="t-w" lang="ja">セーター</span><span class="t-c">毛衣</span></li>
+            <li class="tile"><span class="t-w" lang="ja">コート</span><span class="t-c">大衣</span></li>
+            <li class="tile"><span class="t-w" lang="ja">スカート</span><span class="t-c">裙子</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ズボン</span><span class="t-c">褲子</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ネクタイ</span><span class="t-c">領帶</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ポケット</span><span class="t-c">口袋</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>飲食</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">コーヒー</span><span class="t-c">咖啡</span></li>
+            <li class="tile"><span class="t-w" lang="ja">パン</span><span class="t-c">麵包</span></li>
+            <li class="tile"><span class="t-w" lang="ja">カレー</span><span class="t-c">咖哩</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ビール</span><span class="t-c">啤酒</span></li>
+            <li class="tile"><span class="t-w" lang="ja">コップ</span><span class="t-c">杯子</span></li>
+            <li class="tile"><span class="t-w" lang="ja">スプーン</span><span class="t-c">湯匙</span></li>
+            <li class="tile"><span class="t-w" lang="ja">フォーク</span><span class="t-c">叉子</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ナイフ</span><span class="t-c">刀子</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>場所・交通</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">アパート</span><span class="t-c">公寓</span></li>
+            <li class="tile"><span class="t-w" lang="ja">デパート</span><span class="t-c">百貨公司</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ホテル</span><span class="t-c">飯店</span></li>
+            <li class="tile"><span class="t-w" lang="ja">レストラン</span><span class="t-c">餐廳</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ビル</span><span class="t-c">大樓</span></li>
+            <li class="tile"><span class="t-w" lang="ja">トイレ</span><span class="t-c">廁所</span></li>
+            <li class="tile"><span class="t-w" lang="ja">プール</span><span class="t-c">游泳池</span></li>
+            <li class="tile"><span class="t-w" lang="ja">エレベーター</span><span class="t-c">電梯</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ポスト</span><span class="t-c">郵筒</span></li>
+            <li class="tile"><span class="t-w" lang="ja">バス</span><span class="t-c">公車</span></li>
+            <li class="tile"><span class="t-w" lang="ja">タクシー</span><span class="t-c">計程車</span></li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>其他</h3>
+          <ul class="tiles tiles-word">
+            <li class="tile"><span class="t-w" lang="ja">ニュース</span><span class="t-c">新聞</span></li>
+            <li class="tile"><span class="t-w" lang="ja">スポーツ</span><span class="t-c">運動</span></li>
+            <li class="tile"><span class="t-w" lang="ja">ギター</span><span class="t-c">吉他</span></li>
+            <li class="tile"><span class="t-w" lang="ja">クラス</span><span class="t-c">班級</span></li>
+            <li class="tile"><span class="t-w" lang="ja">パーティー</span><span class="t-c">派對</span></li>
+            <li class="tile"><span class="t-w" lang="ja">シャワー</span><span class="t-c">淋浴</span></li>
+          </ul>
+        </div>
+      </section>
+      </div>
     </div>
   </div>
 </main>
@@ -2340,7 +3212,7 @@
 <script>
 (() => {
   const ROUND_LENGTH = 10;
-  const QUIZ_KEY = 'jlptn5.quiz.v2';
+  const QUIZ_KEY = 'jlptn5.quiz.v3';
   const MASK_KEY = 'jlptn5.mask';
   const HINT_KEY = 'jlptn5.hint';
 
@@ -2352,20 +3224,48 @@
   const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
   // The tables are the single source of truth; the quiz bank is read from them.
+  // Word tables ask for the meaning. Theme tables ask for the meaning or, where
+  // the point is how a number is read (日期、量詞…), for the reading.
   const BANK = [];
-  const byWord = new Map();
-  document.querySelectorAll('.lex-section').forEach(sec => {
-    sec.querySelectorAll('tbody tr').forEach(tr => {
-      const item = {
-        w: tr.querySelector('.jw').textContent.trim(),
-        r: tr.querySelector('.reading').textContent.trim(),
-        c: tr.querySelector('.mean').textContent.trim(),
-        cat: sec.id,
-      };
-      if (byWord.has(item.w)) return;
-      byWord.set(item.w, item);
-      BANK.push(item);
+  const byKey = new Map();
+  function addItem(item) {
+    item.k = item.cat + '|' + item.w;
+    if (byKey.has(item.k)) return;
+    byKey.set(item.k, item);
+    BANK.push(item);
+  }
+  document.querySelectorAll('.lex-section:not(.theme)').forEach(sec => {
+    sec.querySelectorAll('.word-table tbody tr').forEach(tr => addItem({
+      w: tr.querySelector('.jw').textContent.trim(),
+      r: tr.querySelector('.reading').textContent.trim(),
+      c: tr.querySelector('.mean').textContent.trim(),
+      cat: sec.id, mode: 'meaning', traps: [],
+    }));
+  });
+  document.querySelectorAll('.lex-section.theme').forEach(sec => {
+    sec.querySelectorAll('.tile').forEach(t => {
+      const w = t.querySelector('.t-w').textContent.trim();
+      const rd = t.querySelector('.t-r');
+      addItem({
+        w, r: rd ? rd.textContent.trim() : w,
+        c: t.querySelector('.t-c').textContent.trim(),
+        cat: sec.id, mode: sec.dataset.mode,
+        traps: (t.dataset.trap || '').split('・').filter(Boolean),
+      });
     });
+  });
+  const ans = item => item.mode === 'reading' ? item.r : item.c;
+  // The same word can sit in a word table and a theme table; "全部" asks it once.
+  const scopePool = scope => {
+    if (scope !== 'all') return BANK.filter(x => x.cat === scope);
+    const seen = new Set();
+    return BANK.filter(x => {
+      const id = x.w + '|' + x.r;
+      return seen.has(id) ? false : (seen.add(id), true);
+    });
+  };
+  [...$('quizScope').options].forEach(o => {
+    o.textContent = o.textContent.replace(/（\d+）$/, `（${scopePool(o.value).length}）`);
   });
 
   // Pronunciation via the browser's built-in Japanese speech synthesis.
@@ -2440,6 +3340,24 @@
     }, true);
   }
 
+  // Each theme tile is one button: tap to hear it, or to peek while answers are masked.
+  document.querySelectorAll('.theme .tile').forEach(t => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tile-btn';
+    btn.append(...t.childNodes);
+    const rd = btn.querySelector('.t-r');
+    btn.dataset.say = (rd || btn.querySelector('.t-w')).textContent.trim();
+    if (speech) btn.title = '播放發音';
+    t.append(btn);
+  });
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.tile-btn');
+    if (!btn) return;
+    if (lexicon.classList.contains('masked')) btn.parentElement.classList.toggle('peek');
+    say(btn.dataset.say, btn);
+  });
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -2455,20 +3373,34 @@
     return a.w === b.w || a.c === b.c || a.r === b.r || a.w.startsWith(b.w) || b.w.startsWith(a.w);
   }
 
+  // Reading questions lead with up to two hand-written traps (よんにち for 4日),
+  // the mistakes learners actually make, then fill up from the same table.
   function pickDistractors(item) {
-    const fits = x => !tooClose(x, item);
-    const sameCat = shuffle(BANK.filter(x => x.cat === item.cat && fits(x)));
-    const others = shuffle(BANK.filter(x => x.cat !== item.cat && fits(x)));
+    const reading = item.mode === 'reading';
     const out = [];
-    for (const x of sameCat.concat(others)) {
-      if (out.every(y => !tooClose(x, y))) out.push(x);
+    const taken = new Set([ans(item)]);
+    if (reading) {
+      for (const t of shuffle(item.traps)) {
+        if (out.length === 2) break;
+        if (!taken.has(t)) { taken.add(t); out.push(t); }
+      }
+    }
+    const chosen = [item];
+    const sameMode = BANK.filter(x => x.mode === item.mode && x.k !== item.k);
+    const pool = shuffle(sameMode.filter(x => x.cat === item.cat)).concat(shuffle(sameMode.filter(x => x.cat !== item.cat)));
+    for (const x of pool) {
       if (out.length === 3) break;
+      const v = ans(x);
+      if (taken.has(v) || (!reading && chosen.some(y => tooClose(x, y)))) continue;
+      taken.add(v);
+      chosen.push(x);
+      out.push(v);
     }
     return out;
   }
 
   function makeQuestion(item) {
-    return { w: item.w, opts: shuffle([item.c, ...pickDistractors(item).map(d => d.c)]), choice: null };
+    return { k: item.k, opts: shuffle([ans(item), ...pickDistractors(item)]), choice: null };
   }
 
   let round = null;
@@ -2480,13 +3412,11 @@
     $('quizHint').textContent = hintShown ? '隱藏讀音' : '顯示讀音';
   }
 
-  function newRound(words) {
+  function newRound(keys) {
     const scope = $('quizScope').value;
-    const pool = words
-      ? words.map(w => byWord.get(w)).filter(Boolean)
-      : BANK.filter(x => scope === 'all' || x.cat === scope);
-    const picked = words ? shuffle(pool) : shuffle(pool).slice(0, ROUND_LENGTH);
-    round = { scope, qs: picked.map(makeQuestion), i: 0, retry: Boolean(words) };
+    const pool = keys ? keys.map(k => byKey.get(k)).filter(Boolean) : scopePool(scope);
+    const picked = keys ? shuffle(pool) : shuffle(pool).slice(0, ROUND_LENGTH);
+    round = { scope, qs: picked.map(makeQuestion), i: 0, retry: Boolean(keys) };
     save();
     render();
   }
@@ -2496,13 +3426,14 @@
   function restore() {
     const saved = store.get(QUIZ_KEY);
     if (!saved || !Array.isArray(saved.qs) || !saved.qs.length) return false;
-    if (!saved.qs.every(q => byWord.has(q.w) && Array.isArray(q.opts) && q.opts.includes(byWord.get(q.w).c))) return false;
+    if (!saved.qs.every(q => byKey.has(q.k) && Array.isArray(q.opts) && q.opts.includes(ans(byKey.get(q.k))))) return false;
     if ([...$('quizScope').options].some(o => o.value === saved.scope)) $('quizScope').value = saved.scope;
     round = saved;
     return true;
   }
 
-  const score = () => round.qs.filter(q => q.choice !== null && q.choice === byWord.get(q.w).c).length;
+  const isRight = q => q.choice !== null && q.choice === ans(byKey.get(q.k));
+  const score = () => round.qs.filter(isRight).length;
   const isDone = () => round.i >= round.qs.length;
   const inProgress = () => !isDone() && (round.i > 0 || round.qs[0].choice !== null);
 
@@ -2514,7 +3445,7 @@
     $('quizProgress').textContent = isDone() ? `共 ${total} 題` : `第 ${round.i + 1} / ${total} 題`;
     $('quizScore').textContent = `答對 ${score()}`;
     $('quizPips').innerHTML = round.qs.map((q, n) => {
-      if (q.choice !== null) return `<li class="${q.choice === byWord.get(q.w).c ? 'ok' : 'ng'}"></li>`;
+      if (q.choice !== null) return `<li class="${isRight(q) ? 'ok' : 'ng'}"></li>`;
       return `<li class="${n === round.i ? 'now' : ''}"></li>`;
     }).join('');
   }
@@ -2527,30 +3458,41 @@
     $('quizDone').hidden = true;
 
     const q = round.qs[round.i];
-    const item = byWord.get(q.w);
+    const item = byKey.get(q.k);
+    const reading = item.mode === 'reading';
+    const answered = q.choice !== null;
     $('quizWord').textContent = item.w;
     $('quizReading').textContent = item.r;
+    // A reading question shows the meaning instead, so 1日 (1號) and 1日 (一天) stay distinct.
+    $('quizGloss').textContent = item.c;
+    $('quizGloss').hidden = !reading;
+    $('quizAsk').textContent = reading ? '這個怎麼念？' : '這個字的中文意思是？';
     const qs = $('quizSay');
-    if (qs) { qs.dataset.say = item.r; qs.setAttribute('aria-label', `播放「${item.w}」的發音`); }
-    const kanaOnly = item.w === item.r;
+    if (qs) {
+      qs.dataset.say = item.r;
+      qs.setAttribute('aria-label', `播放「${item.w}」的發音`);
+      qs.hidden = reading && !answered;
+    }
+    const noHint = item.w === item.r || reading;
     applyHint();
-    $('quizHint').hidden = kanaOnly;
-    if (kanaOnly) $('quizReading').hidden = true;
+    $('quizHint').hidden = noHint;
+    if (noHint) $('quizReading').hidden = true;
 
-    const answered = q.choice !== null;
+    const right = ans(item);
+    const optLang = reading ? ' lang="ja"' : '';
     $('quizOptions').innerHTML = q.opts.map((opt, n) => {
       let cls = 'option', mark = '', sr = '';
-      if (answered && opt === item.c) { cls += ' is-correct'; mark = ICON_OK; sr = '（正確答案）'; }
+      if (answered && opt === right) { cls += ' is-correct'; mark = ICON_OK; sr = '（正確答案）'; }
       else if (answered && opt === q.choice) { cls += ' is-wrong'; mark = ICON_NG; sr = '（你的選擇）'; }
       return `<button type="button" class="${cls}" data-opt="${esc(opt)}"${answered ? ' disabled' : ''}>` +
-        `<span class="key" aria-hidden="true">${n + 1}</span><span class="label">${esc(opt)}</span>` +
+        `<span class="key" aria-hidden="true">${n + 1}</span><span class="label"${optLang}>${esc(opt)}</span>` +
         `${mark ? `<span class="mark">${mark}</span>` : ''}<span class="sr-only">${sr}</span></button>`;
     }).join('');
 
     const reveal = $('quizReveal');
     reveal.hidden = !answered;
     if (answered) {
-      const ok = q.choice === item.c;
+      const ok = q.choice === right;
       reveal.className = 'reveal ' + (ok ? 'ok' : 'ng');
       reveal.innerHTML =
         `<p class="status">${ok ? ICON_OK + '答對了' : ICON_NG + '答錯了，正確答案是：'}</p>` +
@@ -2568,10 +3510,10 @@
     q.choice = opt;
     save();
     render();
-    const item = byWord.get(q.w);
-    $('quizLive').textContent = opt === item.c
+    const item = byKey.get(q.k);
+    $('quizLive').textContent = opt === ans(item)
       ? `答對了。${item.w}，${item.r}，${item.c}。`
-      : `答錯了。正確答案是${item.c}。${item.w}，${item.r}。`;
+      : `答錯了。正確答案是${ans(item)}。${item.w}，${item.r}，${item.c}。`;
     $('quizNext').focus({ preventScroll: true });
     $('quizNext').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
@@ -2596,7 +3538,7 @@
     done.hidden = false;
     const total = round.qs.length;
     const s = score();
-    const missed = round.qs.filter(q => q.choice !== byWord.get(q.w).c).map(q => byWord.get(q.w));
+    const missed = round.qs.filter(q => !isRight(q)).map(q => byKey.get(q.k));
     const ratio = s / total;
     // The grade is stamped the way a Japanese teacher stamps homework, in kana an N5 learner can read.
     const grade = ratio === 1 ? ['たいへんよくできました', '做得非常好']
@@ -2628,7 +3570,7 @@
       (missed.length ? `<button type="button" class="btn btn-primary" data-act="retry">複習答錯的 ${missed.length} 題</button>` : '') +
       `<button type="button" class="btn ${missed.length ? 'btn-secondary' : 'btn-primary'}" data-act="new">再來一組</button></div>`;
     done.querySelector('[data-act="retry"]')?.addEventListener('click', () => {
-      newRound(missed.map(m => m.w));
+      newRound(missed.map(m => m.k));
       $('quizOptions').querySelector('.option')?.focus({ preventScroll: true });
     });
     done.querySelector('[data-act="new"]').addEventListener('click', () => {
@@ -2693,32 +3635,55 @@
     lexicon.classList.toggle('masked', on);
     maskBtn.setAttribute('aria-pressed', String(on));
     $('maskHint').hidden = !on;
-    lexicon.querySelectorAll('tbody tr').forEach(tr => {
+    lexicon.querySelectorAll('.word-table tbody tr').forEach(tr => {
       tr.classList.remove('peek');
       if (on) tr.tabIndex = 0; else tr.removeAttribute('tabindex');
     });
+    lexicon.querySelectorAll('.tile.peek').forEach(t => t.classList.remove('peek'));
     store.set(MASK_KEY, on);
   }
   maskBtn.addEventListener('click', () => setMask(!lexicon.classList.contains('masked')));
   lexicon.addEventListener('click', e => {
     if (!lexicon.classList.contains('masked')) return;
-    const tr = e.target.closest('tbody tr');
+    const tr = e.target.closest('.word-table tbody tr');
     if (tr) tr.classList.toggle('peek');
   });
   lexicon.addEventListener('keydown', e => {
     if (!lexicon.classList.contains('masked') || (e.key !== 'Enter' && e.key !== ' ')) return;
-    const tr = e.target.closest('tbody tr');
+    const tr = e.target.closest('.word-table tbody tr');
     if (tr && e.target === tr) { e.preventDefault(); tr.classList.toggle('peek'); }
   });
   if (store.get(MASK_KEY) === true) setMask(true);
 
-  // Highlight the category currently in view and keep its chip visible.
+  // The nav holds one chip set at a time: 詞性 or 主題. The switch jumps to that
+  // group, and scrolling into the other group flips the switch to follow.
   const chips = $('chips');
+  const seg = $('navSeg');
   const chipFor = new Map([...chips.querySelectorAll('a[href^="#"]')].map(a => [decodeURIComponent(a.hash.slice(1)), a]));
+  let group = null;
+  function showGroup(g) {
+    if (g === group) return;
+    group = g;
+    chips.querySelectorAll('.chip-set').forEach(set => { set.hidden = set.dataset.group !== g; });
+    seg.querySelectorAll('.seg-btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.group === g)));
+    chips.scrollLeft = 0;
+  }
+  seg.hidden = false;
+  showGroup('pos');
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('.seg-btn');
+    if (!b) return;
+    showGroup(b.dataset.group);
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('group-' + b.dataset.group).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  // Highlight the category currently in view and keep its chip visible.
   let current = null;
   function setCurrent(id) {
     if (id === current) return;
     current = id;
+    if (id) showGroup($(id).closest('.lex-group').dataset.group);
     chipFor.forEach((a, key) => a.setAttribute('aria-current', String(key === id)));
     const a = chipFor.get(id);
     if (a) chips.scrollTo({ left: a.offsetLeft - chips.clientWidth / 2 + a.offsetWidth / 2 });
