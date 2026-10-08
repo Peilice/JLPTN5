@@ -820,6 +820,20 @@
       border-left: 1px solid var(--line-strong);
     }
 
+    /* Phones: the section name alone (時間的說法), so it isn't cut down to 第一章・數⋯.
+       Narrower than 380px there is no room for it; the button just says 目次. */
+    @media (max-width: 559px) {
+      .toc-here .here-ch {
+        display: none;
+      }
+    }
+
+    @media (max-width: 379px) {
+      .toc-here {
+        display: none;
+      }
+    }
+
     .toc-btn .e-chev {
       width: 14px;
       height: 14px;
@@ -910,9 +924,10 @@
 
     .toc-ch-link {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 10px;
-      padding: 8px 0 2px;
+      min-height: 44px;
+      padding: 4px 0 0;
       font-weight: 700;
       color: var(--ink);
       text-decoration: none;
@@ -927,14 +942,7 @@
       column-gap: 20px;
     }
 
-    .toc-ch li {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
     .toc-ch li>a {
-      flex: 1;
       min-width: 0;
       display: flex;
       align-items: center;
@@ -958,7 +966,7 @@
     @media (hover: hover) {
 
       .toc-ch li>a:hover,
-      .toc-drill:hover {
+      .sec-drill:hover {
         background: var(--surface-2);
       }
     }
@@ -974,17 +982,28 @@
       opacity: 0.7;
     }
 
-    .toc-drill {
+    /* 練這節 sits on the section heading, where you've just read the words; the 目次 only navigates. */
+    .sec-drill {
+      position: relative;
       flex: none;
-      min-height: 36px;
+      align-self: center;
+      margin: -4px 0 -4px auto;
+      min-height: 32px;
       padding: 0 12px;
       font: inherit;
       font-size: var(--fs-xs);
+      font-weight: 400;
       color: var(--ink-2);
       background: transparent;
       border: 1px solid var(--line-strong);
       border-radius: var(--r-pill);
       cursor: pointer;
+    }
+
+    .sec-drill::after {
+      content: "";
+      position: absolute;
+      inset: -6px -4px;
     }
 
     /* 錯題本: a fold-out under the quiz card, most-missed first. */
@@ -1044,20 +1063,11 @@
       }
     }
 
-    /* Phones: the button shrinks to ✕ 4 so the nav stays one line. */
+    /* Phones: tighter, but it keeps its name; a bare "0" told nobody what it was. */
     @media (max-width: 559px) {
       .miss-toggle {
         padding: 0 10px;
         gap: 4px;
-      }
-
-      .miss-toggle .mt-label {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
       }
     }
 
@@ -2226,7 +2236,7 @@
       .about-more,
       .say,
       .ex-toggle,
-      .toc-drill,
+      .sec-drill,
       #clearRecords,
       .clear-note {
         display: none !important;
@@ -6593,7 +6603,8 @@
         scopeSel.append(g);
       });
       scopeSel.options[0].textContent = `全部（${scopePool('all').length}）`;
-      scopeSel.add(new Option('錯題本', 'miss'), 1);
+      // 錯題本 sits beside 全部, before the chapter groups, not inside 第一章.
+      scopeSel.insertBefore(new Option('錯題本', 'miss'), scopeSel.querySelector('optgroup'));
       document.querySelectorAll('.bank-total').forEach(el => { el.textContent = scopePool('all').length; });
       $('entryTotal').textContent = BANK.length;
 
@@ -7040,6 +7051,7 @@
       $('quizNext').addEventListener('click', next);
       // Changing the range mid-round queues it for the next round instead of wiping progress.
       $('quizScope').addEventListener('change', () => {
+        if (scopeSel.value !== 'miss' && !missIds().length) missOpt.disabled = true;
         if (!inProgress()) { newRound(); return; }
         disarmRestart();
         $('quizLive').textContent = scopePending() ? `這組做完後改用「${scopeName()}」出題。` : '維持目前的範圍。';
@@ -7076,6 +7088,7 @@
         missToggle.innerHTML = (ids.length ? `<span class="miss">${ICON_MISS}</span>` : '') +
           `<span class="mt-label">錯題本</span><span class="n">${ids.length}</span>${ICON_CHEV}`;
         missOpt.textContent = `錯題本（${ids.length}）`;
+        missOpt.disabled = !ids.length && scopeSel.value !== 'miss';
         missBody.innerHTML = ids.length
           ? `<div class="miss-head"><p class="chapter-intro">共 ${ids.length} 字，答錯多的排前面；連續答對 ${MISS_CLEAR} 次就移出。點字可以跳到它在單字表的位置。</p>` +
           `<button type="button" class="btn btn-secondary miss-drill">練這些字</button></div>` +
@@ -7151,8 +7164,8 @@
         }
         Object.keys(mistakes).forEach(id => delete mistakes[id]);
         store.set(MISS_KEY, mistakes);
-        renderMissBook();
         newRound();
+        renderMissBook();
         setClear('done');
         $('quizLive').textContent = '已清除錯題本與練習進度，練習題已重新出題。';
       });
@@ -7218,11 +7231,17 @@
       panelWrap.append(toc);
       panel.append(panelWrap);
       nav.append(panel);
-      toc.querySelectorAll('.toc-ch li').forEach(li => {
-        const a = li.querySelector('a');
-        const id = decodeURIComponent(a.hash.slice(1));
-        const name = $(id).dataset.name;
-        li.insertAdjacentHTML('beforeend', `<button type="button" class="toc-drill" data-scope="${esc(id)}" aria-label="練習「${esc(name)}」">練這節</button>`);
+      document.querySelectorAll('.lex-section').forEach(sec => {
+        sec.querySelector('h3').insertAdjacentHTML('beforeend',
+          `<button type="button" class="sec-drill" data-scope="${esc(sec.id)}" aria-label="練習「${esc(sec.dataset.name)}」">練這節</button>`);
+      });
+      $('lexicon').addEventListener('click', e => {
+        const drill = e.target.closest('.sec-drill');
+        if (!drill) return;
+        scopeSel.value = drill.dataset.scope;
+        scopeSel.dispatchEvent(new Event('change'));
+        $('quiz').scrollIntoView({ block: 'start' });
+        $('quizOptions').querySelector('.option:not([disabled])')?.focus({ preventScroll: true });
       });
       const tocLink = $('tocBtn');
       const tocBtn = document.createElement('button');
@@ -7239,20 +7258,15 @@
         tocBtn.setAttribute('aria-expanded', String(on));
         if (!on) return;
         maskHint.hidden = true;
+        // Opened before the nav has stuck (top of the page), the panel would hang below the
+        // fold; bring the nav up to the top first so the whole panel is on screen.
+        const navTop = nav.getBoundingClientRect().top;
+        if (navTop > 0) scrollBy(0, navTop);
         const cur = panel.querySelector('[aria-current="true"]');
         panel.scrollTop = cur ? cur.offsetTop - panel.clientHeight / 2 : 0;
       }
       tocBtn.addEventListener('click', () => openToc(panel.hidden));
       panel.addEventListener('click', e => {
-        const drill = e.target.closest('.toc-drill');
-        if (drill) {
-          openToc(false);
-          scopeSel.value = drill.dataset.scope;
-          scopeSel.dispatchEvent(new Event('change'));
-          $('quiz').scrollIntoView({ block: 'start' });
-          $('quizOptions').querySelector('.option:not([disabled])')?.focus({ preventScroll: true });
-          return;
-        }
         if (e.target.closest('a')) openToc(false);
       });
       document.addEventListener('keydown', e => {
@@ -7274,7 +7288,9 @@
         if (!el) { tocHere.textContent = ''; return; }
         const ch = el.closest('.chapter');
         const no = text(ch.querySelector('h2 .ch-no'));
-        tocHere.textContent = el === ch ? text(ch.querySelector('h2')).replace(no, no + '・') : `${no}・${el.dataset.name}`;
+        // The 第一章・ prefix is its own span so phones can drop it and keep the section name.
+        tocHere.innerHTML = `<span class="here-ch">${esc(no)}・</span>` +
+          esc(el === ch ? text(ch.querySelector('h2')).slice(no.length) : el.dataset.name);
       }
       if ('IntersectionObserver' in window) {
         const watched = [...document.querySelectorAll('.chapter, .lex-section')];
