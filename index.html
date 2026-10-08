@@ -121,7 +121,7 @@
   }
   .about[open] .about-more { text-decoration: none; }
   .about[open] .about-more::after { content: "（收合）"; }
-  .about-body { max-width: 42em; text-wrap: pretty; color: var(--ink-2); padding: 4px 0 6px; }
+  .about-body { color: var(--ink-2); padding: 4px 0 6px; }
   .about-body p { margin: 6px 0; }
 
   /* Quiz */
@@ -163,10 +163,16 @@
     letter-spacing: 0.02em;
     overflow-wrap: anywhere;
   }
+  .prompt-word.is-zh {
+    font-family: inherit;
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    letter-spacing: 0;
+    padding: 0.35em 0;
+  }
   .prompt-gloss { margin: 6px 0 0; font-size: var(--fs-base); color: var(--ink-2); }
   .prompt-reading { margin: 4px 0 0; font-size: var(--fs-lg); color: var(--sub); letter-spacing: 0.06em; }
   .hint {
-    margin-top: 6px; min-height: 36px; padding: 0 12px;
+    margin-top: 6px; min-height: 40px; padding: 0 12px;
     font: inherit; font-size: var(--fs-sm); color: var(--sub);
     background: transparent; border: 1px dashed var(--line-strong); border-radius: var(--r-pill);
     cursor: pointer;
@@ -275,6 +281,12 @@
   .missed .m-w { font-family: var(--font-ja-head); font-weight: 600; font-size: var(--fs-lg); }
   .missed .m-r { font-size: var(--fs-sm); color: var(--sub); }
   .missed .m-c { margin-left: auto; color: var(--ink-2); text-align: right; }
+  .done-grad {
+    display: flex; align-items: flex-start; gap: 6px;
+    margin: 14px 0 0; text-align: left; font-size: var(--fs-sm); color: var(--ink-2); text-wrap: pretty;
+  }
+  .done-grad svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--correct); }
+  .done-grad [lang="ja"] { font-family: var(--font-ja-head); font-weight: 600; color: var(--ink); }
   .done-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 24px; }
   .scope-note {
     margin: -2px 0 10px; padding: 8px 12px;
@@ -447,6 +459,25 @@
   .ex-ja { display: block; color: var(--ink); }
   .ex-zh { display: block; font-size: var(--fs-sm); color: var(--sub); }
 
+  /* 錯題本: the teacher's small red cross in the margin, with how many times it was missed.
+     Ink only, no fill, so a page with many marks still reads as a word list. */
+  .e-pos { display: inline-flex; align-items: center; gap: 8px; }
+  .miss {
+    display: inline-flex; align-items: center; gap: 1px;
+    color: var(--wrong); font-size: var(--fs-xs); font-weight: 600; line-height: 1;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .miss svg { width: 13px; height: 13px; }
+  .tile .miss { position: absolute; right: 7px; bottom: 7px; pointer-events: none; }
+  .grid .tile .miss { right: 5px; bottom: 5px; }
+  .miss-streak {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px;
+    margin: 8px 0 0; font-size: var(--fs-sm); color: var(--sub);
+  }
+  .miss-streak .dots { display: inline-flex; gap: 4px; }
+  .miss-streak .dots i { width: 8px; height: 8px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); }
+  .miss-streak .dots i.on { background: var(--correct); border-color: var(--correct); }
+
   /* Sets: words learned together sit under one small label. A contrasting pair
      (反義、自他成對…) also gets a double arrow between its two words. */
   .set { padding: 10px 0 0; border-bottom: 1px solid var(--line); }
@@ -503,6 +534,7 @@
   .grid td.tile:not(:has(> .tile-btn)) > span { display: block; }
   @media (hover: hover) { .tile-btn:hover { background: var(--surface-2); } }
   .tile-btn:active { background: var(--surface-2); }
+  .grid .tile-btn:focus-visible { outline-offset: -3px; }
   .tile-btn.is-speaking { background: var(--mask); }
   .t-w { font-family: var(--font-ja-head); font-weight: 600; font-size: var(--fs-2xl); line-height: 1.25; }
   .tiles-phrase .t-w { font-size: var(--fs-xl); }
@@ -602,7 +634,7 @@
     .e-row:not(:has(.e-pos)) .e-mean { grid-row: 1 / span 2; align-self: center; }
     .e-chev { grid-column: 3; grid-row: 1 / span 2; }
     .jw { font-size: var(--fs-lg); }
-    .e-ex { padding-left: 0; }
+    .e-ex { padding: 0 0 14px; }
     .entries-phrase .e-row { grid-template-columns: minmax(0, 1fr); }
     .entries-phrase .e-row .e-word, .entries-phrase .e-row .e-mean { grid-column: 1; grid-row: auto; align-self: auto; }
     .chapter { margin-top: 44px; }
@@ -616,7 +648,7 @@
 
   @media print {
     :root { --bg: #fffdf8; --card: #fffdf8; }
-    .quiz, .lexicon-nav, .about-more, .say, .e-chev, .toc-drill { display: none !important; }
+    .quiz, .lexicon-nav, .about-more, .say, .e-chev, .toc-drill, .miss, .miss-streak, .e-pos.miss-only { display: none !important; }
     .e-ex[hidden] { display: block !important; }
     .masked .mean-t, .masked .reading { color: inherit !important; background: none !important; }
     .entry, .set { break-inside: avoid; }
@@ -631,11 +663,12 @@
   <div class="wrap">
     <h1>JLPT N5 單字整理表</h1>
     <details class="about" id="about">
-      <summary><span>自行整理・6 章 28 節，收錄 <span id="bankTotal">687</span> 個可練習的字</span><span class="about-more">說明</span></summary>
+      <summary><span>自行整理・6 章 28 節，收錄 <span class="bank-total">687</span> 個可練習的字</span><span class="about-more">說明</span></summary>
       <div class="about-body">
         <p>依用途分成六章：數字與念法、時間與方向、人與生活、東西與自然、動詞、形容詞與副詞。每個字附讀音和中文，大部分附詞性和例句。</p>
-        <p>同一個字如果適合兩個地方（例如<span lang="ja">先週</span>同時在「時間的說法」和「相對時間對照」），兩邊都保留，方便各自複習；各節合計 <span id="entryTotal">717</span> 筆，不重複的字為上面的數字。</p>
-        <p>本表為自行編寫整理，並非任何特定網站清單的複製版，也非JLPT官方公告清單（官方並未公開逐字表）。實際範圍約800字，此表涵蓋核心高頻詞彙，供學習參考，正式應考建議搭配市售N5單字書或線上題庫交叉核對。動詞的自動詞／他動詞判斷為常見基本用法，部分動詞（如「休む」）實際上兩種用法皆有，僅標示最常見的一種或標為「自他動詞」。</p>
+        <p>同一個字如果適合兩個地方（例如<span lang="ja">先週</span>同時在「時間的說法」和「相對時間對照」），兩邊都保留，方便各自複習；所以各節合計 <span id="entryTotal">717</span> 筆，扣掉重複是 <span class="bank-total">687</span> 個字。</p>
+        <p>JLPT N5 一般估計約 800 字，本表收錄其中最常用的 <span class="bank-total">687</span> 個，供學習參考。官方並未公開逐字表，本表是自行編寫整理，不是任何網站清單的複製版；正式應考建議搭配市售 N5 單字書或線上題庫交叉核對。</p>
+        <p>自動詞／他動詞依常見的基本用法標示。部分動詞（如「<span lang="ja">休む</span>」）兩種用法都有，只標最常見的一種，或標為「自他動詞」。</p>
       </div>
     </details>
   </div>
@@ -702,7 +735,7 @@
         <ol class="toc-list"><li class="toc-ch"><a class="toc-ch-link" href="#ch-1"><span class="ch-no">第一章</span>數字與念法</a><ol><li><a href="#數字">數字<span class="n">40</span></a></li><li><a href="#日期月份">日期與月份<span class="n">45</span></a></li><li><a href="#時刻">時刻<span class="n">29</span></a></li><li><a href="#期間">期間<span class="n">24</span></a></li><li><a href="#量詞1">量詞：〜つ・〜人<span class="n">22</span></a></li><li><a href="#量詞2">量詞：〜本・〜杯・〜匹<span class="n">33</span></a></li><li><a href="#量詞3">量詞：〜個・〜回・〜階<span class="n">33</span></a></li><li><a href="#量詞4">量詞：〜冊・〜歳與其他<span class="n">34</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-2"><span class="ch-no">第二章</span>時間與方向</a><ol><li><a href="#時間說法">時間的說法<span class="n">34</span></a></li><li><a href="#相對時間">相對時間對照<span class="n">30</span></a></li><li><a href="#こそあど">こそあど與疑問詞<span class="n">27</span></a></li><li><a href="#方位">方位與位置<span class="n">17</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-3"><span class="ch-no">第三章</span>人與生活</a><ol><li><a href="#人稱家族">人稱與家族<span class="n">20</span></a></li><li><a href="#寒暄語">寒暄語<span class="n">20</span></a></li><li><a href="#家">家與住處<span class="n">14</span></a></li><li><a href="#城市">城市裡的地方<span class="n">13</span></a></li><li><a href="#交通">交通與車站<span class="n">11</span></a></li><li><a href="#吃與買">吃與買<span class="n">23</span></a></li><li><a href="#學校工作">學校、工作與興趣<span class="n">26</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-4"><span class="ch-no">第四章</span>東西與自然</a><ol><li><a href="#物品">隨身物品與電器<span class="n">14</span></a></li><li><a href="#衣物身體">衣物與身體<span class="n">15</span></a></li><li><a href="#天氣季節">天氣與季節<span class="n">17</span></a></li><li><a href="#自然顏色">動物、自然與顏色<span class="n">25</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-5"><span class="ch-no">第五章</span>動詞</a><ol><li><a href="#動詞生活">一天的生活<span class="n">17</span></a></li><li><a href="#動詞移動">移動與位置<span class="n">14</span></a></li><li><a href="#動詞給借">給、借與買賣<span class="n">13</span></a></li><li><a href="#動詞穿戴">穿戴與開關<span class="n">15</span></a></li><li><a href="#動詞說聽">說、聽、知道與狀態<span class="n">17</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-6"><span class="ch-no">第六章</span>形容詞與副詞</a><ol><li><a href="#形容外觀">大小、多少與顏色<span class="n">21</span></a></li><li><a href="#形容感覺">感覺與評價<span class="n">17</span></a></li><li><a href="#形容人事">人和事的樣子<span class="n">20</span></a></li><li><a href="#副詞">副詞與數量<span class="n">17</span></a></li></ol></li></ol>
       </nav>
 <section class="chapter" id="ch-1" aria-labelledby="ch-1-t">
-<header class="chapter-head"><h2 id="ch-1-t"><span class="ch-no">第一章</span>數字與念法</h2><p class="chapter-intro">數字、日期、時刻和量詞，念法常常會變。這一章的練習題考讀音；<b class="chg">畫上螢光筆</b>的是念法特殊或會音變的地方，最常考。點任一格可以聽發音。</p><ol class="chapter-toc"><li><a href="#數字">數字<span class="n">40</span></a></li><li><a href="#日期月份">日期與月份<span class="n">45</span></a></li><li><a href="#時刻">時刻<span class="n">29</span></a></li><li><a href="#期間">期間<span class="n">24</span></a></li><li><a href="#量詞1">量詞：〜つ・〜人<span class="n">22</span></a></li><li><a href="#量詞2">量詞：〜本・〜杯・〜匹<span class="n">33</span></a></li><li><a href="#量詞3">量詞：〜個・〜回・〜階<span class="n">33</span></a></li><li><a href="#量詞4">量詞：〜冊・〜歳與其他<span class="n">34</span></a></li></ol></header>
+<header class="chapter-head"><h2 id="ch-1-t"><span class="ch-no">第一章</span>數字與念法</h2><p class="chapter-intro">數字、日期、時刻和量詞，念法常常會變。這一章特別要練讀音；<b class="chg">畫上螢光筆</b>的是念法特殊或會音變的地方，最常考。點任一格可以聽發音。</p><ol class="chapter-toc"><li><a href="#數字">數字<span class="n">40</span></a></li><li><a href="#日期月份">日期與月份<span class="n">45</span></a></li><li><a href="#時刻">時刻<span class="n">29</span></a></li><li><a href="#期間">期間<span class="n">24</span></a></li><li><a href="#量詞1">量詞：〜つ・〜人<span class="n">22</span></a></li><li><a href="#量詞2">量詞：〜本・〜杯・〜匹<span class="n">33</span></a></li><li><a href="#量詞3">量詞：〜個・〜回・〜階<span class="n">33</span></a></li><li><a href="#量詞4">量詞：〜冊・〜歳與其他<span class="n">34</span></a></li></ol></header>
 <section id="數字" class="lex-section" data-name="數字" data-mode="reading">
 <h3>數字 <span class="count">40 字</span></h3>
 <p class="rule">4、7、9 有兩種念法：單獨數數時多用<span lang="ja">よん、なな、きゅう</span>；時刻、月份等固定說法才用<span lang="ja">し、しち、く</span>。百、千遇到 3、6、8 會音變；一萬一定要念<span lang="ja">いちまん</span>，不能只說<span lang="ja">まん</span>。</p>
@@ -1332,7 +1365,7 @@
 <script>
 (() => {
   const ROUND_LENGTH = 10;
-  const QUIZ_KEY = 'jlptn5.quiz.v4';
+  const QUIZ_KEY = 'jlptn5.quiz.v5';
   const MASK_KEY = 'jlptn5.mask';
   const HINT_KEY = 'jlptn5.hint';
 
@@ -1344,8 +1377,8 @@
   const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 
   // The page is the single source of truth; the quiz bank is read from it.
-  // Chapter 1 (數字與念法) asks for readings, with hand-written traps such as
-  // よんにち for 4日; every other chapter asks for the meaning.
+  // Each question draws one of four types at random (see TYPES below), so any
+  // chapter can ask any type the word supports.
   const BANK = [];
   const byKey = new Map();
   function addItem(item) {
@@ -1356,7 +1389,7 @@
   }
   const text = el => el ? el.textContent.trim() : '';
   document.querySelectorAll('.lex-section').forEach(sec => {
-    const base = { cat: sec.id, ch: sec.closest('.chapter').id, mode: sec.dataset.mode };
+    const base = { cat: sec.id, ch: sec.closest('.chapter').id };
     sec.querySelectorAll('.entry, .tile').forEach(el => {
       const w = text(el.querySelector('.jw, .t-w'));
       addItem({
@@ -1367,7 +1400,27 @@
       });
     });
   });
-  const ans = item => item.mode === 'reading' ? item.r : item.c;
+  // Question types: what the prompt shows, what the options are, and the line asking.
+  //   meaning 日→中：show the word, pick the meaning
+  //   zh2ja   中→日：show the meaning, pick the word
+  //   reading 讀音：show the word (and meaning, so 1日 1號／一天 stay distinct), pick the reading
+  //   kana    表記：show the reading, pick how it is written
+  const TYPES = {
+    meaning: { ask: '這個字的中文意思是？', opt: 'c' },
+    zh2ja: { ask: '這個意思的日文是？', opt: 'w' },
+    reading: { ask: '這個怎麼念？', opt: 'r' },
+    kana: { ask: '這個讀音要怎麼寫？', opt: 'w' },
+  };
+  const hasJa = w => /[぀-ヿ㐀-鿿]/.test(w);
+  // Bare numerals (100, 300) only make sense as reading/writing questions;
+  // words written in kana alone have no reading or writing to ask about.
+  function typesFor(item) {
+    const t = [];
+    if (hasJa(item.w) && item.c) t.push('meaning', 'zh2ja');
+    if (item.w !== item.r) t.push('reading', 'kana');
+    return t.length ? t : ['meaning'];
+  }
+  const ans = (item, type) => item[TYPES[type].opt];
   // A word can sit in two sections; a whole chapter or "全部" asks it once.
   const once = list => {
     const seen = new Set();
@@ -1389,7 +1442,7 @@
     scopeSel.append(g);
   });
   scopeSel.options[0].textContent = `全部（${scopePool('all').length}）`;
-  $('bankTotal').textContent = scopePool('all').length;
+  document.querySelectorAll('.bank-total').forEach(el => { el.textContent = scopePool('all').length; });
   $('entryTotal').textContent = BANK.length;
 
   // Pronunciation via the browser's built-in Japanese speech synthesis.
@@ -1491,6 +1544,62 @@
     say(btn.dataset.say, btn);
   });
 
+  // 錯題本: every miss is kept on this device as [times missed, correct in a row].
+  // Five correct in a row takes the word out. A word listed in two sections shares one record.
+  const MISS_KEY = 'jlptn5.mistakes.v1';
+  const MISS_CLEAR = 5;
+  const mistakes = store.get(MISS_KEY) || {};
+  const wordId = item => item.w + '|' + item.r;
+  const wordEls = new Map();
+  document.querySelectorAll('.lex-section .entry, .lex-section .tile').forEach(el => {
+    const w = text(el.querySelector('.jw, .t-w'));
+    const id = wordId({ w, r: text(el.querySelector('.reading, .t-r')) || w });
+    if (!wordEls.has(id)) wordEls.set(id, []);
+    wordEls.get(id).push(el);
+  });
+  const ICON_MISS = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>';
+  function paintMiss(id) {
+    const rec = mistakes[id];
+    (wordEls.get(id) || []).forEach(el => {
+      el.querySelector('.miss')?.remove();
+      el.querySelector('.miss-streak')?.remove();
+      el.querySelector('.e-pos.miss-only')?.remove();
+      if (!rec) return;
+      const [n, streak] = rec;
+      const mark = `<span class="miss" title="答錯 ${n} 次，再連續答對 ${MISS_CLEAR - streak} 次就移出錯題本">` +
+        `${ICON_MISS}<span aria-hidden="true">${n > 9 ? '9+' : n}</span><span class="sr-only">，答錯 ${n} 次</span></span>`;
+      if (el.classList.contains('tile')) {
+        el.querySelector('.tile-btn').insertAdjacentHTML('beforeend', mark);
+        return;
+      }
+      const row = el.querySelector('.e-row');
+      let pos = row.querySelector('.e-pos');
+      if (!pos) {
+        pos = document.createElement('span');
+        pos.className = 'e-pos miss-only';
+        row.querySelector('.e-mean').after(pos);
+      }
+      pos.insertAdjacentHTML('beforeend', mark);
+      el.querySelector('.e-ex')?.insertAdjacentHTML('beforeend',
+        `<p class="miss-streak"><span>錯題本</span>` +
+        `<span class="dots" aria-hidden="true">${Array.from({ length: MISS_CLEAR }, (_, i) => `<i${i < streak ? ' class="on"' : ''}></i>`).join('')}</span>` +
+        `<span class="tnum">連續答對 ${streak} / ${MISS_CLEAR}</span></p>`);
+    });
+  }
+  Object.keys(mistakes).forEach(paintMiss);
+  // Returns true when this answer took the word out of the book.
+  function recordAnswer(item, right) {
+    const id = wordId(item);
+    const rec = mistakes[id];
+    let cleared = false;
+    if (!right) mistakes[id] = [(rec ? rec[0] : 0) + 1, 0];
+    else if (rec && ++rec[1] >= MISS_CLEAR) { delete mistakes[id]; cleared = true; }
+    else if (!rec) return false;
+    store.set(MISS_KEY, mistakes);
+    paintMiss(id);
+    return cleared;
+  }
+
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -1507,24 +1616,34 @@
   }
 
   // Reading questions lead with up to two hand-written traps (よんにち for 4日),
-  // the mistakes learners actually make, then fill up from the same table.
-  function pickDistractors(item) {
-    const reading = item.mode === 'reading';
+  // the mistakes learners actually make. The rest come from the same table,
+  // then the same chapter, then anywhere, drawn from words that fit the type.
+  const fits = {
+    meaning: x => Boolean(x.c),
+    zh2ja: x => hasJa(x.w),
+    reading: () => true,
+    kana: x => x.w !== x.r,
+  };
+  function pickDistractors(item, type) {
     const out = [];
-    const taken = new Set([ans(item)]);
-    if (reading) {
+    const taken = new Set([ans(item, type)]);
+    if (type === 'reading') {
       for (const t of shuffle(item.traps)) {
         if (out.length === 2) break;
         if (!taken.has(t)) { taken.add(t); out.push(t); }
       }
     }
     const chosen = [item];
-    const sameMode = BANK.filter(x => x.mode === item.mode && x.k !== item.k);
-    const pool = shuffle(sameMode.filter(x => x.cat === item.cat)).concat(shuffle(sameMode.filter(x => x.cat !== item.cat)));
+    const cands = BANK.filter(x => x.k !== item.k && fits[type](x));
+    const pool = [
+      x => x.cat === item.cat,
+      x => x.cat !== item.cat && x.ch === item.ch,
+      x => x.ch !== item.ch,
+    ].flatMap(f => shuffle(cands.filter(f)));
     for (const x of pool) {
       if (out.length === 3) break;
-      const v = ans(x);
-      if (taken.has(v) || (!reading && chosen.some(y => tooClose(x, y)))) continue;
+      const v = ans(x, type);
+      if (taken.has(v) || (type !== 'reading' && chosen.some(y => tooClose(x, y)))) continue;
       taken.add(v);
       chosen.push(x);
       out.push(v);
@@ -1533,8 +1652,12 @@
   }
 
   function makeQuestion(item) {
-    return { k: item.k, opts: shuffle([ans(item), ...pickDistractors(item)]), choice: null };
+    const types = typesFor(item);
+    const t = types[Math.floor(Math.random() * types.length)];
+    return { k: item.k, t, opts: shuffle([ans(item, t), ...pickDistractors(item, t)]), choice: null };
   }
+  const qItem = q => byKey.get(q.k);
+  const qAns = q => ans(qItem(q), q.t);
 
   let round = null;
   // Readings are shown by default; hiding them sticks across questions and visits.
@@ -1559,13 +1682,13 @@
   function restore() {
     const saved = store.get(QUIZ_KEY);
     if (!saved || !Array.isArray(saved.qs) || !saved.qs.length) return false;
-    if (!saved.qs.every(q => byKey.has(q.k) && Array.isArray(q.opts) && q.opts.includes(ans(byKey.get(q.k))))) return false;
+    if (!saved.qs.every(q => byKey.has(q.k) && q.t in TYPES && Array.isArray(q.opts) && q.opts.includes(qAns(q)))) return false;
     if ([...$('quizScope').options].some(o => o.value === saved.scope)) $('quizScope').value = saved.scope;
     round = saved;
     return true;
   }
 
-  const isRight = q => q.choice !== null && q.choice === ans(byKey.get(q.k));
+  const isRight = q => q.choice !== null && q.choice === qAns(q);
   const score = () => round.qs.filter(isRight).length;
   const isDone = () => round.i >= round.qs.length;
   const inProgress = () => !isDone() && (round.i > 0 || round.qs[0].choice !== null);
@@ -1591,28 +1714,32 @@
     $('quizDone').hidden = true;
 
     const q = round.qs[round.i];
-    const item = byKey.get(q.k);
-    const reading = item.mode === 'reading';
+    const item = qItem(q);
     const answered = q.choice !== null;
-    $('quizWord').textContent = item.w;
+    const word = $('quizWord');
+    const zh = q.t === 'zh2ja';
+    word.textContent = zh ? item.c : q.t === 'kana' ? item.r : item.w;
+    word.lang = zh ? 'zh-Hant' : 'ja';
+    word.classList.toggle('is-zh', zh);
     $('quizReading').textContent = item.r;
-    // A reading question shows the meaning instead, so 1日 (1號) and 1日 (一天) stay distinct.
+    // A reading question shows the meaning too, so 1日 (1號) and 1日 (一天) stay distinct.
     $('quizGloss').textContent = item.c;
-    $('quizGloss').hidden = !reading;
-    $('quizAsk').textContent = reading ? '這個怎麼念？' : '這個字的中文意思是？';
+    $('quizGloss').hidden = q.t !== 'reading';
+    $('quizAsk').textContent = TYPES[q.t].ask;
     const qs = $('quizSay');
     if (qs) {
       qs.dataset.say = item.r;
       qs.setAttribute('aria-label', `播放「${item.w}」的發音`);
-      qs.hidden = reading && !answered;
+      // Hearing the word would give away a reading or 中→日 answer.
+      qs.hidden = (q.t === 'reading' || zh) && !answered;
     }
-    const noHint = item.w === item.r || reading;
+    const noHint = item.w === item.r || q.t !== 'meaning';
     applyHint();
     $('quizHint').hidden = noHint;
     if (noHint) $('quizReading').hidden = true;
 
-    const right = ans(item);
-    const optLang = reading ? ' lang="ja"' : '';
+    const right = qAns(q);
+    const optLang = q.t === 'meaning' ? '' : ' lang="ja"';
     $('quizOptions').innerHTML = q.opts.map((opt, n) => {
       let cls = 'option', mark = '', sr = '';
       if (answered && opt === right) { cls += ' is-correct'; mark = ICON_OK; sr = '（正確答案）'; }
@@ -1641,12 +1768,14 @@
     const q = round.qs[round.i];
     if (!q || q.choice !== null) return;
     q.choice = opt;
+    const item = qItem(q);
+    const right = qAns(q);
+    if (recordAnswer(item, opt === right)) (round.cleared ||= []).push(q.k);
     save();
     render();
-    const item = byKey.get(q.k);
-    $('quizLive').textContent = opt === ans(item)
+    $('quizLive').textContent = opt === right
       ? `答對了。${item.w}，${item.r}，${item.c}。`
-      : `答錯了。正確答案是${ans(item)}。${item.w}，${item.r}，${item.c}。`;
+      : `答錯了。正確答案是${right}。${item.w}，${item.r}，${item.c}。`;
     $('quizNext').focus({ preventScroll: true });
     $('quizNext').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
@@ -1703,7 +1832,9 @@
       (missed.length ? `<h3>答錯的字</h3><ul class="missed">${missed.map(m =>
         `<li><span class="m-w" lang="ja">${esc(m.w)}</span>` +
         (m.r && m.r !== m.w ? `<span class="m-r" lang="ja">${esc(m.r)}</span>` : '') +
-        `<span class="m-c">${esc(m.c)}</span></li>`).join('')}</ul>` : '');
+        `<span class="m-c">${esc(m.c)}</span></li>`).join('')}</ul>` : '') +
+      (round.cleared?.length ? `<p class="done-grad">${ICON_OK}<span>${round.cleared.length} 個字已連續答對 ${MISS_CLEAR} 次，移出錯題本：` +
+        round.cleared.map(k => `<span lang="ja">${esc(byKey.get(k).w)}</span>`).join('、') + `</span></p>` : '');
     done.querySelector('[data-act="retry"]')?.addEventListener('click', () => {
       newRound(missed.map(m => m.k));
       $('quizOptions').querySelector('.option')?.focus({ preventScroll: true });
