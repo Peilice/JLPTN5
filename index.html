@@ -43,6 +43,9 @@
     --fs-2xl: 1.3rem;
     --fs-3xl: 1.5rem;
     --fs-4xl: 1.75rem;
+    --fs-display: clamp(2.75rem, 12vw, 4.25rem);
+    --fs-display-zh: clamp(1.75rem, 7vw, 2.5rem);
+    --fs-chapter: clamp(1.75rem, 7vw, 2.25rem);
     --r-hair: 6px;
     --r-field: 8px;
     --r-surface: 12px;
@@ -158,14 +161,14 @@
     margin: 0;
     font-family: var(--font-ja-head);
     font-weight: 600;
-    font-size: clamp(2.75rem, 12vw, 4.25rem);
+    font-size: var(--fs-display);
     line-height: 1.2;
     letter-spacing: 0.02em;
     overflow-wrap: anywhere;
   }
   .prompt-word.is-zh {
     font-family: inherit;
-    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    font-size: var(--fs-display-zh);
     letter-spacing: 0;
     padding: 0.35em 0;
   }
@@ -392,7 +395,7 @@
     .miss-toggle .mt-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
   .nav-tools { flex: none; display: flex; align-items: center; gap: 8px; }
-  .miss-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 8px 0 14px; }
+  .miss-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 14px 0 14px; }
   .miss-head .chapter-intro { margin: 0; }
   .miss-drill { min-height: 40px; padding: 0 16px; font-size: var(--fs-sm); }
   .miss-list {
@@ -427,16 +430,19 @@
   .lex-body { padding-bottom: 24px; }
 
   /* Chapters */
-  .chapter, .miss-book { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line-strong); scroll-margin-top: var(--nav-h); }
+  /* A chapter opens like a new chapter in a textbook: a full ink rule (the section heading's
+     3px stub, run the whole width) and the chapter name a step above everything else in the word list. */
+  .chapter, .miss-book { margin-top: 96px; padding-top: 20px; border-top: 3px solid var(--ink); scroll-margin-top: var(--nav-h); }
   .miss-book h2:focus { outline: none; }
   .chapter-head h2 {
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px;
-    margin: 0; font-size: var(--fs-4xl); line-height: 1.3; letter-spacing: 0.01em;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 14px;
+    margin: 0; font-size: var(--fs-chapter); line-height: 1.25; letter-spacing: 0.01em;
   }
   .ch-no { font-weight: 400; font-size: var(--fs-sm); color: var(--sub); letter-spacing: 0.04em; }
-  .chapter-head h2 .ch-no { font-size: var(--fs-base); }
-  .chapter-intro { margin: 8px 0 0; max-width: 46em; text-wrap: pretty; font-size: var(--fs-md); color: var(--ink-2); }
-  .chapter-toc { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chapter-head h2 .ch-no { font-size: var(--fs-base); font-weight: 600; letter-spacing: 0.08em; }
+  .chapter-intro { margin: 14px 0 0; max-width: 40em; text-wrap: pretty; font-size: var(--fs-base); color: var(--ink-2); }
+  .chapter-head .legend { margin-top: 16px; }
+  .chapter-toc { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
   .chapter-toc a {
     display: inline-flex; align-items: center; gap: 6px;
     min-height: 40px; padding: 0 12px;
@@ -683,7 +689,8 @@
     .e-ex { padding: 0 0 14px; }
     .entries-phrase .e-row { grid-template-columns: minmax(0, 1fr); }
     .entries-phrase .e-row .e-word, .entries-phrase .e-row .e-mean { grid-column: 1; grid-row: auto; align-self: auto; }
-    .chapter, .miss-book { margin-top: 44px; }
+    .chapter, .miss-book { margin-top: 64px; padding-top: 16px; }
+    .chapter-head h2 { gap: 0 10px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
