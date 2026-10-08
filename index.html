@@ -2186,6 +2186,11 @@
       margin-top: 4px;
     }
 
+    #clearRecords:not([hidden]) {
+      display: block;
+      margin: 8px auto 0;
+    }
+
     @media print {
       :root {
         --bg: #fffdf8;
@@ -2197,7 +2202,8 @@
       .about-more,
       .say,
       .ex-toggle,
-      .toc-drill {
+      .toc-drill,
+      #clearRecords {
         display: none !important;
       }
 
@@ -6471,7 +6477,9 @@
     </div>
   </main>
   <footer>
-    <div class="wrap">製作日期：2026年8月<span id="audioCredit" hidden></span></div>
+    <div class="wrap">製作日期：2026年8月<span id="audioCredit" hidden></span>
+      <button id="clearRecords" class="btn-text" type="button" hidden>清除學習紀錄</button>
+    </div>
   </footer>
 
   <script src="audio/manifest.js"></script>
@@ -7089,6 +7097,31 @@
       let restoring = true;
       if (!restore()) newRound(); else render();
       restoring = false;
+
+      // Footer: wipe the 錯題本 and the round in progress on this device. Display settings
+      // (mask, reading hint) stay. Same press-twice guard as 換一組題目.
+      const clearBtn = $('clearRecords');
+      let clearTimer = null;
+      function disarmClear() {
+        clearTimeout(clearTimer);
+        clearBtn.classList.remove('armed');
+        clearBtn.textContent = '清除學習紀錄';
+      }
+      clearBtn.hidden = false;
+      clearBtn.addEventListener('click', () => {
+        if (!clearBtn.classList.contains('armed')) {
+          clearBtn.classList.add('armed');
+          clearBtn.textContent = '再按一次，清除錯題本與練習進度';
+          clearTimer = setTimeout(disarmClear, 4000);
+          return;
+        }
+        disarmClear();
+        Object.keys(mistakes).forEach(id => delete mistakes[id]);
+        store.set(MISS_KEY, mistakes);
+        renderMissBook();
+        newRound();
+        $('quizLive').textContent = '已清除錯題本與練習進度。';
+      });
 
       // The chevron opens a row's example. While masked, tapping the row reveals the answer
       // instead; unmasked there is nothing to reveal, so the row opens the example too.
