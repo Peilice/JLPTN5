@@ -239,8 +239,9 @@
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     margin-top: 10px; padding-top: 4px; border-top: 1px solid var(--line);
   }
-  .kbd-hint { font-size: var(--fs-xs); color: var(--sub); visibility: hidden; }
-  @media (hover: hover) and (pointer: fine) { .kbd-hint { visibility: visible; } }
+  .kbd-hint { display: none; font-size: var(--fs-xs); color: var(--sub); }
+  @media (hover: hover) and (pointer: fine) { .kbd-hint { display: inline; } }
+  .quiz-foot #quizRestart { margin-left: auto; }
   .btn-text {
     min-height: 44px; padding: 0 4px;
     font: inherit; font-size: var(--fs-sm); color: var(--sub);
@@ -368,6 +369,51 @@
     background: transparent; border: 1px solid var(--line-strong); border-radius: var(--r-pill);
     cursor: pointer;
   }
+  /* 錯題本: a fold-out under the quiz card, most-missed first. */
+  /* The 錯題本 button wears the teacher's red cross so it reads as "your mistakes" at a glance. */
+  .miss-toggle {
+    flex: none; display: inline-flex; align-items: center; gap: 6px;
+    min-height: 40px; padding: 0 12px;
+    font: inherit; font-size: var(--fs-sm); color: var(--ink);
+    background: var(--card); border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+    cursor: pointer;
+  }
+  .miss-toggle .miss svg { width: 14px; height: 14px; }
+  .miss-toggle .n { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .miss-toggle.is-empty { color: var(--sub); }
+  .miss-toggle.is-empty .n { font-weight: 400; }
+  .miss-toggle .e-chev { width: 14px; height: 14px; color: var(--sub); transition: transform 160ms ease-out; }
+  .miss-toggle[aria-expanded="true"] { background: var(--surface-2); }
+  .miss-toggle[aria-expanded="true"] .e-chev { transform: rotate(180deg); }
+  @media (hover: hover) { .miss-toggle:hover { background: var(--surface-2); } }
+  /* Phones: the button shrinks to ✕ 4 so the nav stays one line. */
+  @media (max-width: 559px) {
+    .miss-toggle { padding: 0 10px; gap: 4px; }
+    .miss-toggle .mt-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  }
+  .nav-tools { flex: none; display: flex; align-items: center; gap: 8px; }
+  .miss-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 8px 0 14px; }
+  .miss-head .chapter-intro { margin: 0; }
+  .miss-drill { min-height: 40px; padding: 0 16px; font-size: var(--fs-sm); }
+  .miss-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); column-gap: 20px;
+  }
+  .miss-word {
+    width: calc(100% + 8px); display: flex; align-items: baseline; gap: 8px;
+    min-height: 44px; margin-left: -8px; padding: 10px 8px;
+    font: inherit; color: var(--ink-2); text-align: left;
+    background: transparent; border: 0; border-radius: var(--r-field); cursor: pointer;
+  }
+  @media (hover: hover) { .miss-word:hover { background: var(--surface-2); } }
+  .miss-word .mw { flex: none; font-family: var(--font-ja-head); font-weight: 600; color: var(--ink); }
+  .miss-word .mr { flex: none; font-size: var(--fs-sm); color: var(--sub); }
+  .miss-word .mc { flex: 1; min-width: 0; font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .miss-word .miss, .miss-word .dots { flex: none; align-self: center; }
+  .miss-empty { margin: 8px 0 0; font-size: var(--fs-md); color: var(--ink-2); }
+  .jump-flash { animation: jump-flash 1.6s ease-out; }
+  @keyframes jump-flash { from { background-color: var(--surface-2); box-shadow: inset 0 0 0 2px var(--ink); } }
+  @media (prefers-reduced-motion: reduce) { .jump-flash { animation-duration: 0.01s; } }
   .toc-panel {
     position: absolute; left: 0; right: 0; top: 100%;
     max-height: calc(100dvh - var(--nav-h) - 24px); overflow-y: auto; overscroll-behavior: contain;
@@ -381,7 +427,8 @@
   .lex-body { padding-bottom: 24px; }
 
   /* Chapters */
-  .chapter { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line-strong); scroll-margin-top: var(--nav-h); }
+  .chapter, .miss-book { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line-strong); scroll-margin-top: var(--nav-h); }
+  .miss-book h2:focus { outline: none; }
   .chapter-head h2 {
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px;
     margin: 0; font-size: var(--fs-4xl); line-height: 1.3; letter-spacing: 0.01em;
@@ -459,8 +506,8 @@
   .ex-ja { display: block; color: var(--ink); }
   .ex-zh { display: block; font-size: var(--fs-sm); color: var(--sub); }
 
-  /* 錯題本: the teacher's small red cross in the margin, with how many times it was missed.
-     Ink only, no fill, so a page with many marks still reads as a word list. */
+  /* 錯題本: the teacher's small red cross with how many times it was missed, shown in the
+     錯題本 section only; the word rows stay clean. Ink only, no fill. */
   .e-pos { display: inline-flex; align-items: center; gap: 8px; }
   .miss {
     display: inline-flex; align-items: center; gap: 1px;
@@ -468,15 +515,14 @@
     font-variant-numeric: tabular-nums; white-space: nowrap;
   }
   .miss svg { width: 13px; height: 13px; }
-  .tile .miss { position: absolute; right: 7px; bottom: 7px; pointer-events: none; }
-  .grid .tile .miss { right: 5px; bottom: 5px; }
-  .miss-streak {
+  .dots { display: inline-flex; gap: 4px; }
+  .dots i { width: 8px; height: 8px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); }
+  .dots i.on { background: var(--correct); border-color: var(--correct); }
+  .rv-book {
     display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px;
     margin: 8px 0 0; font-size: var(--fs-sm); color: var(--sub);
   }
-  .miss-streak .dots { display: inline-flex; gap: 4px; }
-  .miss-streak .dots i { width: 8px; height: 8px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); }
-  .miss-streak .dots i.on { background: var(--correct); border-color: var(--correct); }
+  .rv-book svg { width: 16px; height: 16px; margin-right: -4px; color: var(--correct); }
 
   /* Sets: words learned together sit under one small label. A contrasting pair
      (反義、自他成對…) also gets a double arrow between its two words. */
@@ -637,7 +683,7 @@
     .e-ex { padding: 0 0 14px; }
     .entries-phrase .e-row { grid-template-columns: minmax(0, 1fr); }
     .entries-phrase .e-row .e-word, .entries-phrase .e-row .e-mean { grid-column: 1; grid-row: auto; align-self: auto; }
-    .chapter { margin-top: 44px; }
+    .chapter, .miss-book { margin-top: 44px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -648,7 +694,7 @@
 
   @media print {
     :root { --bg: #fffdf8; --card: #fffdf8; }
-    .quiz, .lexicon-nav, .about-more, .say, .e-chev, .toc-drill, .miss, .miss-streak, .e-pos.miss-only { display: none !important; }
+    .quiz, .lexicon-nav, .about-more, .say, .e-chev, .toc-drill { display: none !important; }
     .e-ex[hidden] { display: block !important; }
     .masked .mean-t, .masked .reading { color: inherit !important; background: none !important; }
     .entry, .set { break-inside: avoid; }
@@ -724,7 +770,10 @@
     <nav class="lexicon-nav" aria-label="單字目次">
       <div class="wrap nav-bar">
         <a class="toc-btn" id="tocBtn" href="#toc"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M7 5.5h10M7 10h10M7 14.5h10"/><path d="M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01" stroke-width="2.4"/></svg><span class="toc-label">目次</span><span class="toc-here" id="tocHere"></span></a>
-        <button class="mask-toggle" id="maskToggle" type="button" aria-pressed="false">遮住答案</button>
+        <div class="nav-tools">
+          <button id="missToggle" class="miss-toggle" type="button" aria-expanded="false" aria-controls="missBook" hidden>錯題本</button>
+          <button class="mask-toggle" id="maskToggle" type="button" aria-pressed="false">遮住答案</button>
+        </div>
       </div>
       <p class="mask-hint" id="maskHint" role="status" hidden></p>
     </nav>
@@ -734,6 +783,10 @@
         <a class="toc-quiz" href="#quiz">回到練習題</a>
         <ol class="toc-list"><li class="toc-ch"><a class="toc-ch-link" href="#ch-1"><span class="ch-no">第一章</span>數字與念法</a><ol><li><a href="#數字">數字<span class="n">40</span></a></li><li><a href="#日期月份">日期與月份<span class="n">45</span></a></li><li><a href="#時刻">時刻<span class="n">29</span></a></li><li><a href="#期間">期間<span class="n">24</span></a></li><li><a href="#量詞1">量詞：〜つ・〜人<span class="n">22</span></a></li><li><a href="#量詞2">量詞：〜本・〜杯・〜匹<span class="n">33</span></a></li><li><a href="#量詞3">量詞：〜個・〜回・〜階<span class="n">33</span></a></li><li><a href="#量詞4">量詞：〜冊・〜歳與其他<span class="n">34</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-2"><span class="ch-no">第二章</span>時間與方向</a><ol><li><a href="#時間說法">時間的說法<span class="n">34</span></a></li><li><a href="#相對時間">相對時間對照<span class="n">30</span></a></li><li><a href="#こそあど">こそあど與疑問詞<span class="n">27</span></a></li><li><a href="#方位">方位與位置<span class="n">17</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-3"><span class="ch-no">第三章</span>人與生活</a><ol><li><a href="#人稱家族">人稱與家族<span class="n">20</span></a></li><li><a href="#寒暄語">寒暄語<span class="n">20</span></a></li><li><a href="#家">家與住處<span class="n">14</span></a></li><li><a href="#城市">城市裡的地方<span class="n">13</span></a></li><li><a href="#交通">交通與車站<span class="n">11</span></a></li><li><a href="#吃與買">吃與買<span class="n">23</span></a></li><li><a href="#學校工作">學校、工作與興趣<span class="n">26</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-4"><span class="ch-no">第四章</span>東西與自然</a><ol><li><a href="#物品">隨身物品與電器<span class="n">14</span></a></li><li><a href="#衣物身體">衣物與身體<span class="n">15</span></a></li><li><a href="#天氣季節">天氣與季節<span class="n">17</span></a></li><li><a href="#自然顏色">動物、自然與顏色<span class="n">25</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-5"><span class="ch-no">第五章</span>動詞</a><ol><li><a href="#動詞生活">一天的生活<span class="n">17</span></a></li><li><a href="#動詞移動">移動與位置<span class="n">14</span></a></li><li><a href="#動詞給借">給、借與買賣<span class="n">13</span></a></li><li><a href="#動詞穿戴">穿戴與開關<span class="n">15</span></a></li><li><a href="#動詞說聽">說、聽、知道與狀態<span class="n">17</span></a></li></ol></li><li class="toc-ch"><a class="toc-ch-link" href="#ch-6"><span class="ch-no">第六章</span>形容詞與副詞</a><ol><li><a href="#形容外觀">大小、多少與顏色<span class="n">21</span></a></li><li><a href="#形容感覺">感覺與評價<span class="n">17</span></a></li><li><a href="#形容人事">人和事的樣子<span class="n">20</span></a></li><li><a href="#副詞">副詞與數量<span class="n">17</span></a></li></ol></li></ol>
       </nav>
+<section class="miss-book" id="missBook" aria-labelledby="missBookTitle" hidden>
+<header class="chapter-head"><h2 id="missBookTitle" tabindex="-1">錯題本</h2></header>
+<div id="missBody"></div>
+</section>
 <section class="chapter" id="ch-1" aria-labelledby="ch-1-t">
 <header class="chapter-head"><h2 id="ch-1-t"><span class="ch-no">第一章</span>數字與念法</h2><p class="chapter-intro">數字、日期、時刻和量詞，念法常常會變。這一章特別要練讀音；<b class="chg">畫上螢光筆</b>的是念法特殊或會音變的地方，最常考。點任一格可以聽發音。</p><ol class="chapter-toc"><li><a href="#數字">數字<span class="n">40</span></a></li><li><a href="#日期月份">日期與月份<span class="n">45</span></a></li><li><a href="#時刻">時刻<span class="n">29</span></a></li><li><a href="#期間">期間<span class="n">24</span></a></li><li><a href="#量詞1">量詞：〜つ・〜人<span class="n">22</span></a></li><li><a href="#量詞2">量詞：〜本・〜杯・〜匹<span class="n">33</span></a></li><li><a href="#量詞3">量詞：〜個・〜回・〜階<span class="n">33</span></a></li><li><a href="#量詞4">量詞：〜冊・〜歳與其他<span class="n">34</span></a></li></ol></header>
 <section id="數字" class="lex-section" data-name="數字" data-mode="reading">
@@ -1430,6 +1483,7 @@
     });
   };
   const scopePool = scope => scope === 'all' ? once(BANK)
+    : scope === 'miss' ? missPool()
     : scope.startsWith('ch-') ? once(BANK.filter(x => x.ch === scope))
     : BANK.filter(x => x.cat === scope);
   const scopeSel = $('quizScope');
@@ -1442,6 +1496,7 @@
     scopeSel.append(g);
   });
   scopeSel.options[0].textContent = `全部（${scopePool('all').length}）`;
+  scopeSel.add(new Option('錯題本', 'miss'), 1);
   document.querySelectorAll('.bank-total').forEach(el => { el.textContent = scopePool('all').length; });
   $('entryTotal').textContent = BANK.length;
 
@@ -1550,6 +1605,12 @@
   const MISS_CLEAR = 5;
   const mistakes = store.get(MISS_KEY) || {};
   const wordId = item => item.w + '|' + item.r;
+  const missItem = new Map();
+  BANK.forEach(x => { if (!missItem.has(wordId(x))) missItem.set(wordId(x), x); });
+  // Most-missed first; among equals, the one furthest from leaving the book.
+  const missIds = () => Object.keys(mistakes).filter(id => missItem.has(id))
+    .sort((a, b) => mistakes[b][0] - mistakes[a][0] || mistakes[a][1] - mistakes[b][1]);
+  function missPool() { return missIds().map(id => missItem.get(id)); }
   const wordEls = new Map();
   document.querySelectorAll('.lex-section .entry, .lex-section .tile').forEach(el => {
     const w = text(el.querySelector('.jw, .t-w'));
@@ -1558,35 +1619,12 @@
     wordEls.get(id).push(el);
   });
   const ICON_MISS = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>';
-  function paintMiss(id) {
-    const rec = mistakes[id];
-    (wordEls.get(id) || []).forEach(el => {
-      el.querySelector('.miss')?.remove();
-      el.querySelector('.miss-streak')?.remove();
-      el.querySelector('.e-pos.miss-only')?.remove();
-      if (!rec) return;
-      const [n, streak] = rec;
-      const mark = `<span class="miss" title="答錯 ${n} 次，再連續答對 ${MISS_CLEAR - streak} 次就移出錯題本">` +
-        `${ICON_MISS}<span aria-hidden="true">${n > 9 ? '9+' : n}</span><span class="sr-only">，答錯 ${n} 次</span></span>`;
-      if (el.classList.contains('tile')) {
-        el.querySelector('.tile-btn').insertAdjacentHTML('beforeend', mark);
-        return;
-      }
-      const row = el.querySelector('.e-row');
-      let pos = row.querySelector('.e-pos');
-      if (!pos) {
-        pos = document.createElement('span');
-        pos.className = 'e-pos miss-only';
-        row.querySelector('.e-mean').after(pos);
-      }
-      pos.insertAdjacentHTML('beforeend', mark);
-      el.querySelector('.e-ex')?.insertAdjacentHTML('beforeend',
-        `<p class="miss-streak"><span>錯題本</span>` +
-        `<span class="dots" aria-hidden="true">${Array.from({ length: MISS_CLEAR }, (_, i) => `<i${i < streak ? ' class="on"' : ''}></i>`).join('')}</span>` +
-        `<span class="tnum">連續答對 ${streak} / ${MISS_CLEAR}</span></p>`);
-    });
-  }
-  Object.keys(mistakes).forEach(paintMiss);
+  // Progress toward leaving the book: ●●○○○. Shown in the 目次 list and after answering,
+  // never on the word rows, so words with and without examples look the same.
+  const streakDots = streak => `<span class="dots" aria-hidden="true">${
+    Array.from({ length: MISS_CLEAR }, (_, i) => `<i${i < streak ? ' class="on"' : ''}></i>`).join('')}</span>`;
+  // The 錯題本 list in the 目次 panel is built later and hooks in here.
+  let onMissChange = () => {};
   // Returns true when this answer took the word out of the book.
   function recordAnswer(item, right) {
     const id = wordId(item);
@@ -1596,7 +1634,7 @@
     else if (rec && ++rec[1] >= MISS_CLEAR) { delete mistakes[id]; cleared = true; }
     else if (!rec) return false;
     store.set(MISS_KEY, mistakes);
-    paintMiss(id);
+    onMissChange();
     return cleared;
   }
 
@@ -1669,6 +1707,7 @@
   }
 
   function newRound(keys) {
+    if (!keys && !scopePool($('quizScope').value).length) $('quizScope').value = 'all';
     const scope = $('quizScope').value;
     const pool = keys ? keys.map(k => byKey.get(k)).filter(Boolean) : scopePool(scope);
     const picked = keys ? shuffle(pool) : shuffle(pool).slice(0, ROUND_LENGTH);
@@ -1704,6 +1743,14 @@
       if (q.choice !== null) return `<li class="${isRight(q) ? 'ok' : 'ng'}"></li>`;
       return `<li class="${n === round.i ? 'now' : ''}"></li>`;
     }).join('');
+  }
+
+  function bookLine(book, ok) {
+    if (!book) return '';
+    if (book.cleared) return `<p class="rv-book">${ICON_OK}連續答對 ${MISS_CLEAR} 次，移出錯題本</p>`;
+    return ok
+      ? `<p class="rv-book">錯題本：<span class="tnum">連續答對 ${book.streak} / ${MISS_CLEAR}</span>${streakDots(book.streak)}</p>`
+      : `<p class="rv-book">已記入錯題本（答錯 ${book.n} 次），連續答對 ${MISS_CLEAR} 次就移出</p>`;
   }
 
   function render() {
@@ -1757,7 +1804,8 @@
       reveal.innerHTML =
         `<p class="status">${ok ? ICON_OK + '答對了' : ICON_NG + '答錯了，正確答案是：'}</p>` +
         `<p class="entry"><span class="rv-word" lang="ja">${esc(item.w)}</span>` +
-        `<span class="rv-reading" lang="ja">${esc(item.r)}</span>${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>`;
+        `<span class="rv-reading" lang="ja">${esc(item.r)}</span>${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>` +
+        bookLine(q.book, ok);
     }
     const next = $('quizNext');
     next.hidden = !answered;
@@ -1770,12 +1818,17 @@
     q.choice = opt;
     const item = qItem(q);
     const right = qAns(q);
-    if (recordAnswer(item, opt === right)) (round.cleared ||= []).push(q.k);
+    const cleared = recordAnswer(item, opt === right);
+    if (cleared) (round.cleared ||= []).push(q.k);
+    // Where this answer left the word in the 錯題本, kept with the question so a reload shows it too.
+    const rec = mistakes[wordId(item)];
+    q.book = cleared ? { cleared: true } : rec ? { n: rec[0], streak: rec[1] } : null;
     save();
     render();
     $('quizLive').textContent = opt === right
       ? `答對了。${item.w}，${item.r}，${item.c}。`
       : `答錯了。正確答案是${right}。${item.w}，${item.r}，${item.c}。`;
+    $('quizLive').textContent += $('quizReveal').querySelector('.rv-book')?.textContent || '';
     $('quizNext').focus({ preventScroll: true });
     $('quizNext').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
@@ -1898,6 +1951,67 @@
       const btn = $('quizOptions').querySelectorAll('.option')[Number(e.key) - 1];
       if (btn) { e.preventDefault(); answer(btn.dataset.opt); }
     }
+  });
+
+  // 錯題本: a chapter-level section above 第一章, opened from the nav; it lists the words
+  // and has a button that drills just these words.
+  const missToggle = $('missToggle');
+  const missBook = $('missBook');
+  const missBody = $('missBody');
+  missToggle.hidden = false;
+  const missOpt = [...scopeSel.options].find(o => o.value === 'miss');
+  function renderMissBook() {
+    const ids = missIds();
+    missToggle.classList.toggle('is-empty', !ids.length);
+    missToggle.setAttribute('aria-label', `錯題本 ${ids.length} 字`);
+    missToggle.innerHTML = (ids.length ? `<span class="miss">${ICON_MISS}</span>` : '') +
+      `<span class="mt-label">錯題本</span><span class="n">${ids.length}</span>${ICON_CHEV}`;
+    missOpt.textContent = `錯題本（${ids.length}）`;
+    missBody.innerHTML = ids.length
+      ? `<div class="miss-head"><p class="chapter-intro">共 ${ids.length} 字，答錯多的排前面；連續答對 ${MISS_CLEAR} 次就移出。點字可以跳到它在單字表的位置。</p>` +
+        `<button type="button" class="btn btn-secondary miss-drill">練這些字</button></div>` +
+        `<ol class="miss-list">${ids.map(id => {
+          const x = missItem.get(id);
+          const [n, streak] = mistakes[id];
+          return `<li><button type="button" class="miss-word" data-id="${esc(id)}" ` +
+            `title="答錯 ${n} 次，再連續答對 ${MISS_CLEAR - streak} 次就移出錯題本">` +
+            `<span class="mw" lang="ja">${esc(x.w)}</span>` +
+            (x.r !== x.w ? `<span class="mr" lang="ja">${esc(x.r)}</span>` : '') +
+            `<span class="mc">${esc(x.c)}</span>` +
+            `<span class="miss">${ICON_MISS}<span aria-hidden="true">${n}</span><span class="sr-only">，答錯 ${n} 次</span></span>` +
+            `${streakDots(streak)}<span class="sr-only">，連續答對 ${streak} / ${MISS_CLEAR}</span>` +
+            `</button></li>`;
+        }).join('')}</ol>`
+      : `<p class="miss-empty">還沒有答錯的字。練習時答錯的字會列在這裡，連續答對 ${MISS_CLEAR} 次就移出。</p>`;
+  }
+  renderMissBook();
+  onMissChange = renderMissBook;
+  function openMiss(on) {
+    missBook.hidden = !on;
+    missToggle.setAttribute('aria-expanded', String(on));
+    if (!on) return;
+    openToc(false);
+    missBook.scrollIntoView({ block: 'start' });
+    $('missBookTitle').focus({ preventScroll: true });
+  }
+  missToggle.addEventListener('click', () => openMiss(missBook.hidden));
+  missBook.addEventListener('click', e => {
+    if (e.target.closest('.miss-drill')) {
+      scopeSel.value = 'miss';
+      scopeSel.dispatchEvent(new Event('change'));
+      $('quiz').scrollIntoView({ block: 'start' });
+      $('quizOptions').querySelector('.option:not([disabled])')?.focus({ preventScroll: true });
+      return;
+    }
+    const btn = e.target.closest('.miss-word');
+    const el = btn && wordEls.get(btn.dataset.id)?.[0];
+    if (!el) return;
+    if (el.querySelector('button.e-row')) setOpen(el, true);
+    el.scrollIntoView({ block: 'center' });
+    el.classList.remove('jump-flash');
+    void el.offsetWidth;
+    el.classList.add('jump-flash');
+    el.querySelector('button')?.focus({ preventScroll: true });
   });
 
   let restoring = true;
