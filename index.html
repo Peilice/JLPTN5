@@ -6492,10 +6492,9 @@
   <script src="audio/manifest.js"></script>
   <script src="quiz.js"></script>
   <script src="missbook.js"></script>
+  <script src="round.js"></script>
   <script>
     (() => {
-      const ROUND_LENGTH = 10;
-      const QUIZ_KEY = 'jlptn5.quiz.v5';
       const MASK_KEY = 'jlptn5.mask';
 
       const store = {
@@ -6534,20 +6533,19 @@
       const words = readWords();
       const bank = window.JLPTQuiz.createBank(words.map(x => x.rec));
       const BANK = bank.items;
-      const scopePool = scope => scope === 'miss' ? missPool() : bank.pool(scope);
       const scopeSel = $('quizScope');
       document.querySelectorAll('.chapter').forEach(ch => {
         const no = text(ch.querySelector('h2 .ch-no'));
         const g = document.createElement('optgroup');
         g.label = `${no}　${text(ch.querySelector('h2')).slice(no.length)}`;
-        g.append(new Option(`${no}全部（${scopePool(ch.id).length}）`, ch.id));
-        ch.querySelectorAll('.lex-section').forEach(sec => g.append(new Option(`${sec.dataset.name}（${scopePool(sec.id).length}）`, sec.id)));
+        g.append(new Option(`${no}全部（${bank.pool(ch.id).length}）`, ch.id));
+        ch.querySelectorAll('.lex-section').forEach(sec => g.append(new Option(`${sec.dataset.name}（${bank.pool(sec.id).length}）`, sec.id)));
         scopeSel.append(g);
       });
-      scopeSel.options[0].textContent = `全部（${scopePool('all').length}）`;
+      scopeSel.options[0].textContent = `全部（${bank.pool('all').length}）`;
       // 錯題本 sits beside 全部, before the chapter groups, not inside 第一章.
       scopeSel.insertBefore(new Option('錯題本', 'miss'), scopeSel.querySelector('optgroup'));
-      document.querySelectorAll('.bank-total').forEach(el => { el.textContent = scopePool('all').length; });
+      document.querySelectorAll('.bank-total').forEach(el => { el.textContent = bank.pool('all').length; });
       $('entryTotal').textContent = BANK.length;
 
       // Pronunciation: recorded VOICEVOX mp3s (audio/, made by tools/make_audio.py) when one
@@ -6657,8 +6655,6 @@
       const MISS_CLEAR = window.JLPTMissBook.CLEAR;
       const misses = window.JLPTMissBook.createMissBook(bank, store);
       const wordId = bank.wordId;
-      // The round shuffles the pool anyway, so the 錯題本 range needs no order.
-      function missPool() { return misses.list().map(x => x.item); }
       // Where each word sits on the page, for jumping to it from the 錯題本.
       const wordEls = new Map();
       words.forEach(({ el, rec }) => {
@@ -6670,54 +6666,28 @@
       // Progress toward leaving the book: ●●○○○. Shown in the 目次 list and after answering,
       // never on the word rows, so words with and without examples look the same.
       const streakDots = streak => `<span class="dots" aria-hidden="true">${Array.from({ length: MISS_CLEAR }, (_, i) => `<i${i < streak ? ' class="on"' : ''}></i>`).join('')}</span>`;
-      function shuffle(arr) {
-        const a = arr.slice();
-        for (let i = a.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [a[i], a[j]] = [a[j], a[i]];
-        }
-        return a;
-      }
-
-      const makeQuestion = item => ({ ...bank.question(item, misses.typeFor(item)), choice: null });
+      // 一組練習 (round.js): drawing, answering, saving and summing up live there;
+      // the page draws practice.round and passes on what the learner does.
+      const practice = window.JLPTRound.createPractice({ bank, misses, store });
       const qItem = q => bank.item(q.k);
       const qAns = q => bank.answerOf(q);
+      const { isRight, isDone, inProgress } = practice;
 
-      let round = null;
-
-      function newRound(keys) {
-        if (!keys && !scopePool($('quizScope').value).length) $('quizScope').value = 'all';
-        const scope = $('quizScope').value;
-        const pool = keys ? keys.map(k => bank.item(k)).filter(Boolean) : scopePool(scope);
-        const picked = keys ? shuffle(pool) : shuffle(pool).slice(0, ROUND_LENGTH);
-        round = { scope, qs: picked.map(makeQuestion), i: 0, retry: Boolean(keys) };
-        save();
+      // A new 一組 from the range in the menu (or this 一組's missed words again), then drawn.
+      function newRound(retry) {
+        if (retry) practice.retry();
+        else scopeSel.value = practice.start(scopeSel.value);
         render();
       }
-
-      function save() { store.set(QUIZ_KEY, round); }
-
-      function restore() {
-        const saved = store.get(QUIZ_KEY);
-        if (!saved || !Array.isArray(saved.qs) || !saved.qs.length) return false;
-        if (!saved.qs.every(q => bank.item(q.k) && bank.typesFor(qItem(q)).includes(q.t) && Array.isArray(q.opts) && q.opts.includes(qAns(q)))) return false;
-        if ([...$('quizScope').options].some(o => o.value === saved.scope)) $('quizScope').value = saved.scope;
-        round = saved;
-        return true;
-      }
-
-      const isRight = q => q.choice !== null && q.choice === qAns(q);
-      const score = () => round.qs.filter(isRight).length;
-      const isDone = () => round.i >= round.qs.length;
-      const inProgress = () => !isDone() && (round.i > 0 || round.qs[0].choice !== null);
 
       const ICON_OK = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>';
       const ICON_NG = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/></svg>';
 
       function renderMeta() {
+        const round = practice.round;
         const total = round.qs.length;
         $('quizProgress').textContent = isDone() ? `共 ${total} 題` : `第 ${round.i + 1} / ${total} 題`;
-        $('quizScore').textContent = `答對 ${score()}`;
+        $('quizScore').textContent = `答對 ${practice.score()}`;
         $('quizPips').innerHTML = round.qs.map((q, n) => {
           if (q.choice !== null) return `<li class="${isRight(q) ? 'ok' : 'ng'}"></li>`;
           return `<li class="${n === round.i ? 'now' : ''}"></li>`;
@@ -6739,6 +6709,7 @@
         $('quizStage').hidden = false;
         $('quizDone').hidden = true;
 
+        const round = practice.round;
         const q = round.qs[round.i];
         const item = qItem(q);
         const answered = q.choice !== null;
@@ -6783,16 +6754,11 @@
       }
 
       function answer(opt) {
-        const q = round.qs[round.i];
-        if (!q || q.choice !== null) return;
-        q.choice = opt;
+        const q = practice.round.qs[practice.round.i];
+        if (!practice.answer(opt)) return;
         const item = qItem(q);
         const right = qAns(q);
-        // Where this answer left the word in the 錯題本, kept with the question so a reload shows it too.
-        q.book = misses.record(item, opt === right, q.t);
-        if (q.book?.cleared) (round.cleared ||= []).push(q.k);
         renderMissBook();
-        save();
         render();
         $('quizLive').textContent = opt === right
           ? `答對了。${item.w}，${item.r}，${item.c}。`
@@ -6803,14 +6769,12 @@
       }
 
       function next() {
-        if (!round || round.qs[round.i]?.choice === null) return;
-        round.i++;
-        save();
+        if (!practice.next()) return;
         render();
         if (isDone()) {
           $('quizDone').querySelector('.done-score').focus({ preventScroll: true });
         } else {
-          $('quizLive').textContent = `第 ${round.i + 1} 題`;
+          $('quizLive').textContent = `第 ${practice.round.i + 1} 題`;
           const first = $('quizOptions').querySelector('.option');
           if (first) first.focus({ preventScroll: true });
         }
@@ -6820,20 +6784,14 @@
         $('quizStage').hidden = true;
         const done = $('quizDone');
         done.hidden = false;
-        const total = round.qs.length;
-        const s = score();
-        const missed = round.qs.filter(q => !isRight(q)).map(q => bank.item(q.k));
-        const ratio = s / total;
+        const { score: s, total, missed, cleared, level, retry } = practice.result();
         // The grade is stamped the way a Japanese teacher stamps homework, in kana an N5 learner can read.
-        const grade = ratio === 1 ? ['たいへんよくできました', '做得非常好']
-          : ratio >= 0.7 ? ['よくできました', '做得很好']
-            : ratio >= 0.4 ? ['もうすこし', '再一點點']
-              : ['がんばりましょう', '一起加油吧'];
-        const msg = round.retry && ratio === 1 ? '錯題都訂正好了，這幾個字記住了。'
-          : ratio === 1 ? '全部答對！這組字已經很熟了。'
-            : ratio >= 0.7 ? '不錯！把下面答錯的字再看一遍就更穩了。'
-              : ratio >= 0.4 ? '有進步空間，先複習下面這些字再試一次。'
-                : '別急，先把下面的字看過一遍，再挑戰一次。';
+        // Indexed by level: 0 below 40%, 1 from 40%, 2 from 70%, 3 all right.
+        const grade = [['がんばりましょう', '一起加油吧'], ['もうすこし', '再一點點'],
+          ['よくできました', '做得很好'], ['たいへんよくできました', '做得非常好']][level];
+        const msg = retry && level === 3 ? '錯題都訂正好了，這幾個字記住了。'
+          : ['別急，先把下面的字看過一遍，再挑戰一次。', '有進步空間，先複習下面這些字再試一次。',
+            '不錯！把下面答錯的字再看一遍就更穩了。', '全部答對！這組字已經很熟了。'][level];
         const phraseSize = grade[0].length > 8 ? 14 : grade[0].length > 5 ? 16 : 18;
         done.innerHTML =
           `<div class="done-score${restoring ? ' settled' : ''}" tabindex="-1" role="img" ` +
@@ -6855,10 +6813,10 @@
             `<li><span class="m-w" lang="ja">${esc(m.w)}</span>` +
             (m.r && m.r !== m.w ? `<span class="m-r" lang="ja">${esc(m.r)}</span>` : '') +
             `<span class="m-c">${esc(m.c)}</span></li>`).join('')}</ul>` : '') +
-          (round.cleared?.length ? `<p class="done-grad">${ICON_OK}<span>${round.cleared.length} 個字已連續答對 ${MISS_CLEAR} 次，移出錯題本：` +
-            round.cleared.map(k => `<span lang="ja">${esc(bank.item(k).w)}</span>`).join('、') + `</span></p>` : '');
+          (cleared.length ? `<p class="done-grad">${ICON_OK}<span>${cleared.length} 個字已連續答對 ${MISS_CLEAR} 次，移出錯題本：` +
+            cleared.map(x => `<span lang="ja">${esc(x.w)}</span>`).join('、') + `</span></p>` : '');
         done.querySelector('[data-act="retry"]')?.addEventListener('click', () => {
-          newRound(missed.map(m => m.k));
+          newRound(true);
           $('quizOptions').querySelector('.option')?.focus({ preventScroll: true });
         });
         done.querySelector('[data-act="new"]').addEventListener('click', () => {
@@ -6871,7 +6829,7 @@
       // Restarting mid-round needs a second tap, so a stray thumb cannot wipe progress.
       let armTimer = null;
       const scopeName = () => $('quizScope').selectedOptions[0].textContent.replace(/（\d+）$/, '');
-      const scopePending = () => round && $('quizScope').value !== round.scope && !isDone();
+      const scopePending = () => practice.round && $('quizScope').value !== practice.round.scope && !isDone();
       function disarmRestart() {
         clearTimeout(armTimer);
         const b = $('quizRestart');
@@ -6907,11 +6865,11 @@
       });
 
       document.addEventListener('keydown', e => {
-        if (e.altKey || e.ctrlKey || e.metaKey || !round || isDone()) return;
+        if (e.altKey || e.ctrlKey || e.metaKey || !practice.round || isDone()) return;
         if (e.target.closest('input, select, textarea, summary')) return;
         const rect = document.querySelector('.quiz-card').getBoundingClientRect();
         if (rect.bottom < 0 || rect.top > innerHeight) return;
-        const q = round.qs[round.i];
+        const q = practice.round.qs[practice.round.i];
         if (q.choice === null && /^[1-4]$/.test(e.key)) {
           const btn = $('quizOptions').querySelectorAll('.option')[Number(e.key) - 1];
           if (btn) { e.preventDefault(); answer(btn.dataset.opt); }
@@ -6979,7 +6937,11 @@
       });
 
       let restoring = true;
-      if (!restore()) newRound(); else render();
+      if (practice.restore()) {
+        const { scope } = practice.round;
+        if ([...scopeSel.options].some(o => o.value === scope)) scopeSel.value = scope;
+        render();
+      } else newRound();
       restoring = false;
 
       // Footer: wipe the 錯題本 and the round in progress on this device. Display settings
