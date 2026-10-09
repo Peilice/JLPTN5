@@ -1,21 +1,23 @@
 // Reads the words off index.html the way the page does (see the reader at the top of the
 // page script): every .entry and .tile inside a .lex-section, in page order, as the plain
-// records quiz.js takes. No dependencies, so a small tag walker stands in for the DOM.
+// records quiz.js takes, plus the example sentences the page speaks.
+// No dependencies, so a small tag walker stands in for the DOM.
 const fs = require('node:fs');
 const path = require('node:path');
 
 const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
-const FIELDS = ['jw', 't-w', 'reading', 't-r', 'mean-t', 't-c'];
+const FIELDS = ['jw', 't-w', 'reading', 't-r', 'mean-t', 't-c', 'ex-ja'];
 const decode = s => s
   .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
   .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
   .replace(/&(lt|gt|quot|#39|nbsp|amp);/g, (_, n) => ({ lt: '<', gt: '>', quot: '"', '#39': "'", nbsp: ' ', amp: '&' }[n]));
 const attrsOf = s => Object.fromEntries([...s.matchAll(/([\w-]+)="([^"]*)"/g)].map(m => [m[1], decode(m[2])]));
 
-function readPage(file = path.join(__dirname, '..', 'index.html')) {
+function walk(file = path.join(__dirname, '..', 'index.html')) {
   // Script and style bodies hold < and tag-like strings, so they are dropped first.
   const html = fs.readFileSync(file, 'utf8').replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, '');
   const records = [];
+  const sentences = [];
   const stack = [];   // { tag, cls, role } for each open element
   let chapter = null, section = null, word = null;
   // Text is collected into every open field, like textContent.
@@ -34,6 +36,7 @@ function readPage(file = path.join(__dirname, '..', 'index.html')) {
       if (!e) continue;
       if (e.role === 'word') {
         const t = word.text;
+        if (t['ex-ja'].trim()) sentences.push(t['ex-ja'].trim());
         const w = (t.jw || t['t-w']).trim();
         records.push({
           cat: section.id, ch: chapter, w,
@@ -58,7 +61,14 @@ function readPage(file = path.join(__dirname, '..', 'index.html')) {
     } else if (word) e.field = FIELDS.find(f => cls.includes(f));
     stack.push(e);
   }
-  return records;
+  return { records, sentences };
 }
 
-module.exports = { readPage };
+const readPage = file => walk(file).records;
+// Every text a say button sends: each word's reading and each example sentence.
+function readSpoken(file) {
+  const { records, sentences } = walk(file);
+  return [...new Set([...records.map(x => x.r), ...sentences])];
+}
+
+module.exports = { readPage, readSpoken };

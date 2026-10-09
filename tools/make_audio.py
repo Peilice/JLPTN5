@@ -55,7 +55,7 @@ class Collector(HTMLParser):
         if tag in self.VOID:
             return
         classes = (dict(attrs).get('class') or '').split()
-        if 'tile' in classes and tag == 'li':
+        if 'tile' in classes:
             self.tile, self.tile_depth = {}, len(self.stack)
         target = next((c for c in self.TARGETS if c in classes), None)
         if target:
