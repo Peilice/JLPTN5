@@ -4,6 +4,8 @@
 
 - `index.html`：單字表（唯一的資料來源）與頁面程式
 - `quiz.js`：出題規則（題型、錯誤選項、範圍）
+- `missbook.js`：錯題本（記錄、移出規則、清單）
+- `round.js`：一組練習（抽題、作答、存檔與接續、評語等級）
 - `audio/`：VOICEVOX 產生的發音，由 `tools/make_audio.py` 產生
 - 詞彙定義見 `GLOSSARY.md`，產品方向見 `PRODUCT.md`
 
