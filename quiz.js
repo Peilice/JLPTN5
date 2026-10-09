@@ -91,14 +91,33 @@
     // so only the readings need to differ; the other types also keep apart words too close.
     const apart = (type, a, b) => ans(a, type) !== ans(b, type) && (type === 'reading' || !tooClose(a, b));
 
+    // The wrong options for item, taken in the order given: up to two traps lead, then words
+    // that stand apart from the answer and from each other, then any traps left over.
+    // A word that leaves no room for the rest is backed out of, so this comes up short only
+    // when no three wrong options exist at all, whatever the order.
+    function fill(item, type, traps, words) {
+      const right = ans(item, type);
+      const lead = traps.slice(0, 2);
+      const need = 3 - lead.length;
+      const usable = words.filter(x => ans(x, type) !== right && !lead.includes(ans(x, type)) && apart(type, item, x));
+      let best = [];
+      const search = (chosen, from) => {
+        if (chosen.length > best.length) best = chosen;
+        if (chosen.length === need) return true;
+        for (let i = from; i < usable.length; i++) {
+          if (chosen.every(y => apart(type, usable[i], y)) && search([...chosen, usable[i]], i + 1)) return true;
+        }
+        return false;
+      };
+      search([], 0);
+      const out = [...lead, ...best.map(x => ans(x, type))];
+      for (const t of traps.slice(2)) if (out.length < 3 && !out.includes(t)) out.push(t);
+      return out;
+    }
     // Whether any three wrong options exist, regardless of the order they are drawn in.
     function canFill(item, type) {
-      const { right, traps, words } = candidates(item, type);
-      const need = 3 - Math.min(traps.length, 3);
-      const usable = words.filter(x => ans(x, type) !== right && !traps.includes(ans(x, type)) && apart(type, item, x));
-      const search = (chosen, from) => chosen.length === need ||
-        usable.some((x, i) => i >= from && chosen.every(y => apart(type, x, y)) && search([...chosen, x], i + 1));
-      return search([], 0);
+      const { traps, words } = candidates(item, type);
+      return fill(item, type, traps, words).length === 3;
     }
 
     // Words written in kana alone have no kanji to read or write. A type is also left out
@@ -129,33 +148,13 @@
     // then the same chapter, then anywhere, drawn from words that fit the type and
     // count the same number; when those run out, any traps left over fill in.
     function pickDistractors(item, type) {
-      const { right, traps: allTraps, words } = candidates(item, type);
-      const out = [];
-      const taken = new Set([right]);
-      const traps = shuffle(allTraps);
-      const addTraps = max => {
-        while (out.length < max && traps.length) {
-          const t = traps.shift();
-          if (!taken.has(t)) { taken.add(t); out.push(t); }
-        }
-      };
-      addTraps(2);
-      const chosen = [item];
+      const { traps, words } = candidates(item, type);
       const tiers = [
         x => x.cat === item.cat,
         x => x.cat !== item.cat && x.ch === item.ch,
         x => x.ch !== item.ch,
       ].flatMap(f => shuffle(words.filter(f)));
-      for (const x of tiers) {
-        if (out.length === 3) break;
-        const v = ans(x, type);
-        if (taken.has(v) || !chosen.every(y => apart(type, x, y))) continue;
-        taken.add(v);
-        chosen.push(x);
-        out.push(v);
-      }
-      addTraps(3);
-      return out;
+      return fill(item, type, shuffle(traps), tiers);
     }
 
     // One question about item. prefer is the type the 錯題本 asks it in; a type the word

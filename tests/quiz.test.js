@@ -89,6 +89,22 @@ test('能出哪些題型和抽選項的順序無關', () => {
   }
 });
 
+test('能出的題型一定湊得滿 4 個選項，不受抽選順序影響', () => {
+  // Drawing ねこ (甲、乙、丙) first shuts out とり, うま and うし; the draw must back out of it.
+  const records = [
+    word('名詞', 'ch-1', 'いぬ', 'いぬ', '丁'),
+    word('名詞', 'ch-1', 'ねこ', 'ねこ', '甲、乙、丙'),
+    word('名詞', 'ch-1', 'とり', 'とり', '甲'),
+    word('名詞', 'ch-1', 'うま', 'うま', '乙'),
+    word('名詞', 'ch-1', 'うし', 'うし', '丙'),
+  ];
+  for (let seed = 1; seed <= 50; seed++) {
+    const bank = createBank(records, { random: seeded(seed) });
+    const q = bank.question(bank.item('名詞|いぬ'), 'r2zh');
+    assert.deepEqual([...q.opts].sort(), ['丁', '丙', '乙', '甲'], `seed ${seed}`);
+  }
+});
+
 test('只用假名寫的字不出漢字→讀音和讀音→漢字', () => {
   const bank = createBank([
     word('副詞', 'ch-1', 'すぐ', 'すぐ', '馬上'),
