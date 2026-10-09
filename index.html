@@ -6510,20 +6510,29 @@
       // A word in the 錯題本 keeps the type it was missed in.
       const { TYPES } = window.JLPTQuiz;
       const text = el => el ? el.textContent.trim() : '';
-      const records = [];
-      document.querySelectorAll('.lex-section').forEach(sec => {
-        const base = { cat: sec.id, ch: sec.closest('.chapter').id };
-        sec.querySelectorAll('.entry, .tile').forEach(el => {
-          const w = text(el.querySelector('.jw, .t-w'));
-          records.push({
-            ...base, w,
-            r: text(el.querySelector('.reading, .t-r')) || w,
-            c: text(el.querySelector('.mean-t, .t-c')),
-            traps: (el.dataset.trap || '').split('・').filter(Boolean),
+      // Every word row (.entry) and table tile (.tile) is read here, once: the quiz bank, the
+      // say buttons and the 錯題本 jumps all take it from this list. tools/make_audio.py and
+      // tests/read-page.js read the page the same way; tests/audio.test.js checks they agree.
+      function readWords() {
+        const words = [];
+        document.querySelectorAll('.lex-section').forEach(sec => {
+          const base = { cat: sec.id, ch: sec.closest('.chapter').id };
+          sec.querySelectorAll('.entry, .tile').forEach(el => {
+            const w = text(el.querySelector('.jw, .t-w'));
+            words.push({
+              el, rec: {
+                ...base, w,
+                r: text(el.querySelector('.reading, .t-r')) || w,
+                c: text(el.querySelector('.mean-t, .t-c')),
+                traps: (el.dataset.trap || '').split('・').filter(Boolean),
+              },
+            });
           });
         });
-      });
-      const bank = window.JLPTQuiz.createBank(records);
+        return words;
+      }
+      const words = readWords();
+      const bank = window.JLPTQuiz.createBank(words.map(x => x.rec));
       const BANK = bank.items;
       const scopePool = scope => scope === 'miss' ? missPool() : bank.pool(scope);
       const scopeSel = $('quizScope');
@@ -6624,26 +6633,24 @@
 
       // Every row gets a say button; rows with an example sentence also get a chevron button that opens it.
       const ICON_CHEV = '<svg class="e-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
-      document.querySelectorAll('.entry').forEach(li => {
-        const row = li.querySelector('.e-row');
-        const ex = li.querySelector('.e-ex');
-        const w = text(li.querySelector('.jw'));
-        if (ex) {
-          ex.hidden = true;
-          row.insertAdjacentHTML('afterend', `<button type="button" class="ex-toggle" aria-expanded="false" aria-controls="${ex.id}" aria-label="「${esc(w)}」的例句" title="例句">${ICON_CHEV}</button>`);
-        }
-        row.insertAdjacentHTML('afterend', sayButton(w, text(li.querySelector('.reading'))));
-      });
-
       // Each table tile gets a small say button in the corner. The tile's content is wrapped so
       // that, while answers are masked, tapping it peeks (see setMask); unmasked it does nothing.
-      document.querySelectorAll('.lex-section .tile').forEach(t => {
-        const box = document.createElement('div');
-        box.className = 'tile-btn';
-        box.append(...t.childNodes);
-        t.append(box);
-        const rd = box.querySelector('.t-r');
-        t.insertAdjacentHTML('beforeend', sayButton(text(box.querySelector('.t-w')), (rd || box.querySelector('.t-w')).textContent.trim(), 'say tile-say'));
+      words.forEach(({ el, rec }) => {
+        if (el.matches('.tile')) {
+          const box = document.createElement('div');
+          box.className = 'tile-btn';
+          box.append(...el.childNodes);
+          el.append(box);
+          el.insertAdjacentHTML('beforeend', sayButton(rec.w, rec.r, 'say tile-say'));
+          return;
+        }
+        const row = el.querySelector('.e-row');
+        const ex = el.querySelector('.e-ex');
+        if (ex) {
+          ex.hidden = true;
+          row.insertAdjacentHTML('afterend', `<button type="button" class="ex-toggle" aria-expanded="false" aria-controls="${ex.id}" aria-label="「${esc(rec.w)}」的例句" title="例句">${ICON_CHEV}</button>`);
+        }
+        row.insertAdjacentHTML('afterend', sayButton(rec.w, rec.r));
       });
 
       // 錯題本 (missbook.js): the rules and the record live there; the page shows the list.
@@ -6652,10 +6659,10 @@
       const wordId = bank.wordId;
       // The round shuffles the pool anyway, so the 錯題本 range needs no order.
       function missPool() { return misses.list().map(x => x.item); }
+      // Where each word sits on the page, for jumping to it from the 錯題本.
       const wordEls = new Map();
-      document.querySelectorAll('.lex-section .entry, .lex-section .tile').forEach(el => {
-        const w = text(el.querySelector('.jw, .t-w'));
-        const id = wordId({ w, r: text(el.querySelector('.reading, .t-r')) || w });
+      words.forEach(({ el, rec }) => {
+        const id = wordId(rec);
         if (!wordEls.has(id)) wordEls.set(id, []);
         wordEls.get(id).push(el);
       });
