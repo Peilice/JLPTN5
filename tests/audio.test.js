@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const { readSpoken } = require('./read-page.js');
 
-test('頁面上每個播放鍵的文字都有 VOICEVOX 音檔', { todo: '等 tools/make_audio.py 補上 <td> 格子的音檔' }, () => {
+test('頁面上每個播放鍵的文字都有 VOICEVOX 音檔', () => {
   global.window = {};
   require(path.join(__dirname, '..', 'audio', 'manifest.js'));
   const audio = global.window.SAY_AUDIO;
