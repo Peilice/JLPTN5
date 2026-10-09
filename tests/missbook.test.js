@@ -81,6 +81,21 @@ test('重新載入頁面後紀錄還在；清除後重新載入也是空的', ()
   assert.deepEqual(createMissBook(bank, store).list(), []);
 });
 
+test('頁面上已經找不到的字，載入時刪掉它的紀錄', () => {
+  const store = memoryStore({
+    'jlptn5.mistakes.v1': { '今日|きょう': [1, 0, 'kana'], '毎年|まいねん': [2, 0, 'kana'] },
+  });
+  createMissBook(bank, store);
+  assert.deepEqual(store.get('jlptn5.mistakes.v1'), { '今日|きょう': [1, 0, 'kana'] });
+});
+
+test('題庫是空的（頁面讀取出問題）時，載入不刪任何紀錄', () => {
+  const saved = { '今日|きょう': [1, 0, 'kana'] };
+  const store = memoryStore({ 'jlptn5.mistakes.v1': saved });
+  createMissBook(createBank([]), store);
+  assert.deepEqual(store.get('jlptn5.mistakes.v1'), saved);
+});
+
 test('記下的題型現在已經不能出：不指定題型，用任何題型答對都算', () => {
   // ありがとう is written in kana alone, so it can no longer be asked 讀音→漢字.
   const kanaBank = createBank([

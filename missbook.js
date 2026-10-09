@@ -10,6 +10,17 @@
     const mistakes = store.get(KEY) || {};
     const save = () => store.set(KEY, mistakes);
 
+    // The first listing of each word stands for it.
+    const itemOf = new Map();
+    bank.items.forEach(x => { if (!itemOf.has(bank.wordId(x))) itemOf.set(bank.wordId(x), x); });
+    // A word whose writing or reading changed on the page is gone; its record goes with it.
+    // An empty bank means the page could not be read, so nothing is dropped then.
+    const gone = Object.keys(mistakes).filter(id => !itemOf.has(id));
+    if (itemOf.size && gone.length) {
+      gone.forEach(id => delete mistakes[id]);
+      save();
+    }
+
     // Records from before the type was kept, or a type the word no longer gets, have none.
     function typeFor(item) {
       const t = mistakes[bank.wordId(item)]?.[2];
@@ -35,9 +46,6 @@
       return { n: now[0], streak: now[1] };
     }
 
-    // The first listing of each word stands for it; a word no longer on the page is not listed.
-    const itemOf = new Map();
-    bank.items.forEach(x => { if (!itemOf.has(bank.wordId(x))) itemOf.set(bank.wordId(x), x); });
 
     // Most-missed first; among equals, the one furthest from leaving the book.
     const list = () => Object.keys(mistakes).filter(id => itemOf.has(id))
