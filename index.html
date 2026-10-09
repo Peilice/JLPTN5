@@ -322,26 +322,6 @@
       color: var(--ink-2);
     }
 
-    .prompt-reading {
-      margin: 4px 0 0;
-      font-size: var(--fs-lg);
-      color: var(--sub);
-      letter-spacing: 0.06em;
-    }
-
-    .hint {
-      margin-top: 6px;
-      min-height: 40px;
-      padding: 0 12px;
-      font: inherit;
-      font-size: var(--fs-sm);
-      color: var(--sub);
-      background: transparent;
-      border: 1px dashed var(--line-strong);
-      border-radius: var(--r-pill);
-      cursor: pointer;
-    }
-
     .ask {
       margin: 14px 0 10px;
       font-size: var(--fs-sm);
@@ -2027,23 +2007,6 @@
       border-color: var(--ink);
     }
 
-    .prompt-tools {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .prompt-tools .hint {
-      margin-top: 0;
-    }
-
-    .prompt-tools .say {
-      width: 36px;
-      height: 36px;
-    }
-
     .reveal .entry .say {
       width: 32px;
       height: 32px;
@@ -2324,14 +2287,9 @@
           <div id="quizStage">
             <div class="prompt">
               <p class="prompt-word" id="quizWord" lang="ja">&nbsp;</p>
-              <p class="prompt-reading" id="quizReading" lang="ja" hidden></p>
               <p class="prompt-gloss" id="quizGloss" hidden></p>
-              <div class="prompt-tools">
-                <button class="hint" id="quizHint" type="button" aria-controls="quizReading"
-                  aria-expanded="false">顯示讀音</button>
-              </div>
             </div>
-            <p class="ask" id="quizAsk">這個字的中文意思是？</p>
+            <p class="ask" id="quizAsk">這個意思怎麼念？</p>
             <div class="options" id="quizOptions" role="group" aria-labelledby="quizAsk"></div>
             <div class="reveal" id="quizReveal" hidden></div>
             <div class="quiz-actions">
@@ -6537,7 +6495,6 @@
       const ROUND_LENGTH = 10;
       const QUIZ_KEY = 'jlptn5.quiz.v5';
       const MASK_KEY = 'jlptn5.mask';
-      const HINT_KEY = 'jlptn5.hint';
 
       const store = {
         get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } },
@@ -6587,28 +6544,27 @@
         });
       });
       // Question types: what the prompt shows, what the options are, and the line asking.
-      //   meaning 日→中：show the word, pick the meaning
-      //   zh2ja   中→日：show the meaning, pick the word
-      //   reading 讀音：show the word (and meaning, so 1日 1號／一天 stay distinct), pick the reading
-      //   kana    表記：show the reading, pick how it is written
+      // The reading always sits on one side: kanji and Chinese share glyphs (学校／學校), so a
+      // prompt in one with options in the other could be answered by matching shapes alone.
+      //   zh2r    中文→讀音：show the meaning, pick the reading
+      //   reading 漢字→讀音：show the word (and meaning, so 1日 1號／一天 stay distinct), pick the reading
+      //   r2zh    讀音→中文：show the reading, pick the meaning
+      //   kana    讀音→漢字：show the reading, pick how it is written
       const TYPES = {
-        meaning: { ask: '這個字的中文意思是？', opt: 'c', name: '日翻中' },
-        zh2ja: { ask: '這個意思的日文是？', opt: 'w', name: '中翻日' },
-        reading: { ask: '這個怎麼念？', opt: 'r', name: '讀音' },
-        kana: { ask: '這個讀音要怎麼寫？', opt: 'w', name: '表記' },
+        zh2r: { show: 'c', opt: 'r', ask: '這個意思怎麼念？' },
+        reading: { show: 'w', opt: 'r', ask: '這個怎麼念？' },
+        r2zh: { show: 'r', opt: 'c', ask: '這個讀音的中文意思是？' },
+        kana: { show: 'r', opt: 'w', ask: '這個讀音要怎麼寫？' },
       };
-      const hasJa = w => /[぀-ヿ㐀-鿿]/.test(w);
-      // Bare numerals (100, 300) only make sense as reading/writing questions, and so do
-      // words whose Chinese is written the same (銀行, 3杯): the prompt would be the answer.
-      // Words written in kana alone have no reading or writing to ask about. A type is also left
-      // out when it cannot find three wrong options (13日 has no other 13 to stand beside it).
+      // Words written in kana alone have no kanji to read or write. A type is also left out
+      // when it cannot find three wrong options (13日 has no other 13 to stand beside it).
       function typesFor(item) {
         if (item.types) return item.types;
         const t = [];
-        if (hasJa(item.w) && item.c && item.c !== item.w) t.push('meaning', 'zh2ja');
+        if (item.c) t.push('zh2r', 'r2zh');
         if (item.w !== item.r) t.push('reading', 'kana');
         const full = t.filter(type => pickDistractors(item, type).length === 3);
-        return item.types = full.length ? full : t.length ? t : ['meaning'];
+        return item.types = full.length ? full : t;
       }
       const ans = (item, type) => item[TYPES[type].opt];
       // A word can sit in two sections; a whole chapter or "全部" asks it once.
@@ -6711,13 +6667,6 @@
           line.append(ja);
           line.insertAdjacentHTML('beforeend', sayButton('', ja.textContent.trim(), 'say say-sm', '播放例句發音'));
         });
-        const quizSay = document.createElement('button');
-        quizSay.type = 'button';
-        quizSay.className = 'say';
-        quizSay.id = 'quizSay';
-        quizSay.title = '播放發音';
-        quizSay.innerHTML = ICON_SAY;
-        $('quizHint').before(quizSay);
         document.addEventListener('click', e => {
           const btn = e.target.closest('.say');
           if (!btn) return;
@@ -6814,14 +6763,14 @@
           a.s.some(s => b.s.includes(s));
       }
 
-      // Reading questions lead with up to two hand-written traps (よんにち for 4日),
+      // Questions answered with a reading lead with up to two hand-written traps (よんにち for 4日),
       // the mistakes learners actually make. The rest come from the same table,
       // then the same chapter, then anywhere, drawn from words that fit the type and
       // count the same number; when those run out, any traps left over fill in.
       const fits = {
-        meaning: x => Boolean(x.c),
-        zh2ja: x => hasJa(x.w),
+        zh2r: () => true,
         reading: () => true,
+        r2zh: x => Boolean(x.c),
         kana: x => x.w !== x.r,
       };
       // A reading listing two ways to say it (よん／し) only sits among others that do too,
@@ -6831,8 +6780,9 @@
         const out = [];
         const right = ans(item, type);
         const taken = new Set([right]);
-        const shape = v => type !== 'reading' || multi(v) === multi(right);
-        const traps = type === 'reading' ? shuffle(item.traps).filter(shape) : [];
+        const byReading = TYPES[type].opt === 'r';
+        const shape = v => !byReading || multi(v) === multi(right);
+        const traps = byReading ? shuffle(item.traps).filter(shape) : [];
         const addTraps = max => {
           while (out.length < max && traps.length) {
             const t = traps.shift();
@@ -6868,13 +6818,6 @@
       const qAns = q => ans(qItem(q), q.t);
 
       let round = null;
-      // Readings are shown by default; hiding them sticks across questions and visits.
-      let hintShown = store.get(HINT_KEY) !== false;
-      function applyHint() {
-        $('quizReading').hidden = !hintShown;
-        $('quizHint').setAttribute('aria-expanded', String(hintShown));
-        $('quizHint').textContent = hintShown ? '隱藏讀音' : '顯示讀音';
-      }
 
       function newRound(keys) {
         if (!keys && !scopePool($('quizScope').value).length) $('quizScope').value = 'all';
@@ -6920,7 +6863,7 @@
         if (book.cleared) return `<p class="rv-book">${ICON_OK}連續答對 ${MISS_CLEAR} 次，移出錯題本</p>`;
         return ok
           ? `<p class="rv-book">錯題本：<span class="tnum">連續答對 ${book.streak} / ${MISS_CLEAR}</span>${streakDots(book.streak)}</p>`
-          : `<p class="rv-book">已記入錯題本（答錯 ${book.n} 次），${book.t in TYPES ? `之後都考${TYPES[book.t].name}題，` : ''}連續答對 ${MISS_CLEAR} 次就移出</p>`;
+          : `<p class="rv-book">已記入錯題本（答錯 ${book.n} 次），連續答對 ${MISS_CLEAR} 次就移出</p>`;
       }
 
       function render() {
@@ -6934,29 +6877,20 @@
         const item = qItem(q);
         const answered = q.choice !== null;
         const word = $('quizWord');
-        const zh = q.t === 'zh2ja';
-        word.textContent = zh ? item.c : q.t === 'kana' ? item.r : item.w;
+        const type = TYPES[q.t];
+        const zh = type.show === 'c';
+        word.textContent = item[type.show];
         word.lang = zh ? 'zh-Hant' : 'ja';
         word.classList.toggle('is-zh', zh);
-        $('quizReading').textContent = item.r;
         // A reading question shows the meaning too, so 1日 (1號) and 1日 (一天) stay distinct.
         $('quizGloss').textContent = item.c;
         $('quizGloss').hidden = q.t !== 'reading';
-        $('quizAsk').textContent = TYPES[q.t].ask;
-        const qs = $('quizSay');
-        if (qs) {
-          qs.dataset.say = item.r;
-          qs.setAttribute('aria-label', `播放「${item.w}」的發音`);
-          // Hearing the word would give away a reading or 中→日 answer.
-          qs.hidden = (q.t === 'reading' || zh) && !answered;
-        }
-        const noHint = item.w === item.r || q.t !== 'meaning';
-        applyHint();
-        $('quizHint').hidden = noHint;
-        if (noHint) $('quizReading').hidden = true;
+        $('quizAsk').textContent = type.ask;
+        // No say button on the prompt: hearing the word gives away any answer that is its reading.
+        // The reveal below carries one once the question is answered.
 
         const right = qAns(q);
-        const optLang = q.t === 'meaning' ? '' : ' lang="ja"';
+        const optLang = type.opt === 'c' ? '' : ' lang="ja"';
         $('quizOptions').innerHTML = q.opts.map((opt, n) => {
           let cls = 'option', mark = '', sr = '';
           if (answered && opt === right) { cls += ' is-correct'; mark = ICON_OK; sr = '（正確答案）'; }
@@ -6974,7 +6908,7 @@
           reveal.innerHTML =
             `<p class="status">${ok ? ICON_OK + '答對了' : ICON_NG + '答錯了，正確答案是：'}</p>` +
             `<p class="entry"><span class="rv-word" lang="ja">${esc(item.w)}</span>` +
-            `<span class="rv-reading" lang="ja">${esc(item.r)}</span>${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>` +
+            (item.r !== item.w ? `<span class="rv-reading" lang="ja">${esc(item.r)}</span>` : '') + `${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>` +
             bookLine(q.book, ok);
         }
         const next = $('quizNext');
@@ -6992,7 +6926,7 @@
         if (cleared) (round.cleared ||= []).push(q.k);
         // Where this answer left the word in the 錯題本, kept with the question so a reload shows it too.
         const rec = mistakes[wordId(item)];
-        q.book = cleared ? { cleared: true } : rec ? { n: rec[0], streak: rec[1], t: rec[2] } : null;
+        q.book = cleared ? { cleared: true } : rec ? { n: rec[0], streak: rec[1] } : null;
         save();
         render();
         $('quizLive').textContent = opt === right
@@ -7106,11 +7040,6 @@
         disarmRestart();
         $('quizLive').textContent = scopePending() ? `這組做完後改用「${scopeName()}」出題。` : '維持目前的範圍。';
       });
-      $('quizHint').addEventListener('click', () => {
-        hintShown = !hintShown;
-        store.set(HINT_KEY, hintShown);
-        applyHint();
-      });
 
       document.addEventListener('keydown', e => {
         if (e.altKey || e.ctrlKey || e.metaKey || !round || isDone()) return;
@@ -7191,7 +7120,7 @@
       restoring = false;
 
       // Footer: wipe the 錯題本 and the round in progress on this device. Display settings
-      // (mask, reading hint) stay. Same press-twice guard as 換一組題目.
+      // (mask) stay. Same press-twice guard as 換一組題目.
       // The button sits far below the quiz, so the result is shown on the button itself for a moment.
       const clearBtn = $('clearRecords');
       const clearIcon = clearBtn.firstElementChild.outerHTML;
