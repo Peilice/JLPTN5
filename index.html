@@ -549,6 +549,96 @@
       margin-left: auto;
     }
 
+    /* Collapsed, the quiz is one bar that says where this 一組 stands; tapping it opens the card. */
+    .quiz:has(#quizBody[hidden]) {
+      padding-bottom: 20px;
+    }
+
+    .quiz-resume {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 56px;
+      margin-top: 4px;
+      padding: 8px 16px;
+      font: inherit;
+      text-align: left;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--ink);
+      border-radius: var(--r-surface);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .quiz-resume .qr-main {
+      font-weight: 700;
+    }
+
+    .quiz-resume .qr-sub {
+      font-size: var(--fs-sm);
+      color: var(--sub);
+    }
+
+    .quiz-resume .e-chev {
+      width: 18px;
+      height: 18px;
+      margin-left: auto;
+      flex: none;
+      color: var(--sub);
+      transform: rotate(-90deg);
+    }
+
+    @media (hover: hover) {
+      .quiz-resume:hover {
+        background: var(--surface-2);
+      }
+    }
+
+    /* 目次 on the front page: the whole book at a glance, before the word list starts. */
+    .contents {
+      padding: 4px 0 8px;
+    }
+
+    .contents-title {
+      margin: 0 0 4px;
+      font-size: var(--fs-lg);
+      color: var(--ink-2);
+    }
+
+    .contents-miss {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      border-top: 1px solid var(--line);
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .contents-miss .n {
+      margin-left: auto;
+      font-size: var(--fs-xs);
+      font-weight: 400;
+      color: var(--sub);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .contents .toc {
+      margin: 0;
+    }
+
+    .contents .toc-ch ol {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .contents .toc-ch li>a {
+      min-height: 40px;
+    }
+
     .btn-text {
       min-height: 44px;
       padding: 0 4px;
@@ -2281,6 +2371,9 @@
             </select>
           </label>
         </div>
+        <button class="quiz-resume" id="quizToggle" type="button" aria-expanded="true" aria-controls="quizBody"
+          hidden></button>
+        <div id="quizBody">
         <p class="scope-note" id="scopeNote" hidden></p>
         <div class="quiz-card">
           <div class="quiz-meta">
@@ -2304,12 +2397,21 @@
           <div class="quiz-foot">
             <span class="kbd-hint">鍵盤：1–4 作答・Enter 下一題</span>
             <button id="quizRestart" class="btn-text" type="button">換一組題目</button>
+            <button id="quizCollapse" class="btn-text" type="button" hidden>收起</button>
           </div>
           <noscript>
             <p class="noscript">練習題需要啟用 JavaScript；下方單字表可以直接閱讀。</p>
           </noscript>
         </div>
+        </div>
         <p class="sr-only" id="quizLive" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="contents" id="contents" aria-labelledby="contentsTitle" hidden>
+      <div class="wrap">
+        <h2 class="contents-title" id="contentsTitle">目次</h2>
+        <a class="contents-miss" id="contentsMiss" href="#missBook"></a>
       </div>
     </section>
 
@@ -6696,6 +6798,7 @@
           if (q.choice !== null) return `<li class="${isRight(q) ? 'ok' : 'ng'}"></li>`;
           return `<li class="${n === round.i ? 'now' : ''}"></li>`;
         }).join('');
+        renderResume();
       }
 
       function bookLine(book, ok) {
@@ -6863,6 +6966,7 @@
       // Changing the range mid-round queues it for the next round instead of wiping progress.
       $('quizScope').addEventListener('change', () => {
         if (scopeSel.value !== 'miss' && !misses.list().length) missOpt.disabled = true;
+        openQuiz(true);
         if (!inProgress()) { newRound(); return; }
         disarmRestart();
         $('quizLive').textContent = scopePending() ? `這組做完後改用「${scopeName()}」出題。` : '維持目前的範圍。';
@@ -6870,7 +6974,7 @@
 
       document.addEventListener('keydown', e => {
         if (e.altKey || e.ctrlKey || e.metaKey || !practice.round || isDone()) return;
-        if (e.target.closest('input, select, textarea, summary')) return;
+        if (e.target.closest('input, select, textarea, summary') || $('quizBody').hidden) return;
         const rect = document.querySelector('.quiz-card').getBoundingClientRect();
         if (rect.bottom < 0 || rect.top > innerHeight) return;
         const q = practice.round.qs[practice.round.i];
@@ -6889,6 +6993,7 @@
       const missOpt = [...scopeSel.options].find(o => o.value === 'miss');
       function renderMissBook() {
         const ids = misses.list();
+        renderContentsMiss();
         missToggle.classList.toggle('is-empty', !ids.length);
         missToggle.setAttribute('aria-label', `錯題本 ${ids.length} 字`);
         missToggle.innerHTML = (ids.length ? `<span class="miss">${ICON_MISS}</span>` : '') +
@@ -6925,7 +7030,7 @@
         if (e.target.closest('.miss-drill')) {
           scopeSel.value = 'miss';
           scopeSel.dispatchEvent(new Event('change'));
-          $('quiz').scrollIntoView({ block: 'start' });
+          openQuiz(true, true);
           $('quizOptions').querySelector('.option:not([disabled])')?.focus({ preventScroll: true });
           return;
         }
@@ -7047,7 +7152,7 @@
         if (!drill) return;
         scopeSel.value = drill.dataset.scope;
         scopeSel.dispatchEvent(new Event('change'));
-        $('quiz').scrollIntoView({ block: 'start' });
+        openQuiz(true, true);
         $('quizOptions').querySelector('.option:not([disabled])')?.focus({ preventScroll: true });
       });
       const tocLink = $('tocBtn');
@@ -7111,6 +7216,62 @@
         }, { rootMargin: `-${navH + 1}px 0px -60% 0px` });
         watched.forEach(el => io.observe(el));
       }
+
+      // 單字練習 folds to one bar so the first screen shows the 目次; the bar says where this
+      // 一組 stands and opens the card. Open or folded is remembered on this device.
+      const QUIZ_OPEN_KEY = 'jlptn5.quizOpen';
+      function openQuiz(on, scroll) {
+        $('quizBody').hidden = !on;
+        $('quizToggle').hidden = on;
+        $('quizToggle').setAttribute('aria-expanded', String(on));
+        $('quizCollapse').hidden = !on;
+        store.set(QUIZ_OPEN_KEY, on);
+        if (on && scroll) $('quiz').scrollIntoView({ block: 'start' });
+      }
+      function renderResume() {
+        const round = practice.round;
+        const total = round.qs.length;
+        const name = ([...scopeSel.options].find(o => o.value === round.scope) || scopeSel.selectedOptions[0])
+          .textContent.replace(/（\d+）$/, '');
+        const [main, sub] = isDone()
+          ? ['這組做完了', `答對 ${practice.score()} / ${total}・看結果或再練一組`]
+          : inProgress()
+            ? ['繼續練習', `${name}・第 ${round.i + 1} / ${total} 題・答對 ${practice.score()}`]
+            : ['開始練習', `${name}・${total} 題`];
+        $('quizToggle').innerHTML = `<span><span class="qr-main">${esc(main)}</span><br><span class="qr-sub tnum">${esc(sub)}</span></span>${ICON_CHEV}`;
+      }
+      $('quizToggle').addEventListener('click', () => {
+        openQuiz(true);
+        $('quizOptions').querySelector('.option:not([disabled])')?.focus({ preventScroll: true });
+      });
+      $('quizCollapse').addEventListener('click', () => {
+        openQuiz(false);
+        $('quizToggle').focus();
+      });
+      openQuiz(store.get(QUIZ_OPEN_KEY) === true || location.hash === '#quiz');
+      document.addEventListener('click', e => {
+        if (e.target.closest('a[href="#quiz"]')) openQuiz(true);
+      });
+
+      // The front 目次 is a copy of the nav's list, with the 錯題本 ahead of 第一章.
+      const front = toc.cloneNode(true);
+      front.removeAttribute('id');
+      front.setAttribute('aria-label', '目次');
+      front.querySelector('.toc-title').remove();
+      front.querySelector('.toc-quiz').remove();
+      front.querySelectorAll('[aria-current]').forEach(a => a.removeAttribute('aria-current'));
+      const contentsMiss = $('contentsMiss');
+      contentsMiss.after(front);
+      function renderContentsMiss() {
+        const n = misses.list().length;
+        $('contentsMiss').innerHTML = (n ? `<span class="miss">${ICON_MISS}</span>` : '') + `錯題本<span class="n">${n} 字</span>`;
+      }
+      contentsMiss.addEventListener('click', e => {
+        e.preventDefault();
+        openMiss(true);
+      });
+      $('contents').hidden = false;
+
 
       // Printing should carry the full scope note.
       addEventListener('beforeprint', () => { $('about').open = true; });
