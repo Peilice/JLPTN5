@@ -235,6 +235,50 @@
       color: var(--ink-2);
     }
 
+    .quiz-head-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    /* 收起 sits by 範圍 at the top of the open quiz, solid so it reads as the way back out. */
+    .quiz-collapse {
+      flex: none;
+      min-height: 40px;
+      padding: 0 16px;
+      font: inherit;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--card);
+      background: var(--ink);
+      border: 1px solid transparent;
+      border-radius: var(--r-field);
+      cursor: pointer;
+    }
+
+    @media (hover: hover) {
+      .quiz-collapse:hover {
+        background: var(--ink-2);
+      }
+    }
+
+    /* Phones: drop the visible 範圍 word (kept for screen readers) so 收起 fits on the same line. */
+    @media (max-width: 559px) {
+      .quiz-head:has(#quizCollapse:not([hidden])) .scope>span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      .quiz-head:has(#quizCollapse:not([hidden])) .scope select {
+        max-width: 44vw;
+      }
+    }
+
     .scope {
       display: inline-flex;
       align-items: center;
@@ -597,48 +641,6 @@
       }
     }
 
-    /* 目次 on the front page: the whole book at a glance, before the word list starts. */
-    .contents {
-      padding: 4px 0 8px;
-    }
-
-    .contents-title {
-      margin: 0 0 4px;
-      font-size: var(--fs-lg);
-      color: var(--ink-2);
-    }
-
-    .contents-miss {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 44px;
-      border-top: 1px solid var(--line);
-      font-weight: 700;
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    .contents-miss .n {
-      margin-left: auto;
-      font-size: var(--fs-xs);
-      font-weight: 400;
-      color: var(--sub);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .contents .toc {
-      margin: 0;
-    }
-
-    .contents .toc-ch ol {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-
-    .contents .toc-ch li>a {
-      min-height: 40px;
-    }
-
     .btn-text {
       min-height: 44px;
       padding: 0 4px;
@@ -864,14 +866,13 @@
       align-items: center;
       gap: 8px;
       min-height: 40px;
-      margin-left: -10px;
       padding: 0 12px 0 10px;
       font: inherit;
       font-size: var(--fs-sm);
       color: var(--ink);
       text-decoration: none;
-      background: transparent;
-      border: 0;
+      background: var(--bm-bg);
+      border: 1px solid var(--bm-line);
       border-radius: var(--r-pill);
       cursor: pointer;
     }
@@ -915,6 +916,10 @@
       .toc-here .here-ch {
         display: none;
       }
+
+      .toc-here:empty {
+        display: none;
+      }
     }
 
     @media (max-width: 379px) {
@@ -926,12 +931,20 @@
     .toc-btn .e-chev {
       width: 14px;
       height: 14px;
-      color: var(--sub);
+      color: var(--bm);
       transition: transform 160ms ease-out;
     }
 
+    /* Before the first chapter there is no bookmark yet; the button says how big the book is. */
+    .toc-here:empty::after {
+      content: attr(data-all);
+      color: var(--sub);
+      font-weight: 400;
+    }
+
     .toc-btn[aria-expanded="true"] {
-      background: var(--bm-bg);
+      border-color: var(--bm);
+      box-shadow: inset 0 0 0 1px var(--bm);
     }
 
     .toc-btn[aria-expanded="true"] .e-chev {
@@ -940,7 +953,7 @@
 
     @media (hover: hover) {
       .toc-btn:hover {
-        background: var(--bm-bg);
+        border-color: var(--bm);
       }
     }
 
@@ -1278,18 +1291,57 @@
       max-height: calc(100dvh - var(--nav-h) - 24px);
       overflow-y: auto;
       overscroll-behavior: contain;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line-strong);
-      box-shadow: 0 14px 24px -14px rgba(28, 24, 20, 0.28);
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      border-radius: 0 0 var(--r-sheet) var(--r-sheet);
+      box-shadow: 0 18px 36px -12px rgba(28, 24, 20, 0.35);
+    }
+
+    /* The page dims behind the open 目次, so the list reads as a sheet laid over it. */
+    .toc-scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 9;
+      background: rgba(28, 24, 20, 0.3);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .toc-scrim {
+        background: rgba(0, 0, 0, 0.55);
+      }
     }
 
     .toc-panel .toc {
       margin: 0;
-      padding-bottom: 12px;
+      padding-bottom: 16px;
     }
 
     .toc-panel .toc-title {
       display: none;
+    }
+
+    /* Sections as a grid of small cards: two across on a phone, so the whole book fits in about a screen. */
+    .toc-panel .toc-ch {
+      padding: 2px 0 14px;
+    }
+
+    .toc-panel .toc-ch ol {
+      grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+      gap: 6px;
+    }
+
+    .toc-panel .toc-ch li>a {
+      margin-left: 0;
+      padding: 6px 10px;
+      font-size: var(--fs-sm);
+      line-height: 1.35;
+      background: var(--bg);
+      border: 1px solid var(--line);
+    }
+
+    .toc-panel .toc-ch li>a[aria-current="true"] {
+      background: var(--bm);
+      border-color: var(--bm);
     }
 
     .lex-body {
@@ -1305,6 +1357,12 @@
       padding-top: 20px;
       border-top: 3px solid var(--ink);
       scroll-margin-top: var(--nav-h);
+    }
+
+    /* The first block under the nav needs no chapter break above it. */
+    .lex-body>.miss-book,
+    .miss-book[hidden]+.chapter {
+      margin-top: 36px;
     }
 
     .miss-book h2:focus {
@@ -2292,6 +2350,65 @@
       font-size: var(--fs-xs);
     }
 
+    /* Wide screens: the 目次 stays open in the left margin, like a book's contents beside the page.
+       Every .wrap widens to the same 1180px; the masthead, quiz and nav run the full width from the
+       目次's left edge, and only the word list steps right of the 目次 column. */
+    @media (min-width: 1240px) {
+      .wrap {
+        max-width: 1180px;
+      }
+
+      .lex-body {
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        column-gap: 40px;
+        padding-left: 20px;
+      }
+
+      .lex-body>* {
+        grid-column: 2;
+      }
+
+      .lex-body>.toc {
+        grid-column: 1;
+        grid-row: 1 / span 99;
+        align-self: start;
+        position: sticky;
+        top: calc(var(--nav-h) + 20px);
+        max-height: calc(100vh - var(--nav-h) - 40px);
+        margin-top: 36px;
+        padding-right: 6px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      .lex-body>.toc .toc-ch {
+        padding: 2px 0 8px;
+      }
+
+      .lex-body>.toc .toc-ch-link {
+        min-height: 38px;
+        font-size: var(--fs-sm);
+      }
+
+      .lex-body>.toc .toc-ch ol {
+        display: block;
+      }
+
+      .lex-body>.toc .toc-ch li>a {
+        min-height: 32px;
+        font-size: var(--fs-sm);
+      }
+
+      .toc-btn {
+        display: none;
+      }
+
+      .nav-tools {
+        margin-left: auto;
+      }
+    }
+
     @media print {
       :root {
         --bg: #fffdf8;
@@ -2300,6 +2417,7 @@
 
       .quiz,
       .lexicon-nav,
+      .toc,
       .about-more,
       .say,
       .ex-toggle,
@@ -2364,12 +2482,15 @@
       <div class="wrap">
         <div class="quiz-head">
           <h2 id="quizTitle">單字練習</h2>
-          <label class="scope">
-            <span>範圍</span>
-            <select id="quizScope">
-              <option value="all">全部（686）</option>
-            </select>
-          </label>
+          <div class="quiz-head-tools">
+            <label class="scope">
+              <span>範圍</span>
+              <select id="quizScope">
+                <option value="all">全部（686）</option>
+              </select>
+            </label>
+            <button id="quizCollapse" class="quiz-collapse" type="button" hidden>收起</button>
+          </div>
         </div>
         <button class="quiz-resume" id="quizToggle" type="button" aria-expanded="true" aria-controls="quizBody"
           hidden></button>
@@ -2397,7 +2518,6 @@
           <div class="quiz-foot">
             <span class="kbd-hint">鍵盤：1–4 作答・Enter 下一題</span>
             <button id="quizRestart" class="btn-text" type="button">換一組題目</button>
-            <button id="quizCollapse" class="btn-text" type="button" hidden>收起</button>
           </div>
           <noscript>
             <p class="noscript">練習題需要啟用 JavaScript；下方單字表可以直接閱讀。</p>
@@ -2405,13 +2525,6 @@
         </div>
         </div>
         <p class="sr-only" id="quizLive" aria-live="polite"></p>
-      </div>
-    </section>
-
-    <section class="contents" id="contents" aria-labelledby="contentsTitle" hidden>
-      <div class="wrap">
-        <h2 class="contents-title" id="contentsTitle">目次</h2>
-        <a class="contents-miss" id="contentsMiss" href="#missBook"></a>
       </div>
     </section>
 
@@ -6676,8 +6789,9 @@
       player.onended = player.onerror = clearSpeaking;
       // Readings the engine mispronounces as kana (e.g. は taken as the particle "wa");
       // katakana has only one reading, so it is spoken exactly as written.
+      // VOICEVOX also ends a bare 〜さつ with ッ and reads はち as ワチ.
       // tools/make_audio.py reads this map too, so keep it valid JSON.
-      const SAY_FIX = { "はは": "ハハ" };
+      const SAY_FIX = { "はは": "ハハ", "はち": "ハチ", "はちがつ": "ハチガツ", "あらう": "アラウ", "つかう": "ツカウ", "さつ": "サツ", "にさつ": "ニサツ", "よんさつ": "ヨンサツ", "ごさつ": "ゴサツ", "ろくさつ": "ロクサツ", "ななさつ": "ナナサツ", "はっさつ": "ハッサツ", "きゅうさつ": "キュウサツ", "じゅっさつ": "ジュッサツ", "なんさつ": "ナンサツ" };
       function speak(reading, btn) {
         if (!speech) return clearSpeaking();
         const u = new SpeechSynthesisUtterance((SAY_FIX[reading] || reading).replace(/[／/]/g, '、'));
@@ -6993,7 +7107,6 @@
       const missOpt = [...scopeSel.options].find(o => o.value === 'miss');
       function renderMissBook() {
         const ids = misses.list();
-        renderContentsMiss();
         missToggle.classList.toggle('is-empty', !ids.length);
         missToggle.setAttribute('aria-label', `錯題本 ${ids.length} 字`);
         missToggle.innerHTML = (ids.length ? `<span class="miss">${ICON_MISS}</span>` : '') +
@@ -7131,18 +7244,32 @@
       maskBtn.addEventListener('click', () => setMask(!lexicon.classList.contains('masked'), true));
       if (store.get(MASK_KEY) === true) setMask(true, false);
 
-      // 目次: the static list at the top of the lexicon moves into a panel under the nav.
+      // 目次: on wide screens the static list stays beside the words as a sidebar;
+      // narrower, it moves into a panel that drops down from the nav over a dimmed page.
       const nav = document.querySelector('.lexicon-nav');
       const toc = $('toc');
+      const lexBody = toc.parentElement;
       const panel = document.createElement('div');
       panel.className = 'toc-panel';
       panel.id = 'tocPanel';
       panel.hidden = true;
       const panelWrap = document.createElement('div');
       panelWrap.className = 'wrap';
-      panelWrap.append(toc);
       panel.append(panelWrap);
       nav.append(panel);
+      const scrim = document.createElement('div');
+      scrim.className = 'toc-scrim';
+      scrim.hidden = true;
+      document.body.append(scrim);
+      const wideToc = matchMedia('(min-width: 1240px)');
+      function placeToc() {
+        if (wideToc.matches) {
+          openToc(false);
+          lexBody.prepend(toc);
+        } else {
+          panelWrap.append(toc);
+        }
+      }
       document.querySelectorAll('.lex-section').forEach(sec => {
         sec.querySelector('h3').insertAdjacentHTML('beforeend',
           `<button type="button" class="sec-drill" data-scope="${esc(sec.id)}" aria-label="練習「${esc(sec.dataset.name)}」">練這節</button>`);
@@ -7167,6 +7294,7 @@
       tocLink.replaceWith(tocBtn);
       function openToc(on) {
         panel.hidden = !on;
+        scrim.hidden = !on;
         tocBtn.setAttribute('aria-expanded', String(on));
         if (!on) return;
         maskHint.hidden = true;
@@ -7187,9 +7315,13 @@
       document.addEventListener('click', e => {
         if (!panel.hidden && !nav.contains(e.target)) openToc(false);
       });
+      placeToc();
+      wideToc.addEventListener('change', placeToc);
 
       // Keep the nav saying where you are: 第五章・移動與位置.
       const tocHere = $('tocHere');
+      // Same count as the masthead (量詞 counts as one 節 there, though it is four sections here).
+      tocHere.dataset.all = (text($('about').querySelector('summary')).match(/\d+ 章 \d+ 節/) || [''])[0];
       const sectionLinks = new Map([...toc.querySelectorAll('.toc-ch li > a')].map(a => [decodeURIComponent(a.hash.slice(1)), a]));
       let current = null;
       function setCurrent(el) {
@@ -7197,6 +7329,12 @@
         if (id === current) return;
         current = id;
         sectionLinks.forEach((a, key) => a.setAttribute('aria-current', String(key === id)));
+        // The sidebar scrolls on its own; keep the bookmark in view as the page moves past it.
+        const cur = sectionLinks.get(id);
+        if (cur && toc.parentElement === lexBody &&
+          (cur.offsetTop < toc.scrollTop || cur.offsetTop + cur.offsetHeight > toc.scrollTop + toc.clientHeight)) {
+          toc.scrollTop = cur.offsetTop - toc.clientHeight / 2;
+        }
         if (!el) { tocHere.textContent = ''; return; }
         const ch = el.closest('.chapter');
         const no = text(ch.querySelector('h2 .ch-no'));
@@ -7252,26 +7390,6 @@
       document.addEventListener('click', e => {
         if (e.target.closest('a[href="#quiz"]')) openQuiz(true);
       });
-
-      // The front 目次 is a copy of the nav's list, with the 錯題本 ahead of 第一章.
-      const front = toc.cloneNode(true);
-      front.removeAttribute('id');
-      front.setAttribute('aria-label', '目次');
-      front.querySelector('.toc-title').remove();
-      front.querySelector('.toc-quiz').remove();
-      front.querySelectorAll('[aria-current]').forEach(a => a.removeAttribute('aria-current'));
-      const contentsMiss = $('contentsMiss');
-      contentsMiss.after(front);
-      function renderContentsMiss() {
-        const n = misses.list().length;
-        $('contentsMiss').innerHTML = (n ? `<span class="miss">${ICON_MISS}</span>` : '') + `錯題本<span class="n">${n} 字</span>`;
-      }
-      contentsMiss.addEventListener('click', e => {
-        e.preventDefault();
-        openMiss(true);
-      });
-      $('contents').hidden = false;
-
 
       // Printing should carry the full scope note.
       addEventListener('beforeprint', () => { $('about').open = true; });
