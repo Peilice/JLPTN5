@@ -1,402 +1,519 @@
 ---
 name: JLPT N5 單字整理表
-description: 通勤時翻開的日文單字本：紙張、墨色、一支螢光筆與老師的朱筆
+description: 一張日系文具桌面：淡藍灰方眼紙上的一疊便利貼，旁邊是貼滿彩色索引標籤的白色單字本
 colors:
-  vermilion: "#b5473b"
-  vermilion-ink: "#9e3b30"
-  vermilion-wash: "#f7e4df"
-  highlighter: "#efc030"
-  paper: "#f7f3ea"
-  paper-sheet: "#fffdf8"
-  paper-shade: "#f1ece1"
-  paper-mask: "#e5dfd2"
-  sumi: "#1f1d1a"
-  sumi-soft: "#3b3732"
-  sumi-faded: "#6a645b"
-  ruled-line: "#e4ddcf"
-  pencil-line: "#8c8478"
-  pine: "#2f6f4f"
-  pine-wash: "#e4eee2"
-  indigo: "#2b5a9e"
-  indigo-wash: "#e6ecf4"
-  ochre: "#85561c"
-  ochre-wash: "#f3e7d3"
-  bookmark: "#6b4680"
-  bookmark-wash: "#f0e5f8"
-  bookmark-line: "#9678a9"
-  correct: "#2b6a4a"
-  correct-wash: "#e2eee0"
-  wrong: "#a83f33"
-  wrong-wash: "#f8e4df"
-  night-paper: "#171512"
-  night-sheet: "#211e1a"
-  night-shade: "#2a2621"
-  night-mask: "#3b362f"
-  night-ink: "#ede6da"
-  night-ink-soft: "#d8d0c3"
-  night-ink-faded: "#a9a196"
-  night-ruled-line: "#38332d"
-  night-pencil-line: "#7a7268"
-  night-vermilion: "#e2806f"
-  night-vermilion-ink: "#f0a395"
-  night-vermilion-wash: "#3b231f"
-  night-on-vermilion: "#1b1210"
-  night-pine: "#86cba4"
-  night-pine-wash: "#1d3227"
-  night-indigo: "#94b8ee"
-  night-indigo-wash: "#1d2b41"
-  night-ochre: "#e2b574"
-  night-ochre-wash: "#3a2c18"
-  night-highlighter: "#6b5414"
-  night-bookmark: "#caa8df"
-  night-bookmark-wash: "#33253c"
-  night-bookmark-line: "#886e99"
+  ch1: "#ff9a76"
+  ch1-ink: "#b2452a"
+  ch1-wash: "#fff0ea"
+  ch2: "#74bdff"
+  ch2-ink: "#1e68ad"
+  ch2-wash: "#eaf4ff"
+  ch3: "#9bd86f"
+  ch3-ink: "#3e7a1d"
+  ch3-wash: "#eef8e6"
+  ch4: "#bba6ff"
+  ch4-ink: "#6146c2"
+  ch4-wash: "#f3efff"
+  ch5: "#ff94c4"
+  ch5-ink: "#b0336c"
+  ch5-wash: "#fff0f6"
+  ch6: "#5dd5c6"
+  ch6-ink: "#127569"
+  ch6-wash: "#e6f8f5"
+  note: "#ffe9db"
+  note-under: "#f6d2bd"
+  note-under-2: "#ecbea4"
+  sticker: "#ffb547"
+  mat: "#f4f7fa"
+  mat-line: "rgba(96, 128, 160, 0.12)"
+  mat-line-major: "rgba(96, 128, 160, 0.22)"
+  highlighter: "#ffe14d"
+  paper: "#ffffff"
+  surface: "#f5f2ee"
+  mask: "#eceae6"
+  ink: "#2a2521"
+  ink-soft: "#4a433d"
+  ink-faded: "#6b635b"
+  line: "#e8e3dc"
+  line-strong: "#a39a90"
+  ji: "#2e7d4f"
+  ji-wash: "#e3f3e6"
+  ta: "#2563b8"
+  ta-wash: "#e3eefc"
+  jita: "#94590f"
+  jita-wash: "#fbecd6"
+  correct: "#2a7d4c"
+  correct-wash: "#ddf3e3"
+  wrong: "#c23b2e"
+  wrong-wash: "#fde3df"
+  night-paper: "#1b1a18"
+  night-card: "#24221f"
+  night-surface: "#2d2a27"
+  night-mask: "#3a3632"
+  night-ink: "#f1ebe4"
+  night-ink-soft: "#d9d1c8"
+  night-ink-faded: "#aaa197"
+  night-line: "#36322e"
+  night-line-strong: "#7d746b"
+  night-mat: "#1f2226"
+  night-mat-line: "rgba(170, 190, 215, 0.07)"
+  night-mat-line-major: "rgba(170, 190, 215, 0.13)"
+  night-note: "#3b2c24"
+  night-note-under: "#33261f"
+  night-note-under-2: "#2b201a"
+  night-note-ink: "#f6ece4"
+  night-highlighter: "#6b5a12"
+  night-ch1-ink: "#ffb398"
+  night-ch1-wash: "#3a2620"
+  night-ch2-ink: "#9dcfff"
+  night-ch2-wash: "#1d2b3b"
+  night-ch3-ink: "#b3e290"
+  night-ch3-wash: "#24321c"
+  night-ch4-ink: "#cdbcff"
+  night-ch4-wash: "#2b2540"
+  night-ch5-ink: "#ffb0d3"
+  night-ch5-wash: "#3b2230"
+  night-ch6-ink: "#80e0d3"
+  night-ch6-wash: "#183531"
+  night-ji: "#8fd4a8"
+  night-ji-wash: "#1d3226"
+  night-ta: "#9cc3f5"
+  night-ta-wash: "#1c2a3f"
+  night-jita: "#e9bb7a"
+  night-jita-wash: "#3a2c18"
+  night-correct: "#8fd4a8"
+  night-correct-wash: "#1d3226"
+  night-wrong: "#ff9b8e"
+  night-wrong-wash: "#42221e"
 typography:
   display:
-    fontFamily: "Klee One, Hiragino Mincho ProN, Yu Mincho, Noto Serif JP, serif"
-    fontSize: "clamp(2.75rem, 12vw, 4.25rem)"
-    fontWeight: 600
+    fontFamily: "Zen Maru Gothic, Hiragino Maru Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, sans-serif"
+    fontSize: "clamp(2rem, 11.5cqi, 4.25rem)"
+    fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0.02em"
+  display-zh:
+    fontFamily: "Huninn, PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
+    fontSize: "clamp(1.75rem, 7vw, 2.5rem)"
+    fontWeight: 400
+    lineHeight: 1.2
+  chapter:
+    fontFamily: "Huninn, PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
+    fontSize: "clamp(1.75rem, 7vw, 2.25rem)"
+    fontWeight: 400
+    lineHeight: 1.25
+    letterSpacing: "0.02em"
   headline:
-    fontFamily: "PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
-    fontSize: "1.3rem"
-    fontWeight: 700
+    fontFamily: "Huninn, PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 400
     lineHeight: 1.3
-    letterSpacing: "0.01em"
+    letterSpacing: "0.02em"
   title:
-    fontFamily: "PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
-    fontSize: "1.2rem"
-    fontWeight: 700
+    fontFamily: "Huninn, PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
+    fontSize: "1.3rem"
+    fontWeight: 400
     lineHeight: 1.4
   headword:
-    fontFamily: "Klee One, Hiragino Mincho ProN, Yu Mincho, Noto Serif JP, serif"
+    fontFamily: "Zen Maru Gothic, Hiragino Maru Gothic ProN, Hiragino Sans, Noto Sans JP, Yu Gothic, sans-serif"
     fontSize: "1.2rem"
-    fontWeight: 600
+    fontWeight: 700
     lineHeight: 1.3
+  button:
+    fontFamily: "Huninn, PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
+    fontSize: "1.1rem"
+    fontWeight: 400
+    letterSpacing: "0.04em"
   body:
-    fontFamily: "PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
-    fontSize: "0.92rem"
+    fontFamily: "PingFang TC, Noto Sans TC, Microsoft JhengHei, Heiti TC, system-ui, sans-serif"
+    fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.6
   body-ja:
-    fontFamily: "Hiragino Sans, Hiragino Kaku Gothic ProN, Noto Sans JP, Yu Gothic, Meiryo, sans-serif"
-    fontSize: "0.92rem"
+    fontFamily: "Hiragino Sans, Hiragino Kaku Gothic ProN, Noto Sans JP, Yu Gothic, YuGothic, Meiryo, sans-serif"
+    fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: "PingFang TC, Noto Sans TC, Microsoft JhengHei, system-ui, sans-serif"
+    fontFamily: "PingFang TC, Noto Sans TC, Microsoft JhengHei, Heiti TC, system-ui, sans-serif"
     fontSize: "0.85rem"
     fontWeight: 600
     lineHeight: 1.4
 rounded:
-  hairline: "6px"
-  field: "8px"
-  surface: "12px"
-  sheet: "16px"
+  hair: "6px"
+  field: "10px"
+  surface: "14px"
+  sheet: "18px"
   pill: "999px"
 spacing:
   gutter-phone: "16px"
   gutter: "20px"
   row: "14px"
-  section: "28px"
+  section: "36px"
+  chapter-phone: "64px"
+  chapter: "96px"
+  nav: "52px"
+  quiz-measure: "680px"
   container: "900px"
+  container-wide: "1180px"
+  sidebar: "240px"
+  mat-cell: "20px"
+  mat-major: "100px"
 components:
   button-primary:
-    backgroundColor: "{colors.sumi}"
-    textColor: "{colors.paper-sheet}"
-    rounded: "{rounded.surface}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.button}"
+    rounded: "{rounded.pill}"
     padding: "0 28px"
     height: "52px"
   button-primary-hover:
-    backgroundColor: "{colors.sumi-soft}"
-    textColor: "{colors.paper-sheet}"
+    backgroundColor: "{colors.ink-soft}"
+    textColor: "{colors.paper}"
   button-secondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.sumi}"
-    rounded: "{rounded.surface}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.pill}"
     padding: "0 28px"
     height: "52px"
+  button-secondary-hover:
+    backgroundColor: "{colors.surface}"
+  quiz-note:
+    backgroundColor: "{colors.note}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.hair}"
+    padding: "18px 18px 8px"
+  quiz-resume-note:
+    backgroundColor: "{colors.note}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.hair}"
+    padding: "12px 18px"
+    height: "72px"
   answer-option:
-    backgroundColor: "{colors.paper-sheet}"
-    textColor: "{colors.sumi}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
     rounded: "{rounded.surface}"
     padding: "10px 14px"
     height: "56px"
-    typography: "{typography.body}"
   answer-option-correct:
     backgroundColor: "{colors.correct-wash}"
     textColor: "{colors.correct}"
   answer-option-wrong:
     backgroundColor: "{colors.wrong-wash}"
     textColor: "{colors.wrong}"
-  quiz-sheet:
-    backgroundColor: "{colors.paper-sheet}"
-    rounded: "{rounded.sheet}"
-    padding: "18px 18px 8px"
-  toc-button:
-    backgroundColor: "{colors.bookmark-wash}"
-    textColor: "{colors.sumi}"
+  quiz-collapse:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "40px"
+  scope-select:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 10px"
+    height: "40px"
+  toc-tab:
+    backgroundColor: "{colors.note}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.field}"
     padding: "0 12px 0 10px"
     height: "40px"
+  chapter-index-tab:
+    backgroundColor: "{colors.ch1}"
+    textColor: "{colors.ink}"
+    typography: "{typography.label}"
+    rounded: "{rounded.hair}"
+    padding: "3px 12px"
+  chapter-toc-pill:
+    backgroundColor: "{colors.ch1-wash}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 14px"
+    height: "40px"
   toc-link-current:
-    backgroundColor: "{colors.bookmark}"
-    textColor: "{colors.paper-sheet}"
+    backgroundColor: "{colors.ch1}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.field}"
     height: "44px"
-  chapter-chip:
-    backgroundColor: "transparent"
-    textColor: "{colors.sumi-soft}"
+  section-drill:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ch1-ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 12px"
+    height: "32px"
+  mask-toggle:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 14px"
+    height: "40px"
+  mask-toggle-on:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+  miss-toggle:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
     padding: "0 12px"
     height: "40px"
   pos-tag-intransitive:
-    backgroundColor: "{colors.pine-wash}"
-    textColor: "{colors.pine}"
+    backgroundColor: "{colors.ji-wash}"
+    textColor: "{colors.ji}"
     rounded: "{rounded.pill}"
-    padding: "2px 9px"
+    padding: "1px 9px"
   pos-tag-transitive:
-    backgroundColor: "{colors.indigo-wash}"
-    textColor: "{colors.indigo}"
+    backgroundColor: "{colors.ta-wash}"
+    textColor: "{colors.ta}"
     rounded: "{rounded.pill}"
-    padding: "2px 9px"
+    padding: "1px 9px"
   pos-tag-both:
-    backgroundColor: "{colors.ochre-wash}"
-    textColor: "{colors.ochre}"
+    backgroundColor: "{colors.jita-wash}"
+    textColor: "{colors.jita}"
     rounded: "{rounded.pill}"
-    padding: "2px 9px"
+    padding: "1px 9px"
   say-button:
     backgroundColor: "transparent"
-    textColor: "{colors.sumi-faded}"
+    textColor: "{colors.ink-faded}"
     rounded: "{rounded.pill}"
     size: "36px"
   say-button-speaking:
-    backgroundColor: "{colors.sumi}"
-    textColor: "{colors.paper}"
-  select-field:
-    backgroundColor: "{colors.paper-sheet}"
-    textColor: "{colors.sumi}"
-    rounded: "{rounded.field}"
-    padding: "0 10px"
-    height: "40px"
+    backgroundColor: "{colors.ch1}"
+    textColor: "{colors.ink}"
+  reading-tile:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.surface}"
+    padding: "9px 12px 10px"
+  hanamaru-sticker:
+    backgroundColor: "{colors.sticker}"
+    textColor: "{colors.ink}"
+    size: "168px"
 ---
 
 # Design System: JLPT N5 單字整理表
 
 ## Overview
 
-**Creative North Star: "通勤用的單字本"**
+**Creative North Star: "日系文具桌面"**
 
-這個介面是一本放在口袋裡、在捷運上隨手翻開的單字本：暖白的紙、墨色的字、一支學習者自己畫重點的螢光筆，和一支只在批改時落下的朱筆。學習者手上通常只有幾分鐘、一隻手、晃動的車廂和忽明忽暗的光線，所以每一頁都要一眼看懂、拇指按得到、隨時可以闔上再打開。介面本身退到紙的背後，讓日文字成為頁面上最有存在感的東西。
+整個頁面是一張書桌：上半部是一張淡藍灰的方眼紙（頁首與練習區），上面放著一疊桃色便利貼；下半部是一本白紙單字本，每一章用自己的文具色索引標籤隔開。練習題是那疊便利貼，答完一題就把最上面那張向右上撕走，下一張早已在底下；章節靠索引標籤的顏色讓學習者記住「我在哪」。氣質是可愛、溫暖、有親和力，像日本文具店、便利貼和手帳，而不是課本或一般的藍色單字 app。
 
-材質語言來自課本：紙張分成頁面底色（`paper`）和攤開的那一張（`paper-sheet`），單字之間像筆記本一樣用細橫線分隔，而不是一張張浮起來的卡片。日文單字用教科書體 Klee One 書寫，讓學習者看到正確的筆畫形狀；中文說明用安靜的繁中黑體退居其次。螢光筆（`highlighter`）是學習者在課本上畫的重點，標出念法會變、要特別注意的字；朱紅（`vermilion`）是老師的批改筆，只出現在答錯和一輪結束的朱印。
+材質分工很清楚：方眼紙是「桌面」，只出現在頁首與練習區，淡藍灰細格線每 20px 一格、每五格（100px）一條較深的粗線，下緣一條 1px 細線和單字本分開；單字本是白紙配暖炭墨字，單字之間是細橫線而不是一張張卡片；便利貼是固定的桃色，不隨範圍換色；六種文具色（珊瑚橘、天空藍、若草綠、薰衣草、櫻桃粉、薄荷）只負責「這是第幾章、你在哪一章」；螢光筆黃只標特殊念法。字體用圓體：要學的日文用 Zen Maru Gothic，中文標題與按鈕用粉圓（Huninn），內文退回系統黑體。
 
-元件的手感是**清爽、俐落**：細線、精準的對齊、大而明確的觸控目標，沒有多餘的裝飾或特效。整個系統只保留一個值得記住的時刻：一輪練習結束時，分數像朱印一樣蓋在紙上。
+手感是**有實體感但不吵**：大圓角、便利貼與小卡帶柔和的貼紙陰影，收合的便利貼微微傾斜 −1.5°，攤開閱讀的便利貼則擺正。動態集中在三個文具動作：撕下便利貼、貼上はなまる貼紙、發音時按鈕輕輕脈動。
 
 **Key Characteristics:**
-- 暖白紙張與暖墨黑，深色模式是「夜裡的墨」，不是冷灰。
-- 朱紅只用在答錯與朱印，要注意的地方用螢光筆，「目前在哪、可以去哪」用江戶紫的書籤色，其餘介面狀態用墨色；詞性用低彩度的傳統色（松葉綠、藍染、黃土）。
-- 日文單字用教科書體，日文例句用日文黑體，中文介面用繁中黑體，三者各司其職。
-- 單字表是畫在紙上的橫線，不是卡片堆疊。
+- 淡藍灰方眼紙只當桌面（頁首、練習區），單字本永遠是白紙。
+- 一章一色：每章一組「實色／墨色／淡底」三色，只用來標章節與目前位置。
+- 練習題是一疊桃色便利貼，底下露出兩張紙邊；答完撕下一張。
+- 日文學習字用 Zen Maru Gothic 700，中文標題與按鈕用粉圓 400，內文是系統繁中黑體。
+- 答對綠色加勾、答錯紅色加叉；一輪結果是一枚橘色はなまる貼紙。
 - 觸控目標至少 40px，主要動作 52–56px，放在拇指範圍內。
-- 動態只有一個：朱印分數落下。
 
 ## Colors
 
-一張暖白的紙、一瓶墨、一支螢光筆、一支朱筆、一條書籤繩，再加上三種低彩度的傳統色標示詞性。
+一張淡藍灰方眼紙、一本白紙、一疊桃色便利貼、六色索引標籤、一支螢光筆，加上一枚橘色貼紙。
 
 ### Primary
-- **螢光筆（Highlighter）** (`highlighter`)：山吹色。塗在字的下半部（`linear-gradient(transparent 55%, highlighter 55%)`），字維持墨色粗體：念法會變的假名、例句中的目標單字、章首說明裡的「畫上螢光筆」；對照表中念法會變的格子右上角 10px 的小三角；反白選取文字的底色。墨色字在上面的對比為 9.8:1。與紙面的明度對比只有 1.55:1，所以**不能**用在焦點框、開關或任何唯一的狀態提示。深色模式為 `night-highlighter`，米白墨在上面為 5.8:1。
-- **朱筆（Vermilion）** (`vermilion`)：只有結束時的朱印分數。答錯使用同色系的 `wrong`。深色模式改用 `night-vermilion`。
-- **朱墨（Vermilion Ink）** (`vermilion-ink`)：朱印下方評語的日文。
-- **朱暈（Vermilion Wash）** (`vermilion-wash`)：保留給答錯相關的底色，介面其他地方不使用。
+- **六章文具色**（`ch1`–`ch6`，各帶 `-ink` 與 `-wash`）：珊瑚橘、天空藍、若草綠、薰衣草、櫻桃粉、薄荷。每章在自己的區塊上設定一組 `--c`／`--c-ink`／`--c-wash`，目次各章也套用同一組。
+  - **實色（fill）**：章首上方 4px 的章色帶、章名前的「第N章」索引標籤、目次列下緣 3px 的目前章色線與「目次」按鈕的底色（隨捲動換成目前那一章）、目次中目前那一節的實心底、節標題後面那段傾斜的紙膠帶（不透明度 0.45，深色模式 0.32）、「練這節」的框線、章首節連結滑過時的框線、發音播放中的底色。實色上的字一律是固定的暖炭墨 `ink`，淺色與深色模式都一樣。
+  - **墨色（ink）**：在白紙上當文字用的章色：「練這節」的字、對照表小標（h4）、成對組小標的字。深色模式改用 `night-chN-ink`。
+  - **淡底（wash）**：安靜的章色底：章首的節連結膠囊、成對組小標的底、對照表表頭與列頭、目次面板的節格子、目次連結滑過時的底，以及跳轉提示那一下的底色。
+- **錯題本**沿用同一套結構，但三色都換成答錯色（`wrong-wash`／`wrong`），所以它的章色帶是淡紅色。
 
 ### Secondary
-- **松葉綠（Pine）** (`pine` / `pine-wash`)：自動詞標籤。
-- **藍染（Indigo）** (`indigo` / `indigo-wash`)：他動詞標籤。
+- **便利貼桃（Note）** (`note`)：練習卡、收起的練習列、頁首「說明」展開的那張便利貼；底下兩張紙邊依序是 `note-under`、`note-under-2`，後者也是便利貼上的虛線、錯題清單的橫線與尚未作答的進度圓點。「目次」按鈕在還沒進入任何一章前、遮住答案提示列，以及「收起」滑過時也用這個桃色。
+- **貼紙橘（Sticker）** (`sticker`)：頁首 N5 圓形貼紙（傾斜 −8°）與一輪結束的はなまる花形貼紙。深淺模式同值，上面一律是暖炭墨字。
 
 ### Tertiary
-- **黃土（Ochre）** (`ochre` / `ochre-wash`)：自他動詞標籤。
+- **方眼紙（Mat）** (`mat`)：頁首與練習區的桌面底色，疊兩層淡藍灰格線（`mat-line` 細格 20px、`mat-line-major` 粗格 100px），練習區下緣一條 1px `line`。桌面幾乎是白的，所以桌面上的字直接用 `ink`／`ink-faded`（程式裡的 `--on-mat`／`--on-mat-sub` 只是指向它們的別名）；桌面上的控制項與提示（範圍選單、「收起」、範圍切換提示）都是 `paper` 白紙底、`line-strong` 鉛筆線框，跟著深色模式切換。
 
-### Wayfinding
-- **書籤（Bookmark）** (`bookmark`)：江戶紫，像書裡夾著的那條書籤繩，只標「目前在哪、可以去哪」：目次列的目前位置（前面一枚書籤圖示，字為 600）、目次面板中目前所在那一節的實心底（紙色字）、節標題右側的「練這節」文字，以及從錯題本跳到單字時那一下的框線。色相刻意避開松葉綠、藍染、黃土、朱與螢光筆。在三種紙面上的文字對比 6.3–7.3:1；深色模式 `night-bookmark` 在暖黑紙上 7.3–8.8:1，實心底改用暗色字。
-- **書籤暈（Bookmark Wash）** (`bookmark-wash`)：目次按鈕的底色（配 `bookmark-line` 框線）、目次連結、章首節連結與「練這節」滑過時的底色，以及跳轉提示的底色。
-- **書籤線（Bookmark Line）** (`bookmark-line`)：「練這節」的框線，與紙面對比 3.2:1 以上。
+### Highlighter
+- **螢光筆黃（Highlighter）** (`highlighter`)：塗在字的下半部（`linear-gradient(transparent 55%, highlighter 55%)`），字維持墨色粗體：念法特殊或會音變的假名、例句中的目標單字、章首說明裡的「畫上螢光筆」；對照表中念法會變的格子右上角 10px 的小三角；反白選取文字的底色。深色模式為 `night-highlighter`。
 
 ### Neutral
-- **紙（Paper）** (`paper`)：頁面底色、頁首、固定導覽列與表頭的底色。
-- **攤開的紙（Paper Sheet）** (`paper-sheet`)：練習卡、選項按鈕、下拉選單等「拿在手上」的表面。
-- **紙影（Paper Shade）** (`paper-shade`)：答案揭曉區、選項數字鍵、提示框、滑鼠移過的底色。
-- **遮紙（Paper Mask）** (`paper-mask`)：遮住答案模式下蓋住答案的色塊。
-- **墨（Sumi）** (`sumi`)：主要文字、主要按鈕底色、遮住答案開啟時與發音播放中的底色、鍵盤焦點框、節標題下的短線。
-- **淡墨（Sumi Soft）** (`sumi-soft`)：次要內文、說明文字。
-- **褪墨（Sumi Faded）** (`sumi-faded`)：讀音、字數、例句中譯、欄位名稱等輔助資訊；在所有紙面上都維持 4.9:1 以上。
-- **橫線（Ruled Line）** (`ruled-line`)：單字列之間、區塊之間的分隔線。
-- **鉛筆線（Pencil Line）** (`pencil-line`)：可操作元件的邊框與表頭下緣，與紙面對比 3.3:1 以上。
+- **白紙（Paper）** (`paper`)：單字本頁面、選項、小卡、對照表、次要按鈕、下拉選單。深色模式頁面是 `night-paper`，選項與小卡等「拿在手上」的表面是稍亮的 `night-card`。
+- **紙影（Surface）** (`surface`)：選項數字鍵、滑過的底、無詞性標籤的底、展開中的錯題本按鈕。
+- **遮紙（Mask）** (`mask`)：遮住答案時蓋住答案的色塊。
+- **暖炭墨（Ink）** (`ink`)：主要文字、主要按鈕底、遮住答案開啟時的底；也是所有實色（章色、便利貼、貼紙）上的固定字色。
+- **淡墨（Ink Soft）** (`ink-soft`)：次要內文、章首說明、節說明；主要按鈕滑過。
+- **褪墨（Ink Faded）** (`ink-faded`)：讀音、字數、例句中譯、頁尾等輔助資訊。
+- **細線（Line）** (`line`)：單字列之間、對照表格線、節標題下的虛線、發音按鈕的淡框。
+- **鉛筆線（Line Strong）** (`line-strong`)：可操作元件的邊框（次要按鈕、錯題本按鈕、遮住答案的虛線框、遮紙的虛線外框）。
 
-### Feedback
-- **答對** (`correct` / `correct-wash`) 與 **答錯** (`wrong` / `wrong-wash`)：只出現在作答結果、進度格與錯題相關文字。
+### Feedback 與詞性
+- **答對** (`correct` / `correct-wash`) 與 **答錯** (`wrong` / `wrong-wash`)：作答結果、進度圓點、錯題本的小叉與次數、連續答對的圓點，以及會丟掉進度的「再按一次」警告。
+- **詞性**：自動詞 `ji`、他動詞 `ta`、自他動詞 `jita`，各配一個淡底，只用在詞性標籤。
 
 ### Named Rules
-**The 朱筆 Rule.** 朱紅是老師的批改筆，只出現在兩個地方：答錯（包括目次列錯題本按鈕和錯題本清單上的朱色小叉與錯誤次數；單字表本身不放），以及一輪結束的朱印。看到紅色就代表「錯了」或「這一輪的結果」，不拿來當重點、狀態、裝飾或背景。唯一例外是會丟掉進度的警告，沿用答錯的 `wrong` 色：作答途中按「換一組題目」後出現的「再按一次，放棄這組重新出題」，以及頁尾清除按鈕按第一下後的「再按一次清除，無法復原」。
+**The 一章一色 Rule.** 文具色只有一個意思：「這是第幾章／你在這一章」。它出現在章色帶、索引標籤、目次列下緣與目次按鈕、目前那一節、紙膠帶、節連結、表頭與「練這節」；從不用來表示對錯、詞性或主要動作。實色上永遠是暖炭墨字，白紙上要寫章色字時改用 `-ink`，大面積底色只用 `-wash`。
 
-**The 螢光筆 Rule.** 要注意的地方（念法會變、例句目標字）一律用螢光筆畫在字的下半部，字本身維持墨色粗體，讓意思不只靠顏色傳達。介面狀態（焦點、開關、播放中）一律用墨色，不用螢光筆。
+**The 桌面與筆記本 Rule.** 方眼紙只鋪在頁首和練習區這張「桌面」；單字本（目次列以下）永遠是白紙。不在單字本裡放方眼格線。桌面要安靜：淡、低彩度，讓桃色便利貼和章色成為畫面上的顏色。
 
-**The 書籤 Rule.** 江戶紫只有一個意思：「你在這裡／從這裡過去」。它只出現在目次列的目前位置、目次面板的目前那一節、「練這節」與跳轉提示；不用在按鈕主色、焦點框、開關、單字或任何裝飾。目前位置同時有書籤圖示或實心底，不只靠顏色。
+**The 便利貼固定桃色 Rule.** 練習用的便利貼永遠是 `note` 桃色，不隨範圍、章節或結果換色；分數與對錯寫在便利貼上，不改變便利貼本身。
 
-**The 綠色是對 Rule.** 答對永遠用綠色加勾，答錯用朱紅加叉。不採用日本「紅圈＝答對」的慣例，因為台灣學習者會把紅色讀成錯誤。
+**The 螢光筆 Rule.** 螢光筆黃只標念法（特殊念法、音變、例句目標字）與文字選取，字本身維持墨色粗體，意思不只靠顏色傳達。不用在焦點、開關、目前位置或裝飾（使用者指定保留）。
 
-**The 夜裡的墨 Rule.** 深色模式是暖黑紙（`night-paper` / `night-sheet`）配米白墨（`night-ink`），每個淺色 token 都有一個 `night-` 對應值（紙影、遮紙、淡墨、褪墨、橫線、鉛筆線、螢光筆、朱、朱墨、朱暈、松葉綠、藍染、黃土、書籤與各自的底色）；答對沿用 `night-pine`，答錯沿用 `night-vermilion-ink`。朱紅按鈕在深色模式改用深色字（`night-on-vermilion`）。不使用冷藍灰。
+**The 綠色是對 Rule.** 答對永遠用綠色加勾，答錯用紅色加叉。不採用日本「紅圈＝答對」的慣例，因為台灣學習者會把紅色讀成錯誤；はなまる是橘色貼紙，不是紅圈。
+
+**The 夜裡的書桌 Rule.** 深色模式每個表面與文字 token 都有 `night-` 對應值：方眼紙變成暖灰黑（格線更淡）、便利貼變深桃褐、白紙變暖黑、章色墨與淡底各自換成深色版本。章色實色與貼紙橘維持同樣明亮的文具色，上面照樣是暖炭墨字。
 
 ## Typography
 
-**Display Font:** Klee One（教科書體，後備 Hiragino Mincho ProN、Yu Mincho、Noto Serif JP）
-**Body Font:** PingFang TC／Noto Sans TC／Microsoft JhengHei（繁中黑體）
-**Japanese Body Font:** Hiragino Sans／Noto Sans JP／Yu Gothic／Meiryo（日文黑體）
+**Japanese Display Font:** Zen Maru Gothic（Google Fonts，載入 500 與 700；後備 Hiragino Maru Gothic ProN、Hiragino Sans、Noto Sans JP、Yu Gothic）
+**Chinese Heading Font:** Huninn 粉圓（Google Fonts，400；後備 PingFang TC、Noto Sans TC、Microsoft JhengHei）
+**Body Font:** 系統繁中黑體（PingFang TC／Noto Sans TC／Microsoft JhengHei／Heiti TC）
+**Japanese Body Font:** 系統日文黑體（Hiragino Sans／Noto Sans JP／Yu Gothic／Meiryo）
 
-**Character:** 教科書體帶著手寫的筆畫，讓日文單字像寫在課本上；繁中黑體安靜、中性，負責所有說明與操作。兩者的對比本身就是層級：手寫的是要學的，印刷的是告訴你怎麼學。
+**Character:** 兩種圓體讓整頁像手帳上的字：要學的日文用筆畫清楚、圓潤的 Zen Maru Gothic 粗體，中文的標題和按鈕用粉圓帶出親和力；長段說明交給安靜的系統黑體，讀起來不累。
 
 ### Hierarchy
-- **Display**（600，`--fs-display`：clamp(2.75rem, 12vw, 4.25rem)，行高 1.2）：練習題的單字。一個畫面只有一個。題目是中文時（中文→讀音）用較小的 `--fs-display-zh`（clamp(1.75rem, 7vw, 2.5rem)）。
-- **Headline**（700，1.3rem，行高 1.3）：頁面標題「JLPT N5 單字整理表」。
-- **Chapter**（700，`--fs-chapter`：clamp(1.75rem, 7vw, 2.25rem)，行高 1.25；手機 1.75rem、桌機 2.25rem）：章標題「數字與念法」與錯題本標題，前面以褪墨 600、1rem、字距 0.08em 的「第一章」同一行、基線對齊引導（不另起一行當眉標）。章首說明 1rem 淡墨、寬 40em。390px 寬的手機上最長的「第六章 形容詞與副詞」仍維持一行。
-- **中文段落寬度**一律用 `em` 而不是 `ch`（`ch` 只有半個中文字寬）：章首說明與節說明 46em、頁首說明 42em，並加上 `text-wrap: pretty` 避免最後一行只剩一兩個字。
-- **Title**（700，1.2rem）：節標題；練習區標題略小（1.1rem）並使用淡墨。
-- **Headword**（Klee One 600，1.2rem；手機 1.3rem；答案揭曉 1.5rem）：單字表、答案揭曉、錯題清單中的日文單字。
-- **Body**（400，0.92rem，行高 1.6）：中文意思、例句；選項按鈕放大到 1.1rem。說明段落限制在 46em 以內。
-- **Label**（600，0.85rem）：表頭、字數、進度、讀音與說明文字；最小一級 0.78rem 只給詞性標籤、數字鍵與分類字數。數字使用等寬數字（tabular-nums）。
+- **Display**（Zen Maru Gothic 700，`clamp(2rem, 11.5cqi, 4.25rem)` 依練習卡寬度縮放、後備 `--fs-display`，行高 1.2，字距 0.02em）：練習題的日文題目，一個畫面只有一個。只有假名的題目不在字中斷行（`keep-all`）。
+- **Display 中文**（粉圓 400，`--fs-display-zh`）：中文→讀音題的中文題目。
+- **Chapter**（粉圓 400，`--fs-chapter`，行高 1.25）：章標題與錯題本標題，前面同一行是「第N章」索引標籤。章首說明 1rem 淡墨、寬 40em。
+- **Headline**（粉圓 400，1.5rem）：頁首「JLPT N5 單字整理表」，前面一枚 N5 貼紙。
+- **Title**（粉圓 400，1.3rem）：節標題，寫在章色紙膠帶上；練習區標題 1.2rem、墨色。
+- **Headword**（Zen Maru Gothic 700，1.2rem；手機 1.1rem；答案揭曉 1.5rem；對照表小卡 1.3rem、表格格子 1.1rem）：單字表、答案揭曉、錯題清單、對照表中的日文單字，以及はなまる上的評語與分數。
+- **Button**（粉圓 400，1.1rem，字距 0.04em）：主要與次要按鈕、練習列的主文字（1.3rem）、目次標籤。
+- **Body**（系統黑體 400，1rem，行高 1.6）：中文意思、說明、例句；選項按鈕 1.1rem；節說明 0.92rem。
+- **Label**（系統黑體 600，0.85rem）：表頭、進度、讀音、狀態列；最小一級 0.78rem 只給詞性標籤、數字鍵、成對組小標與字數。數字使用等寬數字（tabular-nums）。
 
 ### Type Scale
-程式碼只使用九級字級 token（`--fs-xs` 到 `--fs-4xl`）：0.78、0.85、0.92、1、1.1、1.2、1.3、1.5、1.75rem，加上 `--fs-display`（題目單字）、`--fs-display-zh`（中文題目）與 `--fs-chapter`（章標題）三個 clamp。不得寫入表外的字級；朱印內的字級屬於 SVG 座標，不在此表。
+程式碼只使用九級字級 token（`--fs-xs` 到 `--fs-4xl`）：0.78、0.85、0.92、1、1.1、1.2、1.3、1.5、1.75rem，加上 `--fs-display`、`--fs-display-zh`、`--fs-chapter` 三個 clamp，以及題目字依卡寬縮放的 `clamp(2rem, 11.5cqi, 4.25rem)`。N5 貼紙內的 0.72em 與はなまる內 SVG 座標的字級不在此表。不得寫入表外的字級。
 
 ### Named Rules
-**The 語言標記 Rule.** 所有日文（單字、讀音、例句、題目、助詞が／を）都必須帶 `lang="ja"`，由 `:lang(ja)` 套用日文字體。中文介面字體清單永遠以繁中字體開頭。
+**The 語言標記 Rule.** 所有日文（單字、讀音、例句、題目、選項、助詞が／を、評語）都必須帶 `lang="ja"`，由 `:lang(ja)` 套用日文字體；要學的單字另外套 Zen Maru Gothic。中文字體清單永遠以繁中字體開頭。
 
-**The 手寫只給日文 Rule.** Klee One 只用在要學習的日文單字上（題目、單字、答案、錯題）；介面文字、數字、按鈕從不使用它（朱印分數除外）。
+**The 圓體分工 Rule.** Zen Maru Gothic 只給要學的日文（題目、單字、答案、錯題、格子、はなまる）；粉圓只給中文標題、按鈕與練習列的主文字；段落與標籤一律系統黑體。粉圓只用 400，不加粗。
+
+**The em 寬度 Rule.** 中文段落寬度一律用 `em` 而不是 `ch`（`ch` 只有半個中文字寬）：章首說明 40em、節說明 46em、頁首說明 42em，並加上 `text-wrap: pretty` 避免最後一行只剩一兩個字。
 
 ## Layout
 
-單欄、置中的內容寬度 900px，左右留白 20px（手機 16px），頁首、練習區、導覽列與單字表共用同一條左邊線。
+單欄、置中的內容寬度 900px，左右留白 20px（≤640px 為 16px）；頁首、練習區、目次列與單字本共用同一條左邊線。練習區內的標題列、提示與便利貼最寬 680px。
 
-頁面順序固定為：精簡頁首 → 練習區 → 固定在頂端的目次列（只在單字區範圍內固定）→ 六章單字。練習區預設收成一列（2026-10-14 起），第一個畫面就看得到目次列和第一章；目次列下方的第一個區塊（第一章或打開的錯題本）上方只留 36px，不做章與章之間的大留白。寬螢幕（≥1240px）所有 `.wrap` 一起放寬到 1180px，頁首、練習區與導覽列從側欄目次的左緣開始跑滿整寬，只有單字區左側讓出 240px 的側欄目次（見下方元件）；點練習列就展開練習卡，展開後在 390px 寬的手機上，四個選項必須在第一個畫面內可見。
+頁面順序固定為：方眼紙上的精簡頁首 → 同一張方眼紙上的練習區 → 固定在頂端的目次列（只在單字本範圍內固定，52px）→ 錯題本（打開時）→ 六章單字。練習區預設收成一張傾斜的便利貼（練習列），第一個畫面就看得到目次列和第一章；目次列下方的第一個區塊上方只留 36px。
 
-單字區是一本書：**章 → 節 → 小標**。每章開頭是章首（章標題、一句說明、這一章各節的圓頭連結），章與章之間用一條橫跨整欄的 3px 墨線和 96px（手機 64px）留白分開，像課本翻到新的一章；錯題本區塊比照；節標題保留目次列高度加 8px 的捲動邊距。每節 10–45 字，同一節的呈現方式一致；練習題型每題隨機，不依章節固定。
+寬螢幕（≥1240px）所有 `.wrap` 一起放寬到 1180px；頁首、練習區與目次列跑滿整寬，只有單字本左側讓出 240px 的側欄目次（欄距 40px），側欄 sticky 在目次列下方 20px，可單獨捲動；這時目次列不顯示「目次」按鈕。
 
-目次列只有一行、高 52px：左邊「目次」按鈕同時寫出目前位置（「第五章・移動與位置」），右邊固定「錯題本」與「遮住答案」。點開後目次面板從列下方垂下、後面的頁面變暗，只列出六章與各節字數；點節名直接跳過去，不做平滑捲動。在頁面頂端（目次列還沒固定）點開時，先把目次列直接移到畫面頂端再垂下面板，整個面板都在畫面內。「練這節」放在每節標題右側。
+單字本是一本活頁夾：**章 → 節 → 小標**。章與章之間 96px（手機 64px）留白，章首上方一條 4px 章色帶、下面 22px（手機 18px）；節與節之間 36px，節標題保留目次列高度加 8px 的捲動邊距。單字列在 760px 以上每行兩個字（欄距 32px），成對的一組橫跨整行；以下每行一個字。手機上一列是「單字（讀音在下）｜中文（詞性標籤在下）｜展開箭頭｜發音」。選項在 560px 以上排成兩欄，以下單欄，主要按鈕在手機上撐滿寬度。
 
-單字列在 760px 以上每行兩個字，成對的一組橫跨整行並沿用同樣的兩欄；以下每行一個字。手機上一列是「單字（讀音在下）｜中文（詞性標籤在下）｜展開箭頭｜發音」，中文欄至少佔 58%，不得被詞性標籤擠到換行。選項在 560px 以上排成兩欄，以下為單欄，主要按鈕在手機上撐滿寬度。
-
-間距節奏：列內 14px、區塊之間 28px、卡片內距 18px（手機 16px／14px）。
+間距節奏：列內 14px、選項之間 10px、便利貼內距 18px（手機 16px／14px）、對照表格子之間 8px。
 
 ## Elevation & Depth
 
-幾乎是平的。深度來自紙張的色階（`paper` → `paper-sheet` → `paper-shade`），而不是陰影。只有練習卡這一張「拿在手上的紙」帶一層極淡、貼近紙面的陰影，其餘全部用細線與色階分層。
+這是有實體感的桌面：真正「放在桌上」的東西（便利貼、選項、小卡、貼紙、主要按鈕）帶柔和、偏下的貼紙陰影，畫在紙上的東西（單字列、表格線、紙膠帶）沒有陰影。陰影一律是模糊的暖色陰影，沒有硬邊位移陰影。
 
 ### Shadow Vocabulary
-- **貼紙陰影**（`box-shadow: 0 1px 2px rgba(28, 24, 20, 0.05), 0 2px 6px -2px rgba(28, 24, 20, 0.08)`）：只用在練習卡。深色模式為 `0 1px 2px rgba(0,0,0,0.4), 0 2px 6px -2px rgba(0,0,0,0.5)`。
+- **便利貼陰影**（`--shadow`：`0 1px 1px rgba(30, 22, 16, 0.08), 0 10px 22px -10px rgba(30, 22, 16, 0.45)`）：便利貼、底下兩張紙邊、練習列、頁首說明便利貼。深色模式為 `0 1px 1px rgba(0, 0, 0, 0.4), 0 10px 22px -10px rgba(0, 0, 0, 0.7)`。
+- **選項陰影**（`0 1px 0 rgba(30, 22, 16, 0.12), 0 3px 8px -4px rgba(30, 22, 16, 0.3)`）：便利貼上的選項；按下或停用時移除。
+- **小卡陰影**（`0 1px 1px rgba(30, 22, 16, 0.06), 0 6px 12px -8px rgba(30, 22, 16, 0.3)`）：對照表的小卡。
+- **按鈕陰影**（`0 1px 1px rgba(30, 22, 16, 0.08), 0 6px 12px -8px rgba(30, 22, 16, 0.35)`）：主要按鈕；按下時下沉 2px 並移除。
+- **貼紙陰影**（N5：`0 1px 1px rgba(0, 0, 0, 0.15), 0 4px 8px -4px rgba(0, 0, 0, 0.45)`；はなまる：兩層 `drop-shadow`）：圓形與花形貼紙。
+- **目次列陰影**（`0 6px 12px -10px rgba(30, 22, 16, 0.4)`）與**目次面板陰影**（`0 18px 36px -12px rgba(28, 24, 20, 0.35)`，後面一層 30% 暗幕，深色 55%）。
 
 ### Named Rules
-**The 一張紙 Rule.** 畫面上同時只有一張紙是浮起來的（練習卡）。單字表、提示、答案區都畫在紙上，不加陰影、不加外框。
+**The 放在桌上才有影 Rule.** 只有實體放在桌上的物件有陰影；單字列、表格、紙膠帶、章色帶都是畫在紙上的，不加陰影、不加外框。
 
 ## Shapes
 
-形狀語言是「裁切整齊的紙與圓頭標籤」：
+形狀語言是「文具」：便利貼的小圓角、索引標籤、圓頭膠囊與圓形貼紙。
 
-- 紙面與按鈕使用柔和的圓角，只有五級（`--r-hair` 6px、`--r-field` 8px、`--r-surface` 12px、`--r-sheet` 16px、`--r-pill` 999px）：練習卡 16px、選項、按鈕與提示框 12px、下拉選單 8px、遮紙色塊與數字鍵 6px、進度格是圓頭。
-- 可以點的小元件（目次按鈕、章首的節連結、「練這節」、詞性標籤、發音按鈕、遮住答案開關）一律是完整圓頭（999px）。
-- 線條有三種粗細：1px 的橫線與鉛筆線、作答結果的 2px 邊框，以及 3px 的墨線。節標題下方是一條 1px 的鉛筆線，左側疊一段 2.5em 寬、3px 高的墨線；章首上方則是同一條 3px 墨線拉滿整欄。成對的字之間是一個褪墨的雙向箭頭（自繪 SVG，線寬 1.6）。
-- 唯一的圓形是朱印：168px 雙圈，外圈 3.5px、內圈 1.5px，傾斜 −8°，評語沿上半圈排列。
+- 五級圓角：`--r-hair` 6px（便利貼與紙邊、索引標籤、遮紙、小標）、`--r-field` 10px（目次按鈕上緣、目次連結、單字列滑過的底）、`--r-surface` 14px（選項、小卡、對照表）、`--r-sheet` 18px（目次面板下緣）、`--r-pill` 999px（按鈕、下拉選單、節連結、詞性標籤、發音按鈕、開關）。
+- 「目次」按鈕是索引標籤：上緣 10px、下緣 6px 的圓角。
+- 傾斜：收起的練習列 −1.5°（滑過時擺正並浮起 2px）、底下兩張紙邊 +1.4° 與 −1.2°、節標題紙膠帶 −2°、N5 貼紙與はなまる −8°。展開閱讀的便利貼不傾斜。
+- 虛線代表「暫時」：遮住答案的開關與遮紙外框是 1.5px 鉛筆線虛線，便利貼內分隔答案區與頁尾也是 1.5px 虛線，節標題下是 1.5px 細線虛線。
+- 線條：1px 細線分隔單字列與表格，1.5–2px 為作答結果邊框，3px 為目次列下緣章色線，4px 為章色帶。成對字之間是褪墨雙向箭頭（自繪 SVG，線寬 1.6）。
+- 圓形：進度圓點（10px，≤380px 為 8px）、選項數字鍵（26px）、N5 貼紙、練習列的墨色圓形箭頭。はなまる是扇形花瓣輪廓加一圈白色虛線。
 
 ## Components
 
 ### Buttons
-清爽、俐落，尺寸大到拇指不會按錯。
-- **Shape:** 柔和圓角（12px），高度 52px。
-- **Primary:** 墨底、紙色字、600 字重；一個畫面只有一個（「下一題」「看結果」「複習答錯的 N 題」）。深色模式自動反轉為米白底、暖黑字。
-- **Hover / Focus:** 移過時轉為淡墨；鍵盤焦點為 2px 墨色外框、2px 間距。滑鼠移過效果只在支援 hover 的裝置上出現。
-- **Secondary:** 透明底、墨色字、鉛筆線邊框，用於並列的次要動作（「再來一組」）。
-- **Text:** 「換一組題目」是帶底線的褪墨文字，最小高度 44px，放在練習卡底部、遠離主要按鈕；作答途中按下會變成朱紅的「再按一次，放棄這組重新出題」，4 秒後恢復。
-- **清除錯題本與練習進度：** 頁尾「製作日期」下方置中的次要按鈕（高 44px、內距 20px、0.92rem），左邊自繪垃圾桶圖示；下方一行 0.78rem 褪墨小字「錯題本和練習進度只存放在這台裝置的瀏覽器裡。」按第一下整顆變成 `wrong` 實心、紙色字（深色模式為暗色字）的「再按一次清除，無法復原」，4 秒後恢復；按第二下清除並重新出題，按鈕換成墨色勾「已清除錯題本與練習進度」3 秒。寬度不超過版面，窄螢幕時文字換行。列印與未啟用 JavaScript 時不顯示。
+圓頭、厚實，拇指一按就中。
+- **Shape:** 完整圓頭（999px），高 52px，左右 28px，粉圓 1.1rem。
+- **Primary:** 暖炭墨底、白紙字，帶按鈕陰影；一個畫面只有一個（「下一題」「看結果」「複習答錯的 N 題」）。深色模式自動反轉為米白底、暖黑字。
+- **Hover / Active / Focus:** 滑過轉為淡墨；按下下沉 2px、陰影消失；鍵盤焦點為全站一致的 2.5px 天空藍墨（`ch2-ink`）外框、2px 間距。滑過效果只在支援 hover 的裝置上出現。
+- **Secondary:** 白紙底、墨色字、1.5px 鉛筆線框，滑過為紙影（「再來一組」）。
+- **Text:** 「換一組題目」是帶底線的 0.85rem 文字、最小高 44px，放在便利貼底部；作答途中按下變成紅色粗體「再按一次，放棄這組重新出題」。
+- **收起:** 練習區標題列右側的白紙底、鉛筆線框膠囊（40px、600），滑過為便利貼桃。
+- **清除錯題本與練習進度:** 頁尾的次要按鈕（44px、0.92rem、自繪垃圾桶圖示）；按第一下整顆變成 `wrong` 實心警告。
 
-### Scope Select 與範圍切換
-- 作答到一半改選範圍，不會丟掉目前這組：選單下方出現一行紙影底的提示「這組做完後改用「X」出題」，「換一組題目」同時變成「改用「X」重新出題」，按一下才立即換。
-- 選單順序：「全部」→「錯題本」→ 六章的群組（每組是「第N章全部」與各節）。錯題本和「全部」同一層，不放進任何一章；錯題本 0 字時停用（目前正選著它時除外）。
-- 範圍選單的數字是該範圍可練習的不重複字數；頁首同時寫出核心單字數與全部可練習字數，兩者不得互相矛盾。
+### Sticky Note Pad（簽名元件）
+- **Stack:** 練習卡是一疊便利貼的最上面一張：`note` 桃色、6px 圓角、便利貼陰影；後面兩張紙邊（`note-under` 旋轉 1.4°、`note-under-2` 旋轉 −1.2°）露出邊緣。
+- **Collapsed:** 收起時整疊是一張 72px 高的練習列，傾斜 −1.5°：粉圓 1.3rem 主文字（開始練習／繼續練習／這組做完了）加一行 0.85rem 進度，右側一顆 40px 的墨色圓形箭頭。
+- **Peel:** 按「下一題」時，複製目前這張便利貼，480ms 內先微微掀起（2°）再向右上撕走（平移 38%／−34%、旋轉 16°、淡出，`cubic-bezier(0.45, 0, 0.7, 0.3)`），新的一張已經在底下。開啟「減少動態效果」時只用 160ms 淡出。
+- **Progress:** 便利貼頂端一排 10 枚圓點貼紙：未作答為 `note-under-2`、答對綠、答錯紅、目前這題是 2.5px 墨色圓圈並放大 1.2 倍。
+- 範圍選單是桌面上白紙底、鉛筆線框的圓頭下拉選單（40px）；範圍切換提示是白紙底、1px 鉛筆線虛線框、10px 圓角的小框，淡墨字。
 
-### Answer Options（簽名元件）
-- **Style:** 攤開的紙底、鉛筆線邊框、12px 圓角、最小高度 56px；左側一枚 26px 的紙影數字鍵（1–4），對應鍵盤快捷鍵。
-- **Correct / Wrong:** 2px 邊框，綠或朱的底色與文字，右側畫上 20px 的勾或叉（自繪 SVG），並附上螢幕閱讀器可讀的「（正確答案）／（你的選擇）」。
-- **Disabled:** 作答後其他選項設為真正的停用狀態，透明度 0.5。
+### Answer Options
+- **Style:** 白紙底、14px 圓角、最小高 56px、選項陰影；左側一枚 26px 紙影圓形數字鍵（1–4），對應鍵盤快捷鍵。滑過時出現鉛筆線框並浮起 1px。
+- **Correct / Wrong:** 2px 邊框、綠或紅的淡底與文字、600 字重，右側畫上 20px 的勾或叉（自繪 SVG），並附螢幕閱讀器可讀的說明。
+- **Disabled:** 作答後其他選項變成褪墨字、移除陰影。
+- **Reveal:** 選項下方以 1.5px 虛線隔開：第一行綠勾「答對了」或紅叉「答錯了，正確答案是：」，第二行 1.5rem Zen Maru 單字、讀音、意思與發音按鈕；錯題本相關的一行小字放在下面。
+
+### はなまる Result（簽名元件）
+- 一輪結束時，便利貼上貼一枚 168px 的貼紙橘花形はなまる（扇形花瓣、內圈白色 2px 虛線），傾斜 −8°，上半圈沿弧線寫評語，中央 Zen Maru 分數，下方「/ 10」。
+- 出現時 520ms、`cubic-bezier(0.34, 1.56, 0.64, 1)`，從 −30°、0.4 倍彈到 −8°；減少動態效果或重新整理回到已完成的回合時直接顯示。
+- 評語依答對比例分四級（たいへんよくできました／よくできました／もうすこし／がんばりましょう），下方附中文翻譯；整體以 `role="img"` 與完整 aria-label 提供給螢幕閱讀器。
+- 後面緊接行動按鈕，答錯的字直接寫在便利貼的橫線上（`note-under-2` 1px 線），一行一字。
 
 ### Chips
-- **Chapter chip:** 章首的節連結。透明底、1px 橫線邊框、淡墨字、40px 高、完整圓頭；字數以較小的褪墨等寬數字跟在後面。
-- **Part-of-speech tag:** 完整圓頭小標籤（0.78rem），自動詞松葉綠、他動詞藍染、自他動詞黃土、其他詞性紙影底淡墨字。
+- **章首節連結:** 章色淡底、墨字、40px 高的圓頭膠囊，字數以 0.78rem 褪墨等寬數字跟在後面；滑過時出現章色實色框線。
+- **詞性標籤:** 0.78rem 圓頭小標籤，自動詞綠、他動詞藍、自他動詞褐，其他詞性紙影底淡墨字。
+- **成對組小標:** 6px 圓角、章色淡底、章色墨字、0.78rem 600。
 
 ### Cards / Containers
-- **Quiz sheet:** 唯一的卡片。攤開的紙底、1px 橫線邊框、16px 圓角、貼紙陰影、內距 18px。
-- **Reveal panel:** 紙影底、12px 圓角、無邊框；第一行是綠勾「答對了」或朱叉「答錯了，正確答案是：」，第二行是教科書體單字、讀音、意思與發音按鈕。
-
-### 錯題記號
-- **錯題本按鈕與區塊：** 目次列「遮住答案」左邊一顆圓頭框線按鈕「✕ 錯題本 4 ⌄」，朱色叉和粗體數字讓它一眼可辨；0 字時換成褪墨色、不放叉。手機（< 560px）只縮小內距，仍保留「錯題本」三個字。點了打開或收起單字區最上方、第一章之前的「錯題本」區塊，並捲到那裡。區塊和章同一層級：同樣的鉛筆線、留白與章標題字級；標題下一行說明（共幾字、排序與移出規則）配「練這些字」次要按鈕（等同範圍選「錯題本」），下面是清單。目次面板只放章節導覽。
-- **練習題結果區：** 答題後在答案下方加一行小字。答錯：「已記入錯題本（答錯 N 次），連續答對 5 次就移出」；答對錯題本裡的字：「錯題本：連續答對 2 / 5 ●●○○○」；第 5 次連續答對：綠勾「連續答對 5 次，移出錯題本」。不在錯題本的字答對時不顯示。
-- **單字列與對照表格子：** 不放任何錯題資訊，有例句和沒例句的字顯示方式一致。
-- **結束畫面：** 有字移出錯題本時，在答錯清單下方加一行綠勾說明，不另加動畫。
-
-### Say Button
-- **Style:** 透明底、褪墨色的喇叭圖示（自繪 SVG，線寬 1.8）、完整圓頭；單字與題目旁 36px，答案揭曉 32px，例句旁 28px。邊框刻意使用淡的橫線色，避免 277 列單字表上出現數百個重的圓圈。
-- **Hit area:** 不論畫出來多大，可點範圍一律向外延伸到至少 40px。
-- **States:** 移過時紙影底、墨色圖示；播放中反轉為墨底、紙色圖示，播放結束自動恢復。對照表的格子播放中為遮紙底。以瀏覽器內建的日語語音念出讀音（假名），語速 0.85。
+- **Reading tile（對照表小卡）:** 白紙底、1.5px 細線框、14px 圓角、小卡陰影；念法會變的格子右上角一個 10px 螢光筆三角。右上角 26px 的小發音按鈕。
+- **Grid（對照表）:** 白紙底、1.5px 細線框、14px 圓角，表頭與列頭是章色淡底、淡墨 600 字。
 
 ### Inputs / Fields
-- **Range select:** 原生下拉選單，攤開的紙底、鉛筆線邊框、8px 圓角、40px 高。
-- **Focus:** 與全站一致的 2px 墨色焦點框。
+- **範圍選單:** 白紙底、1px 鉛筆線框的圓頭原生下拉選單（40px），在方眼紙桌面上。
+- **遮住答案:** 白紙底、1.5px 鉛筆線**虛線**框的圓頭開關；開啟時變成墨色實心、白字、實線。開啟時目次列下方出現一行便利貼桃底的提示，以 `role="status"` 念出。
+- **Focus:** 全站 2.5px `ch2-ink` 外框、2px 間距；原生控制項的 `accent-color` 同色。
 
 ### Navigation
-- **目次列:** 紙色底、1px 橫線下緣、52px 高；只在單字區範圍內固定於頂端。「目次」按鈕是列表圖示＋粗體「目次」＋目前位置（前面一枚 9×14px 的書籤圖示，書籤色 600 字，太長時以刪節號截斷；手機 < 560px 省略「第N章・」只寫節名，< 380px 不寫位置）＋可旋轉的書籤色箭頭，是一個 `aria-expanded` 的展開按鈕。按鈕本身是書籤暈底、`bookmark-line` 框線的圓頭膠囊，和右邊兩顆框線按鈕一樣醒目；展開或滑過時框線加深成書籤色。還沒捲到第一章時，位置處改寫頁首的「6 章 28 節」（褪墨色、400 字），手機 < 560px 不寫。寬螢幕有側欄時不顯示這顆按鈕。
-- **目次面板:** 攤開的紙（`paper-sheet`）底、下緣 16px 圓角、明顯的向下陰影，後面整頁蓋一層半透明暗幕，讀起來是一張疊在頁面上的紙；最高到視窗底部前 24px，內容可捲動。每章一段：褪墨「第一章」＋粗體章名（44px 高），下面各節排成小卡格子（每格至少 148px 寬，手機兩欄、平板五欄），每格紙色底、細線框、8px 圓角、至少 44px 高，節名可換行、字數靠右；目前所在那一節為書籤色實心底、紙色字；滑過為書籤暈。Esc、點面板外（暗幕）或選了一節就收起。
-- **側欄目次（≥1240px）:** 同一份目次留在單字區左側 240px 的欄位，sticky 在目次列下方 20px，最高到視窗底部前 20px、可單獨捲動；標題「目次」與「回到練習題」照常顯示，章名列 38px、節連結 32px 高、一欄直排。目前所在那一節為書籤色實心底，捲動頁面時側欄自動捲到讓它留在畫面內。視窗縮到 1240px 以下時，目次移回面板。沒有 JS 時，窄螢幕同一份目次直接排在單字區開頭，寬螢幕則照樣是側欄。
-- **練習列（收起的練習區）:** 範圍選單下方一條撐滿寬度、56px 高的紙卡按鈕，左緣 3px 墨線、12px 圓角、柔和陰影；粗體一行（開始練習／繼續練習／這組做完了）加一行褪墨小字（範圍・第幾題・答對幾題，或這組的分數），右側褪墨箭頭。點了展開練習卡並把焦點放到第一個選項；練習區最上方範圍選單右邊的「收起」再收回（40px 高的墨色實心按鈕；手機展開時藏起「範圍」兩字讓它留在同一行）。展開或收起記在這台裝置（`jlptn5.quizOpen`），預設收起；「練這節」、「練這些字」、改範圍與「回到練習題」都會自動展開。沒有 JS 時練習卡直接展開、不顯示練習列。
-- **「練這節」:** 節標題右側一顆 32px 高的小圓頭框線按鈕（0.78rem、600、書籤色字與書籤線框，滑過為書籤暈，可點範圍向外延伸到 44px），列印時不顯示。把練習範圍切到該節並回到練習卡；作答途中則沿用範圍切換的規則，等這組做完才換。
-- **遮住答案提示:** 開啟遮住答案時，目次列下方出現一行紙影底的提示，5 秒後消失，並以 `role="status"` 念給螢幕閱讀器。
+- **目次列:** 白紙底、1px 細線下緣與淡陰影、52px 高，只在單字本範圍內固定於頂端；下緣一條 3px 線換成目前那一章的章色（240ms 漸變），還沒進入任何一章時透明。
+- **「目次」按鈕:** 索引標籤形（上 10px、下 6px 圓角），底色是目前章的實色，還沒進入章節時是便利貼桃；內容是列表圖示＋粉圓「目次」＋目前位置（手機 < 560px 只寫節名，< 380px 不寫）＋可旋轉箭頭。滑過為 1.5px 墨色內框，展開為 2px。
+- **目次面板:** 從列下方垂下的白紙，下緣 18px 圓角與面板陰影，後面一層暗幕。每章一段：「第N章」章色索引標籤＋粉圓章名；各節排成章色淡底的小卡格子（每格至少 148px），目前那一節為章色實心底、墨字 600。
+- **側欄目次（≥1240px）:** 同一份目次留在單字本左側，章名列 38px、節連結 32px 高、一欄直排，目前那一節同樣是章色實心底。
+- **錯題本按鈕:** 白紙底、1px 鉛筆線框的圓頭按鈕，紅色小叉、「錯題本」與粗體數字；0 字時褪墨、不放叉。
+- **「練這節」:** 節標題右側 32px 高的白底圓頭按鈕，章色實色 1.5px 框、章色墨字 0.78rem 600，滑過為章色淡底，可點範圍向外延伸。
 
-### Ruled Word List（簽名元件）
-- 每個單字是紙上的一列，以 1px 橫線分隔，沒有外框、底色或圓角；預設只佔一行，最小高度 52px。
-- 日文單字以教科書體呈現，讀音以褪墨小字排在單字下方（只有假名的字不重複寫讀音）；動詞帶自他動詞標籤，其他詞性不另外標。
-- **有例句的列**整列是一個展開按鈕，右側畫一個向下箭頭；點開後例句排在中文欄下方（手機靠左），目標單字以墨色粗體加螢光筆標出，中譯另起一行。同時可以展開多列。
-- **成對的一組（Set）:** 一起記的字放在同一組，上方一行 0.78rem 褪墨小標（「反義」「自他成對」「借出⇔借入」）。互相對照的兩個字（反義、自他成對、一問一答的寒暄語）之間畫一個褪墨雙向箭頭：桌機左右排、箭頭在中間；手機上下排、箭頭夾在兩列之間的單字欄下方。只是放在一起的組（「哥哥姊姊」「依部位用不同的動詞」）只有小標，沒有箭頭。不使用左側括線。
-- **Phrase list:** 寒暄語的列把中文排在日文下方，不壓縮長句。
-- **Mask mode:** 第一章遮讀音，其他章遮中文意思，以遮紙色塊蓋住；有例句的列展開就揭開，沒有例句的列在遮住模式下變成可以點的按鈕（鍵盤 Enter／空白鍵）。
+### Chapter Divider（簽名元件）
+- 章首像活頁夾的分隔頁：一條橫跨整欄的 4px 章色帶，下方章名前同一行是章色實色的「第N章」索引標籤（6px 圓角、0.85rem 600、字距 0.08em、墨字）。
+- 節標題是粉圓 1.3rem，後面墊一段 4.2em 寬、傾斜 −2° 的章色紙膠帶（實色、不透明度 0.45），下方 1.5px 細線虛線。
 
-### Reading Tables
-- 數字、日期、時刻、期間、量詞、こそあど、相對時間與顏色維持格子或對照表。念法會變的格子以右上角 10px 的螢光筆小三角標示，讀音中變化的那幾個假名再以墨色粗體加螢光筆標出；遮住答案時螢光筆一起隱藏。不使用側邊色條。
+### Ruled Word List
+- 每個單字是白紙上的一列，以 1px 細線分隔，沒有外框、底色或陰影；最小高 52px。日文單字 Zen Maru 700，讀音以褪墨 0.85rem 排在下方。
+- 有例句的列整列可點，展開後例句排在中文欄下方，目標單字以墨色粗體加螢光筆標出。
+- 成對的一組上方是章色小標；互相對照的兩個字之間畫褪墨雙向箭頭。
+- **Mask mode:** 答案蓋上遮紙色塊，加一圈 1.5px 鉛筆線虛線，讀起來是「暫時蓋住」而不是空白；螢光筆一起隱藏。
 
-### Seal Score（簽名元件）
-- 一輪結束時，蓋上一枚像日本老師批改作業用的評語印章：168px 朱紅雙圈（外圈 3.5、內圈 1.5，以 SVG 繪製），傾斜 −8°，上半圈沿弧線寫著評語，中央是教科書體分數，下方小字「/ 10」。
-- 評語依答對比例分四級，全部是 N5 程度讀得懂的假名：全對「たいへんよくできました」、七成以上「よくできました」、四成以上「もうすこし」、其餘「がんばりましょう」。印章下方以「評語：中文」附上翻譯。
-- 只重考錯題的回合全對時，說明文字改為「錯題都訂正好了」。
-- 印章與評語之後緊接著行動按鈕（「複習答錯的 N 題」「再來一組」），錯題清單放在按鈕下方，一行一字：教科書體單字、讀音（只有假名的字不重複）、靠右的中文意思。
-- 印章整體以 `role="img"` 與完整的 aria-label（分數、評語與翻譯）提供給螢幕閱讀器。
-- 出現時以 420ms、`cubic-bezier(0.16, 1, 0.3, 1)` 從 1.35 倍縮放落下，像蓋印；開啟「減少動態效果」或重新整理頁面回到已完成的回合時直接顯示。這是整個系統唯一的動畫時刻。
+### Say Button
+- **Style:** 透明底、1px 細線圓框、褪墨喇叭圖示（自繪 SVG）；單字旁 36px、答案揭曉 32px、例句旁 28px、小卡角落 26px，可點範圍向外延伸 6px。
+- **States:** 滑過為紙影底、鉛筆線框、墨色圖示；播放中換成目前章的實色底、墨色圖示，並以 900ms 輕輕脈動放大 1.12 倍（減少動態效果時停止）。
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** 讓日文單字成為畫面上最大、最有存在感的元素，並一律用 Klee One 書寫。
-- **Do** 為每一段日文加上 `lang="ja"`。
-- **Do** 把主要動作放在練習卡下方、拇指範圍內，觸控目標至少 40px，主要按鈕 52px 以上。
-- **Do** 用紙張色階和 1px 細線分層，讓單字表看起來像畫在紙上的橫線。
-- **Do** 讓所有文字與紙面維持 4.5:1 以上的對比，可操作元件的邊框維持 3:1 以上，淺色與深色模式都要檢查。
-- **Do** 作答回饋要立即、安靜：顏色、勾叉圖示、文字三者並用，並透過 aria-live 讓螢幕閱讀器唸出結果。
+- **Do** 讓每一章的元件都從同一組 `--c`／`--c-ink`／`--c-wash` 取色，實色上用暖炭墨字。
+- **Do** 為每一段日文加上 `lang="ja"`，要學的單字用 Zen Maru Gothic 700。
+- **Do** 把主要動作放在便利貼下方、拇指範圍內，觸控目標至少 40px，主要按鈕 52px 以上。
+- **Do** 作答回饋顏色、勾叉圖示、文字三者並用，並透過 aria-live 念出結果。
+- **Do** 每個新動態都在 `prefers-reduced-motion` 下停止或改為淡出，像撕便利貼一樣。
+- **Do** 讓所有文字與底色維持 4.5:1 以上、可操作元件邊框 3:1 以上，淺色與深色模式都要檢查。
 
 ### Don't:
-- **Don't** 用朱紅標示重點或介面狀態；朱紅只給答錯、朱印，以及會丟掉進度的再按一次警告。
-- **Don't** 把書籤色（江戶紫）擴散到主要按鈕、焦點框、開關或裝飾；它只標目前位置與導覽。
-- **Don't** 用螢光筆當唯一的狀態提示（焦點、開關、目前所在），它和紙面的明度對比不夠。
+- **Don't** 把文具色拿來表示對錯、詞性、主要動作或純裝飾；它只標章節與目前位置。
+- **Don't** 把螢光筆黃用在念法以外的地方，或當成唯一的狀態提示。
 - **Don't** 用紅色表示答對。
-- **Don't** 把單字列做成一張張浮起來的卡片，或在練習卡以外的地方加陰影。
+- **Don't** 把方眼格線延伸到單字本裡，或讓便利貼隨範圍換色。
+- **Don't** 用綠色切割墊或任何高彩度的桌面底色；桌面維持淡藍灰方眼紙（使用者 2026-10-15 否決了綠色切割墊）。
+- **Don't** 把單字列做成一張張浮起來的卡片，或為畫在紙上的東西加陰影。
+- **Don't** 使用硬邊位移陰影；陰影一律是柔和、模糊的暖色陰影。
 - **Don't** 在卡片、提示或警告框上使用左側彩色粗邊框。
-- **Don't** 用表情符號（⚠️、✅、❌）代替圖示；圖示一律是線寬一致的自繪 SVG。
-- **Don't** 走櫻花粉、動漫可愛、黑金奢華或遊戲化（吉祥物、霓虹色、連勝火焰）的日語學習套版。
-- **Don't** 加入毛玻璃、漸層文字或分散在各處的進場動畫；整個系統只有一個朱印時刻。
-- **Don't** 在深色模式使用冷藍灰，或讓任何顏色只有淺色版本。
+- **Don't** 用表情符號或文字符號（⚠️、✅、❌、✕）代替圖示；圖示一律是自繪 SVG。
+- **Don't** 在深色模式讓任何表面或文字 token 只有淺色版本。
