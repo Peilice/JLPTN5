@@ -1,11 +1,11 @@
-// 一組練習: draws the questions for one 一組, takes the answers (recording them in the 錯題本),
+// 一組練習: draws the questions for one 一組, takes the answers (recording them in the 錯題本 and 已熟),
 // keeps the 一組 saved so a reload picks it up, and sums it up at the end.
 // The page draws what practice.round holds; it never changes it.
 (function (root) {
   const KEY = 'jlptn5.quiz.v5';
   const LENGTH = 10;
 
-  function createPractice({ bank, misses, store, random = Math.random }) {
+  function createPractice({ bank, misses, mastery, store, random = Math.random }) {
     let round = null;
 
     function shuffle(arr) {
@@ -25,10 +25,21 @@
     const ask = item => ({ ...bank.question(item, misses.typeFor(item)), choice: null });
 
     // A new 一組 from the range; an empty range (錯題本 with no words) falls back to 全部.
+    // 已熟 words are skipped, but one of them is mixed in to check it is still known.
+    // A range that is all 已熟 is asked whole (allKnown), so it can still be practised.
     // Returns the range actually used.
     function start(scope) {
       if (!pool(scope).length) scope = 'all';
-      round = { scope, qs: shuffle(pool(scope)).slice(0, LENGTH).map(ask), i: 0, retry: false };
+      const all = shuffle(pool(scope));
+      const fresh = all.filter(x => !mastery.isKnown(x));
+      const check = all.find(x => mastery.isKnown(x));
+      let qs;
+      if (!fresh.length) qs = all.slice(0, LENGTH).map(ask);
+      else {
+        qs = fresh.slice(0, check ? LENGTH - 1 : LENGTH).map(ask);
+        if (check) qs.splice(Math.floor(random() * (qs.length + 1)), 0, { ...ask(check), check: true });
+      }
+      round = { scope, qs, i: 0, retry: false, allKnown: !fresh.length };
       save();
       return scope;
     }
@@ -47,8 +58,10 @@
       const right = isRight(q);
       q.book = misses.record(bank.item(q.k), right, q.t);
       if (q.book?.cleared) (round.cleared ||= []).push(q.k);
+      q.known = mastery.record(bank.item(q.k), right, q.t);
+      if (q.known.became) (round.known ||= []).push(q.k);
       save();
-      return { right, book: q.book };
+      return { right, book: q.book, known: q.known };
     }
 
     // On to the next question, once this one is answered.
@@ -88,6 +101,7 @@
         level: ratio === 1 ? 3 : ratio >= 0.7 ? 2 : ratio >= 0.4 ? 1 : 0,
         missed: round.qs.filter(q => !isRight(q)).map(q => bank.item(q.k)),
         cleared: (round.cleared || []).map(k => bank.item(k)).filter(Boolean),
+        known: (round.known || []).map(k => bank.item(k)).filter(Boolean),
       };
     }
 

@@ -1809,6 +1809,103 @@
       }
     }
 
+    /* 已熟: a small はなまる sticker on the word, tilted like the result one. */
+    .entry:has(> .known) {
+      grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+    }
+
+    .known {
+      position: relative;
+      flex: none;
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+    }
+
+    .known .hanamaru {
+      width: 26px;
+      height: 26px;
+      transform: rotate(-8deg);
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+    }
+
+    .known .k-flower {
+      fill: var(--sticker);
+    }
+
+    .known .k-ring {
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 9;
+      stroke-dasharray: 12 16;
+      stroke-linecap: round;
+    }
+
+    /* Armed to come off: the sticker fades under a red cross until the second tap. */
+    .known.armed .hanamaru {
+      opacity: 0.4;
+    }
+
+    .known-x {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--wrong);
+    }
+
+    .known-x svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* A card gets it stuck over its top-left corner, clear of the word; a table cell, whose
+     wrapper scrolls and would clip that, keeps it inside in the empty lower-right. */
+    .tile>.known {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 30px;
+      height: 30px;
+    }
+
+    .tiles .tile>.known {
+      top: -12px;
+      left: -12px;
+      right: auto;
+      bottom: auto;
+    }
+
+    .tile>.known .hanamaru {
+      width: 22px;
+      height: 22px;
+    }
+
+    .rv-book .hanamaru,
+    .done-grad .hanamaru {
+      transform: rotate(-8deg);
+    }
+
+    .rv-book .k-flower,
+    .done-grad .k-flower {
+      fill: var(--sticker);
+    }
+
+    .rv-book .k-ring,
+    .done-grad .k-ring {
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 9;
+      stroke-dasharray: 12 16;
+      stroke-linecap: round;
+    }
+
     .e-word {
       display: flex;
       flex-direction: column;
@@ -2771,6 +2868,7 @@
         </div>
         <div id="quizBody">
         <p class="scope-note" id="scopeNote" hidden></p>
+        <p class="scope-note" id="knownNote" hidden></p>
         <div class="note-stack">
         <div class="quiz-card">
           <div class="quiz-meta">
@@ -6980,14 +7078,15 @@
       <div><button id="clearRecords" class="btn btn-secondary" type="button" hidden><svg viewBox="0 0 20 20" fill="none"
             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M3.5 5.5h13M8 5.5V4h4v1.5M5 5.5l.8 11h8.4l.8-11M8.5 8.5v5M11.5 8.5v5" />
-          </svg><span>清除錯題本與練習進度</span></button></div>
-      <p class="clear-note" id="clearNote" hidden>錯題本和練習進度只存放在這台裝置的瀏覽器裡。</p>
+          </svg><span>清除錯題本、はなまる與練習進度</span></button></div>
+      <p class="clear-note" id="clearNote" hidden>錯題本、はなまる和練習進度只存放在這台裝置的瀏覽器裡。</p>
     </div>
   </footer>
 
   <script src="audio/manifest.js"></script>
   <script src="quiz.js"></script>
   <script src="missbook.js"></script>
+  <script src="mastery.js"></script>
   <script src="round.js"></script>
   <script>
     (() => {
@@ -7029,16 +7128,30 @@
       const words = readWords();
       const bank = window.JLPTQuiz.createBank(words.map(x => x.rec));
       const BANK = bank.items;
+      // 已熟 (mastery.js): the rule and the record live there; the page puts the はなまる on the words.
+      const KNOWN_CLEAR = window.JLPTMastery.CLEAR;
+      const mastery = window.JLPTMastery.createMastery(bank, store);
       const scopeSel = $('quizScope');
       document.querySelectorAll('.chapter').forEach(ch => {
         const no = text(ch.querySelector('h2 .ch-no'));
         const g = document.createElement('optgroup');
         g.label = `${no}　${text(ch.querySelector('h2')).slice(no.length)}`;
-        g.append(new Option(`${no}全部（${bank.pool(ch.id).length}）`, ch.id));
-        ch.querySelectorAll('.lex-section').forEach(sec => g.append(new Option(`${sec.dataset.name}（${bank.pool(sec.id).length}）`, sec.id)));
+        g.append(new Option(`${no}全部`, ch.id));
+        ch.querySelectorAll('.lex-section').forEach(sec => g.append(new Option(sec.dataset.name, sec.id)));
         scopeSel.append(g);
       });
-      scopeSel.options[0].textContent = `全部（${bank.pool('all').length}）`;
+      scopeSel.options[0].textContent = '全部';
+      // Each range says how many words it has, and how many are left once some are 已熟: （40／52）.
+      const scopeOpts = [...scopeSel.options];
+      scopeOpts.forEach(o => { o.dataset.name = o.textContent; });
+      function renderScopeCounts() {
+        scopeOpts.forEach(o => {
+          const all = bank.pool(o.value);
+          const left = all.filter(x => !mastery.isKnown(x)).length;
+          o.textContent = `${o.dataset.name}（${left < all.length ? `${left}／` : ''}${all.length}）`;
+        });
+      }
+      renderScopeCounts();
       // 錯題本 sits beside 全部, before the chapter groups, not inside 第一章.
       scopeSel.insertBefore(new Option('錯題本', 'miss'), scopeSel.querySelector('optgroup'));
       document.querySelectorAll('.bank-total').forEach(el => { el.textContent = bank.pool('all').length; });
@@ -7165,7 +7278,7 @@
       const streakDots = streak => `<span class="dots" aria-hidden="true">${Array.from({ length: MISS_CLEAR }, (_, i) => `<i${i < streak ? ' class="on"' : ''}></i>`).join('')}</span>`;
       // 一組練習 (round.js): drawing, answering, saving and summing up live there;
       // the page draws practice.round and passes on what the learner does.
-      const practice = window.JLPTRound.createPractice({ bank, misses, store });
+      const practice = window.JLPTRound.createPractice({ bank, misses, mastery, store });
       const qItem = q => bank.item(q.k);
       const qAns = q => bank.answerOf(q);
       const { isRight, isDone, inProgress } = practice;
@@ -7190,9 +7303,12 @@
         for (let i = 1; i <= n; i++) d += ` A 17 17 0 0 1 ${at(i)}`;
         return d + ' Z';
       })();
+      const ICON_KNOWN = `<svg class="hanamaru" viewBox="0 0 168 168" aria-hidden="true"><path class="k-flower" d="${FLOWER}"/><circle class="k-ring" cx="84" cy="84" r="48"/></svg>`;
 
       function renderMeta() {
         const round = practice.round;
+        $('knownNote').hidden = !round.allKnown || isDone();
+        $('knownNote').textContent = '這個範圍的字都貼上はなまる了，這組照樣全部出題，當作複習。';
         const total = round.qs.length;
         $('quizProgress').textContent = isDone() ? `共 ${total} 題` : `第 ${round.i + 1} / ${total} 題`;
         $('quizScore').textContent = `答對 ${practice.score()}`;
@@ -7209,6 +7325,16 @@
         return ok
           ? `<p class="rv-book">錯題本：<span class="tnum">連續答對 ${book.streak} / ${MISS_CLEAR}</span>${streakDots(book.streak)}</p>`
           : `<p class="rv-book">已記入錯題本（答錯 ${book.n} 次），連續答對 ${MISS_CLEAR} 次就移出</p>`;
+      }
+
+      // 已熟 after answering: a はなまる just put on, or taken off by a missed check.
+      function knownLine(q) {
+        const k = q.known;
+        if (!k) return '';
+        if (k.became) return `<p class="rv-book">${ICON_KNOWN}連續答對 ${KNOWN_CLEAR} 次，貼上はなまる，之後出題先跳過</p>`;
+        if (k.lost) return `<p class="rv-book">抽查已熟的字答錯了，撕下はなまる</p>`;
+        if (q.check && k.known) return `<p class="rv-book">${ICON_KNOWN}抽查已熟的字：還記得，はなまる留著</p>`;
+        return '';
       }
 
       function render() {
@@ -7255,7 +7381,7 @@
             `<p class="status">${ok ? ICON_OK + '答對了' : ICON_NG + '答錯了，正確答案是：'}</p>` +
             `<p class="entry"><span class="rv-word" lang="ja">${esc(item.w)}</span>` +
             (item.r !== item.w ? `<span class="rv-reading" lang="ja">${esc(item.r)}</span>` : '') + `${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>` +
-            bookLine(q.book, ok);
+            bookLine(q.book, ok) + knownLine(q);
         }
         const next = $('quizNext');
         next.hidden = !answered;
@@ -7268,11 +7394,12 @@
         const item = qItem(q);
         const right = qAns(q);
         renderMissBook();
+        renderKnown();
         render();
         $('quizLive').textContent = opt === right
           ? `答對了。${item.w}，${item.r}，${item.c}。`
           : `答錯了。正確答案是${right}。${item.w}，${item.r}，${item.c}。`;
-        $('quizLive').textContent += $('quizReveal').querySelector('.rv-book')?.textContent || '';
+        $('quizReveal').querySelectorAll('.rv-book').forEach(p => { $('quizLive').textContent += p.textContent + '。'; });
         $('quizNext').focus({ preventScroll: true });
         $('quizNext').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
@@ -7318,7 +7445,7 @@
         $('quizStage').hidden = true;
         const done = $('quizDone');
         done.hidden = false;
-        const { score: s, total, missed, cleared, level, retry } = practice.result();
+        const { score: s, total, missed, cleared, known, level, retry } = practice.result();
         // The grade is stamped the way a Japanese teacher stamps homework, in kana an N5 learner can read.
         // Indexed by level: 0 below 40%, 1 from 40%, 2 from 70%, 3 all right.
         const grade = [['がんばりましょう', '一起加油吧'], ['もうすこし', '再一點點'],
@@ -7348,7 +7475,9 @@
             (m.r && m.r !== m.w ? `<span class="m-r" lang="ja">${esc(m.r)}</span>` : '') +
             `<span class="m-c">${esc(m.c)}</span></li>`).join('')}</ul>` : '') +
           (cleared.length ? `<p class="done-grad">${ICON_OK}<span>${cleared.length} 個字已連續答對 ${MISS_CLEAR} 次，移出錯題本：` +
-            cleared.map(x => `<span lang="ja">${esc(x.w)}</span>`).join('、') + `</span></p>` : '');
+            cleared.map(x => `<span lang="ja">${esc(x.w)}</span>`).join('、') + `</span></p>` : '') +
+          (known.length ? `<p class="done-grad">${ICON_KNOWN}<span>${known.length} 個字已連續答對 ${KNOWN_CLEAR} 次，貼上はなまる：` +
+            known.map(x => `<span lang="ja">${esc(x.w)}</span>`).join('、') + `</span></p>` : '');
         done.querySelector('[data-act="retry"]')?.addEventListener('click', () => {
           newRound(true);
           $('quizOptions').querySelector('.option')?.focus({ preventScroll: true });
@@ -7362,7 +7491,7 @@
 
       // Restarting mid-round needs a second tap, so a stray thumb cannot wipe progress.
       let armTimer = null;
-      const scopeName = () => $('quizScope').selectedOptions[0].textContent.replace(/（\d+）$/, '');
+      const scopeName = () => $('quizScope').selectedOptions[0].textContent.replace(/（[^）]*）$/, '');
       const scopePending = () => practice.round && $('quizScope').value !== practice.round.scope && !isDone();
       function disarmRestart() {
         clearTimeout(armTimer);
@@ -7443,6 +7572,52 @@
           : `<p class="miss-empty">還沒有答錯的字。練習時答錯的字會列在這裡，連續答對 ${MISS_CLEAR} 次就移出。</p>`;
       }
       renderMissBook();
+
+      // 已熟 words carry a small はなまる: beside the say button on a row, in the corner of a tile.
+      // Tapping it asks once more before taking it off, so a stray thumb cannot undo five answers.
+      function renderKnown() {
+        renderScopeCounts();
+        words.forEach(({ el, rec }) => {
+          const has = el.querySelector(':scope > .known');
+          const known = mastery.isKnown(rec);
+          if (known === !!has) return;
+          if (has) { has.remove(); return; }
+          const btn = `<button type="button" class="known" data-id="${esc(wordId(rec))}" aria-label="${esc(`「${rec.w}」已熟，按兩下撕下はなまる`)}" title="已熟（連續答對 ${KNOWN_CLEAR} 次）">${ICON_KNOWN}</button>`;
+          if (el.matches('.tile')) el.insertAdjacentHTML('beforeend', btn);
+          else el.querySelector(':scope > .e-row').insertAdjacentHTML('afterend', btn);
+        });
+      }
+      let unmarkTimer = null;
+      function disarmKnown() {
+        clearTimeout(unmarkTimer);
+        document.querySelectorAll('.known.armed').forEach(b => {
+          b.classList.remove('armed');
+          b.innerHTML = ICON_KNOWN;
+        });
+      }
+      $('lexicon').addEventListener('click', e => {
+        const btn = e.target.closest('.known');
+        if (!btn) return;
+        e.stopPropagation();
+        const item = bank.items.find(x => wordId(x) === btn.dataset.id);
+        if (!btn.classList.contains('armed')) {
+          disarmKnown();
+          btn.classList.add('armed');
+          btn.innerHTML = ICON_KNOWN + `<span class="known-x">${ICON_NG}</span>`;
+          $('quizLive').textContent = `再按一次撕下「${item.w}」的はなまる，之後會重新出題。`;
+          unmarkTimer = setTimeout(disarmKnown, 4000);
+          return;
+        }
+        disarmKnown();
+        mastery.unmark(item);
+        // The button goes with the はなまる; keep focus on the word it was on.
+        const el = btn.parentElement;
+        renderKnown();
+        el.querySelector('button, [tabindex]')?.focus({ preventScroll: true });
+        $('quizLive').textContent = `已撕下「${item.w}」的はなまる，之後會重新出題。`;
+      }, true);
+      renderKnown();
+
       function openMiss(on) {
         missBook.hidden = !on;
         missToggle.setAttribute('aria-expanded', String(on));
@@ -7489,8 +7664,8 @@
         clearTimeout(clearTimer);
         clearBtn.classList.toggle('armed', state === 'armed');
         clearBtn.innerHTML = state === 'done'
-          ? `${ICON_OK}<span>已清除錯題本與練習進度</span>`
-          : `${clearIcon}<span>${state === 'armed' ? '再按一次清除，無法復原' : '清除錯題本與練習進度'}</span>`;
+          ? `${ICON_OK}<span>已清除錯題本、はなまる與練習進度</span>`
+          : `${clearIcon}<span>${state === 'armed' ? '再按一次清除，無法復原' : '清除錯題本、はなまる與練習進度'}</span>`;
         if (state !== 'idle') clearTimer = setTimeout(() => setClear('idle'), state === 'armed' ? 4000 : 3000);
       }
       clearBtn.hidden = false;
@@ -7498,14 +7673,16 @@
       clearBtn.addEventListener('click', () => {
         if (!clearBtn.classList.contains('armed')) {
           setClear('armed');
-          $('quizLive').textContent = '再按一次會清除錯題本與練習進度，無法復原。';
+          $('quizLive').textContent = '再按一次會清除錯題本、はなまる與練習進度，無法復原。';
           return;
         }
         misses.clear();
+        mastery.clear();
         newRound();
         renderMissBook();
+        renderKnown();
         setClear('done');
-        $('quizLive').textContent = '已清除錯題本與練習進度，練習題已重新出題。';
+        $('quizLive').textContent = '已清除錯題本、はなまる與練習進度，練習題已重新出題。';
       });
 
       // The chevron opens a row's example. While masked, tapping the row reveals the answer
@@ -7687,7 +7864,7 @@
         const round = practice.round;
         const total = round.qs.length;
         const name = ([...scopeSel.options].find(o => o.value === round.scope) || scopeSel.selectedOptions[0])
-          .textContent.replace(/（\d+）$/, '');
+          .textContent.replace(/（[^）]*）$/, '');
         const [main, sub] = isDone()
           ? ['這組做完了', `答對 ${practice.score()} / ${total}・看結果或再練一組`]
           : inProgress()

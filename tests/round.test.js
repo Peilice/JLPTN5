@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createBank } = require('../quiz.js');
 const { createMissBook } = require('../missbook.js');
+const { createMastery } = require('../mastery.js');
 const { createPractice, LENGTH } = require('../round.js');
 
 function memoryStore() {
@@ -23,14 +24,15 @@ const records = [
 function setup(store = memoryStore()) {
   const bank = createBank(records);
   const misses = createMissBook(bank, store);
-  const practice = createPractice({ bank, misses, store });
+  const mastery = createMastery(bank, store);
+  const practice = createPractice({ bank, misses, mastery, store });
   // Answer the current question right or wrong.
   const reply = ok => {
     const q = practice.round.qs[practice.round.i];
     const right = bank.answerOf(q);
     return practice.answer(ok ? right : q.opts.find(o => o !== right));
   };
-  return { bank, misses, practice, store, reply };
+  return { bank, misses, mastery, practice, store, reply };
 }
 const words = (bank, practice) => practice.round.qs.map(q => bank.item(q.k).w);
 
@@ -56,13 +58,13 @@ test('作答：答錯記入錯題本；同一題不能再答；答完才能下�
   assert.equal(practice.inProgress(), false);
   assert.equal(practice.next(), false);
   const q = practice.round.qs[0];
-  assert.deepEqual(reply(false), { right: false, book: { n: 1, streak: 0 } });
+  assert.deepEqual(reply(false), { right: false, book: { n: 1, streak: 0 }, known: { streak: 0, known: false } });
   assert.deepEqual(misses.list().map(x => x.item.k), [q.k]);
   assert.equal(practice.answer(bank.answerOf(q)), null);
   assert.equal(practice.score(), 0);
   assert.equal(practice.inProgress(), true);
   assert.equal(practice.next(), true);
-  assert.deepEqual(reply(true), { right: true, book: null });
+  assert.deepEqual(reply(true), { right: true, book: null, known: { streak: 1, known: false } });
   assert.equal(practice.score(), 1);
 });
 
@@ -113,6 +115,60 @@ test('連續答對移出錯題本的字，列在這組的結果裡', () => {
   assert.deepEqual(reply(true).book, { cleared: true });
   practice.next();
   assert.deepEqual(practice.result().cleared.map(x => x.w), ['すぐ']);
+});
+
+// Makes a word 已熟: right CLEAR times, in both types the test words get.
+const learn = (mastery, x) => { for (let i = 0; i < 5; i++) mastery.record(x, true, i % 2 ? 'zh2r' : 'r2zh'); };
+
+test('已熟的字不出題，但每組混一題已熟的字抽查', () => {
+  const { bank, mastery, practice } = setup();
+  bank.pool('名詞').slice(0, 5).forEach(x => learn(mastery, x));
+  for (let n = 0; n < 20; n++) {
+    practice.start('名詞');
+    const qs = practice.round.qs;
+    // 7 words not yet 已熟, and one 已熟 word to check.
+    assert.equal(qs.length, 8);
+    assert.equal(qs.filter(q => mastery.isKnown(bank.item(q.k))).length, 1);
+    assert.deepEqual(qs.filter(q => q.check).map(q => q.k), qs.filter(q => mastery.isKnown(bank.item(q.k))).map(q => q.k));
+    assert.equal(practice.round.allKnown, false);
+  }
+  practice.start('副詞');
+  assert.equal(practice.round.qs.length, 4);
+  assert.ok(practice.round.qs.every(q => !q.check));
+});
+
+test('範圍裡的字都已熟，就照樣全部出題，並標明都已熟', () => {
+  const { bank, mastery, practice } = setup();
+  bank.pool('副詞').forEach(x => learn(mastery, x));
+  practice.start('副詞');
+  assert.equal(practice.round.qs.length, 4);
+  assert.equal(practice.round.allKnown, true);
+});
+
+test('抽查答錯就不再是已熟，並記入錯題本', () => {
+  const { bank, misses, mastery, practice, reply } = setup();
+  bank.pool('名詞').forEach((x, n) => { if (n) learn(mastery, x); });
+  practice.start('名詞');
+  const qs = practice.round.qs;
+  for (const q of qs) {
+    const r = reply(!q.check);
+    if (q.check) assert.equal(r.known.lost, true);
+    practice.next();
+  }
+  const checked = bank.item(qs.find(q => q.check).k);
+  assert.equal(mastery.isKnown(checked), false);
+  assert.ok(misses.list().some(x => x.item.k === checked.k));
+  assert.deepEqual(practice.result().known, []);
+
+});
+
+test('這組變成已熟的字列在結果裡', () => {
+  const { bank, mastery, practice, reply } = setup();
+  const fresh = bank.pool('副詞')[0];
+  for (let i = 0; i < 4; i++) mastery.record(fresh, true, i % 2 ? 'zh2r' : 'r2zh');
+  practice.start('副詞');
+  for (const q of practice.round.qs) { reply(q.k === fresh.k); practice.next(); }
+  assert.deepEqual(practice.result().known.map(x => x.k), [fresh.k]);
 });
 
 test('重新載入頁面後接續同一組；存檔裡的字已經不在題庫就重新出題', () => {
