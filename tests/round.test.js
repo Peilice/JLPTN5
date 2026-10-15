@@ -4,14 +4,7 @@ const { createBank } = require('../quiz.js');
 const { createMissBook } = require('../missbook.js');
 const { createMastery } = require('../mastery.js');
 const { createPractice, LENGTH } = require('../round.js');
-
-function memoryStore() {
-  const data = {};
-  return {
-    get: key => key in data ? JSON.parse(data[key]) : null,
-    set: (key, value) => { data[key] = JSON.stringify(value); },
-  };
-}
+const { memoryStore } = require('./memory-store.js');
 
 // 12 words in 名詞 (more than one 一組), 4 in 副詞.
 const NOUNS = ['いぬ 狗', 'ねこ 貓', 'とり 鳥', 'うま 馬', 'うし 牛', 'さかな 魚', 'はな 花', 'くるま 車', 'いえ 家', 'やま 山', 'かわ 河', 'そら 天空'];
@@ -270,4 +263,55 @@ test('評語：朱印的日文、中文與底下那句話依等級而定；複�
   assert.deepEqual(wording(4), ['もうすこし', '再一點點', '有進步空間，先複習下面這些字再試一次。']);
   assert.deepEqual(wording(0), ['がんばりましょう', '一起加油吧', '別急，先把下面的字看過一遍，再挑戰一次。']);
   assert.deepEqual(wording(0, true), ['たいへんよくできました', '做得非常好', '錯題都訂正好了，這幾個字記住了。']);
+});
+
+test('清除學習紀錄：錯題本與はなまる都清空，在同一個範圍重新出一組；錯題本範圍改成全部', () => {
+  const { bank, misses, mastery, practice, reply } = setup();
+  learn(mastery, bank.pool('名詞')[0]);
+  practice.start('副詞');
+  reply(false);
+  practice.next();
+  practice.start('miss');
+  reply(true);
+
+  assert.equal(practice.clearRecords(), 'all');
+  assert.deepEqual(misses.list(), []);
+  assert.equal(bank.items.some(x => mastery.isKnown(x)), false);
+  assert.equal(practice.round.scope, 'all');
+  assert.equal(practice.inProgress(), false);
+
+  practice.start('名詞');
+  reply(true);
+  assert.equal(practice.clearRecords(), '名詞');
+  assert.equal(practice.round.scope, '名詞');
+  assert.equal(practice.inProgress(), false);
+  assert.equal(practice.clearRecords('副詞'), '副詞');
+});
+
+test('擦掉はなまる：範圍不再算全部已熟', () => {
+  const { bank, mastery, practice } = setup();
+  bank.pool('副詞').forEach(x => learn(mastery, x));
+  practice.start('副詞');
+  assert.equal(practice.round.allKnown, true);
+  practice.unmark(bank.pool('副詞')[0]);
+  assert.equal(mastery.isKnown(bank.pool('副詞')[0]), false);
+  assert.equal(practice.round.allKnown, false);
+});
+
+test('擦掉はなまる：這組裡還沒作答的抽查題改成一般題目，答過的不動', () => {
+  const { bank, mastery, practice, reply } = setup();
+  bank.pool('名詞').forEach((x, n) => { if (n) learn(mastery, x); });
+  practice.start('名詞');
+  const q = practice.round.qs.find(x => x.check);
+  practice.unmark(bank.item(q.k));
+  assert.equal(q.check, undefined);
+
+  const again = setup();
+  bank.pool('名詞').forEach((x, n) => { if (n) learn(again.mastery, again.bank.item(x.k)); });
+  again.practice.start('名詞');
+  const at = again.practice.round.qs.findIndex(x => x.check);
+  for (let i = 0; i <= at; i++) { again.reply(true); if (i < at) again.practice.next(); }
+  const answered = again.practice.round.qs[at];
+  again.practice.unmark(again.bank.item(answered.k));
+  assert.equal(answered.check, true);
 });

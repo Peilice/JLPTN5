@@ -7585,10 +7585,11 @@
           return;
         }
         disarmKnown();
-        mastery.unmark(item);
+        practice.unmark(item);
         // The button goes with the はなまる; keep focus on the word it was on.
         const el = btn.parentElement;
         renderKnown();
+        renderMeta();
         el.querySelector('button, [tabindex]')?.focus({ preventScroll: true });
         $('quizLive').textContent = `已擦掉「${item.w}」的はなまる，之後會重新出題。`;
       }, true);
@@ -7630,7 +7631,7 @@
       } else newRound();
       restoring = false;
 
-      // Footer: wipe the 錯題本 and the round in progress on this device. Display settings
+      // Footer: wipe the 錯題本, the はなまる and the round in progress on this device. Display settings
       // (mask) stay. Same press-twice guard as 換一組題目.
       // The button sits far below the quiz, so the result is shown on the button itself for a moment.
       const clearBtn = $('clearRecords');
@@ -7652,9 +7653,8 @@
           $('quizLive').textContent = '再按一次會清除錯題本、はなまる與練習進度，無法復原。';
           return;
         }
-        misses.clear();
-        mastery.clear();
-        newRound();
+        scopeSel.value = practice.clearRecords(scopeSel.value);
+        render();
         renderMissBook();
         renderKnown();
         setClear('done');

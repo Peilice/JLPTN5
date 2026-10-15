@@ -96,6 +96,26 @@
       save();
     }
 
+    // A はなまる taken off by hand. The 一組 under way follows: its range is no longer all
+    // 已熟, and the word, if still to be asked as a check, is asked as any other.
+    function unmark(item) {
+      mastery.unmark(item);
+      if (!round) return;
+      round.allKnown = false;
+      round.qs.forEach(q => {
+        if (q.check && q.choice === null && bank.wordId(bank.item(q.k)) === bank.wordId(item)) delete q.check;
+      });
+      save();
+    }
+
+    // Wipes the 錯題本 and every はなまる, and starts a new 一組 in the range given, or this
+    // 一組's (全部 when that was the 錯題本, now empty). Returns the range used.
+    function clearRecords(scope = round ? round.scope : 'all') {
+      misses.clear();
+      mastery.clear();
+      return start(scope);
+    }
+
     // Picks up the 一組 saved before a reload; one asking a word or type the page no longer
     // has is dropped. Returns whether there was one to pick up.
     function restore() {
@@ -142,6 +162,8 @@
       answer,
       notes,
       next,
+      unmark,
+      clearRecords,
       isRight,
       score,
       isDone,

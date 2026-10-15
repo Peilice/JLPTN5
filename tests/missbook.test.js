@@ -2,15 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createBank } = require('../quiz.js');
 const { createMissBook, CLEAR } = require('../missbook.js');
-
-// The page's store, kept in memory: a reload is a second book over the same store.
-function memoryStore(init = {}) {
-  const data = Object.fromEntries(Object.entries(init).map(([k, v]) => [k, JSON.stringify(v)]));
-  return {
-    get: key => key in data ? JSON.parse(data[key]) : null,
-    set: (key, value) => { data[key] = JSON.stringify(value); },
-  };
-}
+const { memoryStore } = require('./memory-store.js');
 
 const word = (cat, w, r, c) => ({ cat, ch: 'ch-1', w, r, c, traps: [] });
 // Enough words that every one of them can be asked in all four types.
