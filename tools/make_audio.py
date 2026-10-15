@@ -39,15 +39,15 @@ MANIFEST = OUT / 'manifest.js'
 class Collector(HTMLParser):
     """依序收集頁面上會被朗讀的文字（等同 textContent.trim()）。"""
 
-    TARGETS = ('reading', 't-r', 't-w', 'ex-ja')
+    TARGETS = ('reading', 'jw', 't-r', 't-w', 'ex-ja')
     VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'}
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack = []      # 每個開啟中的元素：收集目標名稱或 None
         self.bufs = {}       # 目標名稱 -> 正在累積的文字
-        self.tile = None     # 目前所在格子的 {'t-r': ..., 't-w': ...}
-        self.tile_depth = None
+        self.word = None     # 目前所在單字列或格子的 {'reading': ..., 'jw': ...} 或 {'t-r': ..., 't-w': ...}
+        self.word_depth = None
         self.texts = []      # 單字與格子的讀音
         self.sentences = []  # 例句
 
@@ -55,8 +55,8 @@ class Collector(HTMLParser):
         if tag in self.VOID:
             return
         classes = (dict(attrs).get('class') or '').split()
-        if 'tile' in classes:
-            self.tile, self.tile_depth = {}, len(self.stack)
+        if 'entry' in classes or 'tile' in classes:
+            self.word, self.word_depth = {}, len(self.stack)
         target = next((c for c in self.TARGETS if c in classes), None)
         if target:
             self.bufs[target] = []
@@ -71,17 +71,17 @@ class Collector(HTMLParser):
         target = self.stack.pop()
         if target:
             text = ''.join(self.bufs.pop(target)).strip()
-            if target == 'reading':
-                self.texts.append(text)
-            elif target == 'ex-ja':
+            if target == 'ex-ja':
                 self.sentences.append(text)
-            elif self.tile is not None:
-                self.tile[target] = text
-        if self.tile is not None and len(self.stack) == self.tile_depth:
-            spoken = self.tile.get('t-r') or self.tile.get('t-w')
+            elif self.word is not None:
+                self.word[target] = text
+        # 和頁面（words.js）一樣：沒有讀音就念寫法。
+        if self.word is not None and len(self.stack) == self.word_depth:
+            w = self.word
+            spoken = w.get('reading') or w.get('t-r') or w.get('jw') or w.get('t-w')
             if spoken:
                 self.texts.append(spoken)
-            self.tile = self.tile_depth = None
+            self.word = self.word_depth = None
 
     def handle_data(self, data):
         for buf in self.bufs.values():

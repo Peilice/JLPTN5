@@ -7059,6 +7059,7 @@
   </footer>
 
   <script src="audio/manifest.js"></script>
+  <script src="words.js"></script>
   <script src="quiz.js"></script>
   <script src="missbook.js"></script>
   <script src="mastery.js"></script>
@@ -7079,28 +7080,10 @@
       // A word in the 錯題本 keeps the type it was missed in.
       const { TYPES } = window.JLPTQuiz;
       const text = el => el ? el.textContent.trim() : '';
-      // Every word row (.entry) and table tile (.tile) is read here, once: the quiz bank, the
-      // say buttons and the 錯題本 jumps all take it from this list. tools/make_audio.py and
-      // tests/read-page.js read the page the same way; tests/audio.test.js checks they agree.
-      function readWords() {
-        const words = [];
-        document.querySelectorAll('.lex-section').forEach(sec => {
-          const base = { cat: sec.id, ch: sec.closest('.chapter').id };
-          sec.querySelectorAll('.entry, .tile').forEach(el => {
-            const w = text(el.querySelector('.jw, .t-w'));
-            words.push({
-              el, rec: {
-                ...base, w,
-                r: text(el.querySelector('.reading, .t-r')) || w,
-                c: text(el.querySelector('.mean-t, .t-c')),
-                traps: (el.dataset.trap || '').split('・').filter(Boolean),
-              },
-            });
-          });
-        });
-        return words;
-      }
-      const read = readWords();
+      // Every word row (.entry) and table tile (.tile) is read here, once, by words.js: the quiz
+      // bank, the say buttons and the 錯題本 jumps all take it from this list. tests/read-page.js
+      // reads index.html with the same words.js; tools/make_audio.py reads it the same way in Python.
+      const read = window.JLPTWords.readWords(document);
       const bank = window.JLPTQuiz.createBank(read.map(x => x.rec));
       // From here on each word is the bank's item: the bank answers only about its own.
       const words = read.map(({ el, rec }) => ({ el, item: bank.itemFor(rec) }));
@@ -7205,14 +7188,12 @@
           speech.addEventListener?.('voiceschanged', pickVoice);
         }
         // Example sentences are spoken as written; the engine picks the kanji readings.
-        document.querySelectorAll('.e-ex').forEach(box => {
-          const ja = box.querySelector('.ex-ja');
-          if (!ja) return;
+        window.JLPTWords.readSentences(document).forEach(({ el: ja, text: said }) => {
           const line = document.createElement('div');
           line.className = 'ex-line';
           ja.before(line);
           line.append(ja);
-          line.insertAdjacentHTML('beforeend', sayButton('', ja.textContent.trim(), 'say say-sm', '播放例句發音'));
+          line.insertAdjacentHTML('beforeend', sayButton('', said, 'say say-sm', '播放例句發音'));
         });
         document.addEventListener('click', e => {
           const btn = e.target.closest('.say');

@@ -20,6 +20,8 @@ const records = readPage();
 const SEEDS = [1, 2, 3, 4, 5];
 // Which field each type's options are: the reading, the meaning or the written form.
 const OPT = { zh2r: 'r', reading: 'r', r2zh: 'c', kana: 'w' };
+// The 太接近 rule (GLOSSARY.md) written out again on purpose, not taken from quiz.js: if quiz.js
+// ever loosens its own copy, this one still holds the questions to the rule as defined.
 const senses = c => c.replace(/（[^）]*）/g, m => m.replace(/、/g, '・')).split(/[、；／]/).map(s => s.trim()).filter(Boolean);
 const close = (a, b) => a.w === b.w || a.c === b.c || a.r === b.r || a.w.startsWith(b.w) || b.w.startsWith(a.w) ||
   senses(a.c).some(s => senses(b.c).includes(s));
