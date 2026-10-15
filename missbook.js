@@ -57,7 +57,7 @@
       save();
     }
 
-    return { record, typeFor, list, clear };
+    return { record, typeFor, list, clear, CLEAR };
   }
 
   const api = { createMissBook, CLEAR };

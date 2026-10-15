@@ -61,7 +61,24 @@
       q.known = mastery.record(bank.item(q.k), right, q.t);
       if (q.known.became) (round.known ||= []).push(q.k);
       save();
-      return { right, book: q.book, known: q.known };
+      return { right, book: q.book, known: q.known, notes: notes(q) };
+    }
+
+    // What to say under an answered question, one line per note: the 錯題本 first, then the
+    // はなまる. Worked out from what the question saved, so a reload says the same.
+    // kind tells the page which icon goes with the line; streak feeds its ●●○○○.
+    function notes(q) {
+      const out = [];
+      const { book, known } = q;
+      if (q.choice === null) return out;
+      if (book?.cleared) out.push({ kind: 'cleared', text: `連續答對 ${misses.CLEAR} 次，移出錯題本` });
+      else if (book && isRight(q)) {
+        out.push({ kind: 'streak', text: `錯題本：連續答對 ${book.streak} / ${misses.CLEAR}`, streak: book.streak });
+      } else if (book) out.push({ kind: 'missed', text: `已記入錯題本（答錯 ${book.n} 次），連續答對 ${misses.CLEAR} 次就移出` });
+      if (known?.became) out.push({ kind: 'known', text: `連續答對 ${mastery.CLEAR} 次，畫上はなまる，之後出題先跳過` });
+      else if (known?.lost) out.push({ kind: 'lost', text: '抽查已熟的字答錯了，擦掉はなまる' });
+      else if (q.check && known?.known) out.push({ kind: 'checked', text: '抽查已熟的字：還記得，はなまる留著' });
+      return out;
     }
 
     // On to the next question, once this one is answered.
@@ -90,15 +107,26 @@
       return true;
     }
 
+    // The grade is stamped the way a Japanese teacher stamps homework, in kana an N5 learner can
+    // read, with its Chinese and a line under the seal. Indexed by level.
+    const GRADES = [
+      ['がんばりましょう', '一起加油吧', '別急，先把下面的字看過一遍，再挑戰一次。'],
+      ['もうすこし', '再一點點', '有進步空間，先複習下面這些字再試一次。'],
+      ['よくできました', '做得很好', '不錯！把下面答錯的字再看一遍就更穩了。'],
+      ['たいへんよくできました', '做得非常好', '全部答對！這組字已經很熟了。'],
+    ];
+
     // The grade is a level, 0 to 3: all right, 70% or more, 40% or more, less.
-    // The page words it (the seal and the line under it).
     function result() {
       const total = round.qs.length;
       const s = score();
       const ratio = s / total;
+      const level = ratio === 1 ? 3 : ratio >= 0.7 ? 2 : ratio >= 0.4 ? 1 : 0;
+      const [ja, zh, line] = GRADES[level];
       return {
-        score: s, total, retry: round.retry,
-        level: ratio === 1 ? 3 : ratio >= 0.7 ? 2 : ratio >= 0.4 ? 1 : 0,
+        score: s, total, retry: round.retry, level,
+        grade: { ja, zh },
+        msg: round.retry && level === 3 ? '錯題都訂正好了，這幾個字記住了。' : line,
         missed: round.qs.filter(q => !isRight(q)).map(q => bank.item(q.k)),
         cleared: (round.cleared || []).map(k => bank.item(k)).filter(Boolean),
         known: (round.known || []).map(k => bank.item(k)).filter(Boolean),
@@ -112,6 +140,7 @@
       restore,
       result,
       answer,
+      notes,
       next,
       isRight,
       score,

@@ -7312,22 +7312,11 @@
         renderResume();
       }
 
-      function bookLine(book, ok) {
-        if (!book) return '';
-        if (book.cleared) return `<p class="rv-book">${ICON_OK}連續答對 ${MISS_CLEAR} 次，移出錯題本</p>`;
-        return ok
-          ? `<p class="rv-book">錯題本：<span class="tnum">連續答對 ${book.streak} / ${MISS_CLEAR}</span>${streakDots(book.streak)}</p>`
-          : `<p class="rv-book">已記入錯題本（答錯 ${book.n} 次），連續答對 ${MISS_CLEAR} 次就移出</p>`;
-      }
-
-      // 已熟 after answering: a はなまる just put on, or taken off by a missed check.
-      function knownLine(q) {
-        const k = q.known;
-        if (!k) return '';
-        if (k.became) return `<p class="rv-book">${ICON_KNOWN}連續答對 ${KNOWN_CLEAR} 次，畫上はなまる，之後出題先跳過</p>`;
-        if (k.lost) return `<p class="rv-book">抽查已熟的字答錯了，擦掉はなまる</p>`;
-        if (q.check && k.known) return `<p class="rv-book">${ICON_KNOWN}抽查已熟的字：還記得，はなまる留著</p>`;
-        return '';
+      // The lines under an answered question come from round.js; the page adds each kind's icon.
+      function noteLines(q) {
+        return practice.notes(q).map(({ kind, text, streak }) => kind === 'streak'
+          ? `<p class="rv-book"><span class="tnum">${esc(text)}</span>${streakDots(streak)}</p>`
+          : `<p class="rv-book">${{ cleared: ICON_OK, known: ICON_KNOWN, checked: ICON_KNOWN }[kind] || ''}${esc(text)}</p>`).join('');
       }
 
       function render() {
@@ -7374,7 +7363,7 @@
             `<p class="status">${ok ? ICON_OK + '答對了' : ICON_NG + '答錯了，正確答案是：'}</p>` +
             `<p class="entry"><span class="rv-word" lang="ja">${esc(item.w)}</span>` +
             (item.r !== item.w ? `<span class="rv-reading" lang="ja">${esc(item.r)}</span>` : '') + `${sayButton(item.w, item.r)}<span class="rv-mean">${esc(item.c)}</span></p>` +
-            bookLine(q.book, ok) + knownLine(q);
+            noteLines(q);
         }
         const next = $('quizNext');
         next.hidden = !answered;
@@ -7383,16 +7372,16 @@
 
       function answer(opt) {
         const q = practice.round.qs[practice.round.i];
-        if (!practice.answer(opt)) return;
+        const done = practice.answer(opt);
+        if (!done) return;
         const item = qItem(q);
-        const right = qAns(q);
         renderMissBook();
         renderKnown();
         render();
-        $('quizLive').textContent = opt === right
+        $('quizLive').textContent = (done.right
           ? `答對了。${item.w}，${item.r}，${item.c}。`
-          : `答錯了。正確答案是${right}。${item.w}，${item.r}，${item.c}。`;
-        $('quizReveal').querySelectorAll('.rv-book').forEach(p => { $('quizLive').textContent += p.textContent + '。'; });
+          : `答錯了。正確答案是${qAns(q)}。${item.w}，${item.r}，${item.c}。`) +
+          done.notes.map(n => n.text + '。').join('');
         $('quizNext').focus({ preventScroll: true });
         $('quizNext').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
@@ -7438,27 +7427,21 @@
         $('quizStage').hidden = true;
         const done = $('quizDone');
         done.hidden = false;
-        const { score: s, total, missed, cleared, known, level, retry } = practice.result();
-        // The grade is stamped the way a Japanese teacher stamps homework, in kana an N5 learner can read.
-        // Indexed by level: 0 below 40%, 1 from 40%, 2 from 70%, 3 all right.
-        const grade = [['がんばりましょう', '一起加油吧'], ['もうすこし', '再一點點'],
-          ['よくできました', '做得很好'], ['たいへんよくできました', '做得非常好']][level];
-        const msg = retry && level === 3 ? '錯題都訂正好了，這幾個字記住了。'
-          : ['別急，先把下面的字看過一遍，再挑戰一次。', '有進步空間，先複習下面這些字再試一次。',
-            '不錯！把下面答錯的字再看一遍就更穩了。', '全部答對！這組字已經很熟了。'][level];
-        const phraseSize = grade[0].length > 8 ? 14 : grade[0].length > 5 ? 16 : 18;
+        // The grade and the line under the seal come worded from round.js.
+        const { score: s, total, missed, cleared, known, grade, msg } = practice.result();
+        const phraseSize = grade.ja.length > 8 ? 14 : grade.ja.length > 5 ? 16 : 18;
         done.innerHTML =
           `<div class="done-score${restoring ? ' settled' : ''}" tabindex="-1" role="img" ` +
-          `aria-label="答對 ${s} 題，共 ${total} 題。${grade[0]}（${grade[1]}）">` +
+          `aria-label="答對 ${s} 題，共 ${total} 題。${grade.ja}（${grade.zh}）">` +
           `<svg viewBox="0 0 168 168" aria-hidden="true">` +
           `<defs><path id="sealArc" d="M 30 92 A 54 54 0 0 1 138 92"/></defs>` +
           `<path class="seal-flower" d="${FLOWER}"/>` +
           `<circle class="seal-ring" cx="84" cy="84" r="64"/>` +
-          `<text class="seal-phrase" lang="ja" font-size="${phraseSize}" letter-spacing="1"><textPath href="#sealArc" startOffset="50%" text-anchor="middle">${grade[0]}</textPath></text>` +
+          `<text class="seal-phrase" lang="ja" font-size="${phraseSize}" letter-spacing="1"><textPath href="#sealArc" startOffset="50%" text-anchor="middle">${grade.ja}</textPath></text>` +
           `<text class="seal-num" x="84" y="118" font-size="50" text-anchor="middle">${s}</text>` +
           `<text class="seal-of" x="84" y="140" font-size="14" text-anchor="middle">/ ${total}</text>` +
           `</svg></div>` +
-          `<p class="done-gloss"><span lang="ja">${grade[0]}</span>：${grade[1]}</p>` +
+          `<p class="done-gloss"><span lang="ja">${grade.ja}</span>：${grade.zh}</p>` +
           `<p class="done-msg">${msg}</p>` +
           `<div class="done-actions">` +
           (missed.length ? `<button type="button" class="btn btn-primary" data-act="retry">複習答錯的 ${missed.length} 題</button>` : '') +

@@ -58,13 +58,16 @@ test('作答：答錯記入錯題本；同一題不能再答；答完才能下�
   assert.equal(practice.inProgress(), false);
   assert.equal(practice.next(), false);
   const q = practice.round.qs[0];
-  assert.deepEqual(reply(false), { right: false, book: { n: 1, streak: 0 }, known: { streak: 0, known: false } });
+  assert.deepEqual(reply(false), {
+    right: false, book: { n: 1, streak: 0 }, known: { streak: 0, known: false },
+    notes: [{ kind: 'missed', text: '已記入錯題本（答錯 1 次），連續答對 5 次就移出' }],
+  });
   assert.deepEqual(misses.list().map(x => x.item.k), [q.k]);
   assert.equal(practice.answer(bank.answerOf(q)), null);
   assert.equal(practice.score(), 0);
   assert.equal(practice.inProgress(), true);
   assert.equal(practice.next(), true);
-  assert.deepEqual(reply(true), { right: true, book: null, known: { streak: 1, known: false } });
+  assert.deepEqual(reply(true), { right: true, book: null, known: { streak: 1, known: false }, notes: [] });
   assert.equal(practice.score(), 1);
 });
 
@@ -184,4 +187,87 @@ test('重新載入頁面後接續同一組；存檔裡的字已經不在題庫�
   store.set('jlptn5.quiz.v5', { ...first.practice.round, qs: [{ k: '名詞|いない', t: 'zh2r', opts: [], choice: null }] });
   assert.equal(setup(store).practice.restore(), false);
   assert.equal(setup(memoryStore()).practice.restore(), false);
+});
+
+// What the page says under an answered question: one line per note, in this order —
+// the 錯題本 first, then the はなまる. The page only adds the icon each kind carries.
+const said = notes => notes.map(n => `${n.kind}：${n.text}`);
+
+test('答完一題的提示：答錯記入錯題本，答對時錯題本的進度', () => {
+  const store = memoryStore();
+  store.set('jlptn5.mistakes.v1', { 'すぐ|すぐ': [2, 3, 'zh2r'] });
+  const { practice, reply } = setup(store);
+  practice.start('miss');
+  assert.deepEqual(said(reply(true).notes), ['streak：錯題本：連續答對 4 / 5']);
+  assert.equal(practice.round.qs[0].book.streak, 4);
+
+  const fresh = setup();
+  fresh.practice.start('副詞');
+  assert.deepEqual(said(fresh.reply(false).notes), ['missed：已記入錯題本（答錯 1 次），連續答對 5 次就移出']);
+  fresh.practice.next();
+  assert.deepEqual(fresh.reply(true).notes, []);
+});
+
+test('答完一題的提示：移出錯題本與畫上はなまる同時發生時，兩句都說，錯題本在前', () => {
+  const store = memoryStore();
+  store.set('jlptn5.mistakes.v1', { 'すぐ|すぐ': [1, 4, 'zh2r'] });
+  store.set('jlptn5.mastery.v1', { 'すぐ|すぐ': [4, ['r2zh']] });
+  const { practice, reply } = setup(store);
+  practice.start('miss');
+  assert.deepEqual(said(reply(true).notes), [
+    'cleared：連續答對 5 次，移出錯題本',
+    'known：連續答對 5 次，畫上はなまる，之後出題先跳過',
+  ]);
+});
+
+test('答完一題的提示：抽查答對留著はなまる，答錯就擦掉並記入錯題本', () => {
+  const { bank, mastery, practice, reply } = setup();
+  bank.pool('名詞').forEach((x, n) => { if (n) learn(mastery, x); });
+  practice.start('名詞');
+  const at = practice.round.qs.findIndex(q => q.check);
+  for (let i = 0; i < at; i++) { reply(true); practice.next(); }
+  assert.deepEqual(said(reply(true).notes), ['checked：抽查已熟的字：還記得，はなまる留著']);
+
+  const again = setup();
+  bank.pool('名詞').forEach((x, n) => { if (n) learn(again.mastery, again.bank.item(x.k)); });
+  again.practice.start('名詞');
+  const at2 = again.practice.round.qs.findIndex(q => q.check);
+  for (let i = 0; i < at2; i++) { again.reply(true); again.practice.next(); }
+  assert.deepEqual(said(again.reply(false).notes), [
+    'missed：已記入錯題本（答錯 1 次），連續答對 5 次就移出',
+    'lost：抽查已熟的字答錯了，擦掉はなまる',
+  ]);
+});
+
+test('重新載入後，答過的題目照樣說出同樣的提示', () => {
+  const store = memoryStore();
+  const first = setup(store);
+  first.practice.start('名詞');
+  const notes = first.reply(false).notes;
+  const again = setup(store);
+  again.practice.restore();
+  assert.deepEqual(again.practice.notes(again.practice.round.qs[0]), notes);
+  assert.deepEqual(again.practice.notes(again.practice.round.qs[1]), []);
+});
+
+test('評語：朱印的日文、中文與底下那句話依等級而定；複習全對另有一句', () => {
+  const wording = (rights, retry) => {
+    const { practice, reply } = setup();
+    practice.start('名詞');
+    if (retry) {
+      reply(false);
+      for (let i = 1; i < LENGTH; i++) { practice.next(); reply(true); }
+      practice.next();
+      practice.retry();
+      reply(true);
+      practice.next();
+    } else for (let i = 0; i < LENGTH; i++) { reply(i < rights); practice.next(); }
+    const { grade, msg } = practice.result();
+    return [grade.ja, grade.zh, msg];
+  };
+  assert.deepEqual(wording(10), ['たいへんよくできました', '做得非常好', '全部答對！這組字已經很熟了。']);
+  assert.deepEqual(wording(7), ['よくできました', '做得很好', '不錯！把下面答錯的字再看一遍就更穩了。']);
+  assert.deepEqual(wording(4), ['もうすこし', '再一點點', '有進步空間，先複習下面這些字再試一次。']);
+  assert.deepEqual(wording(0), ['がんばりましょう', '一起加油吧', '別急，先把下面的字看過一遍，再挑戰一次。']);
+  assert.deepEqual(wording(0, true), ['たいへんよくできました', '做得非常好', '錯題都訂正好了，這幾個字記住了。']);
 });

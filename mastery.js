@@ -59,7 +59,7 @@
       save();
     }
 
-    return { record, isKnown, unmark, clear };
+    return { record, isKnown, unmark, clear, CLEAR };
   }
 
   const api = { createMastery, CLEAR, TYPES };
