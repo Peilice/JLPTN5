@@ -54,12 +54,15 @@
       a.s.some(s => b.s.includes(s));
   }
 
+  // A listing is known by its section and writing: 時間|毎年.
+  const keyOf = rec => rec.cat + '|' + rec.w;
+
   function createBank(records, { random = Math.random } = {}) {
     const items = [];
     const byKey = new Map();
     records.forEach(rec => {
       const item = { ...rec, traps: rec.traps || [] };
-      item.k = item.cat + '|' + item.w;
+      item.k = keyOf(item);
       item.s = senses(item.c);
       item.n = numOf(item.w);
       if (byKey.has(item.k)) return;
@@ -67,6 +70,13 @@
       items.push(item);
     });
 
+    // The bank answers only about its own items. A record read off the page looks alike but
+    // lacks the key the bank works by, so it is turned into the bank's item first (itemFor).
+    function own(item) {
+      if (!item || byKey.get(item.k) !== item) {
+        throw new Error(`題庫沒有這一筆（${item && item.w}）：請先用 bank.itemFor 換成題庫裡的那一筆`);
+      }
+    }
     // A word can sit in two sections; a whole chapter or 全部 asks it once.
     const once = list => {
       const seen = new Set();
@@ -124,6 +134,7 @@
     // when it cannot find three wrong options (13日 has no other 13 to stand beside it).
     const typeCache = new Map();
     function typesFor(item) {
+      own(item);
       if (typeCache.has(item.k)) return typeCache.get(item.k);
       const t = [];
       if (item.c) t.push('zh2r', 'r2zh');
@@ -173,6 +184,8 @@
       answerOf: q => ans(byKey.get(q.k), q.t),
       wordId,
       item: k => byKey.get(k),
+      // The bank's item for a record read off the page (the same section and writing).
+      itemFor: rec => byKey.get(keyOf(rec)),
     };
   }
 

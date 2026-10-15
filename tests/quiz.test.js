@@ -114,3 +114,32 @@ test('只用假名寫的字不出漢字→讀音和讀音→漢字', () => {
   ], { random: seeded(1) });
   assert.deepEqual(bank.typesFor(bank.item('副詞|すぐ')).sort(), ['r2zh', 'zh2r']);
 });
+
+test('頁面讀到的紀錄用 itemFor 換成題庫裡的那一筆；同一節重複收錄的字換到同一筆', () => {
+  const records = [
+    word('時間', 'ch-1', '毎年', 'まいとし', '每年'),
+    word('時間', 'ch-1', '毎年', 'まいとし', '每年'),
+    word('頻率', 'ch-1', '毎年', 'まいとし', '每年'),
+  ];
+  const bank = createBank(records, { random: seeded(1) });
+  assert.equal(bank.itemFor(records[0]), bank.item('時間|毎年'));
+  assert.equal(bank.itemFor(records[1]), bank.item('時間|毎年'));
+  assert.equal(bank.itemFor(records[2]), bank.item('頻率|毎年'));
+  assert.equal(bank.itemFor(word('時間', 'ch-1', '毎日', 'まいにち', '每天')), undefined);
+});
+
+// The page once asked 已熟 about its own records instead of the bank's; they lack the bank's key,
+// so every one of them got the types of whichever was asked first, and はなまる went missing.
+test('題庫只認自己的字：拿頁面讀到的原始紀錄來問題型或出題會報錯', () => {
+  const records = [
+    word('副詞', 'ch-1', 'すぐ', 'すぐ', '馬上'),
+    word('副詞', 'ch-1', 'もう', 'もう', '已經'),
+    word('副詞', 'ch-1', 'まだ', 'まだ', '還'),
+    word('副詞', 'ch-1', 'よく', 'よく', '常常'),
+  ];
+  const bank = createBank(records, { random: seeded(1) });
+  assert.throws(() => bank.typesFor(records[0]), /itemFor/);
+  assert.throws(() => bank.typesFor({ ...bank.item('副詞|すぐ') }), /itemFor/);
+  assert.throws(() => bank.question(records[0]), /itemFor/);
+  assert.ok(bank.typesFor(bank.itemFor(records[0])).length);
+});

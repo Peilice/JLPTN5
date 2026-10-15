@@ -7100,8 +7100,11 @@
         });
         return words;
       }
-      const words = readWords();
-      const bank = window.JLPTQuiz.createBank(words.map(x => x.rec));
+      const read = readWords();
+      const bank = window.JLPTQuiz.createBank(read.map(x => x.rec));
+      // From here on each word is the bank's item: the bank answers only about its own.
+      const words = read.map(({ el, rec }) => ({ el, item: bank.itemFor(rec) }));
+      const itemAt = new Map(words.map(x => [x.el, x.item]));
       const BANK = bank.items;
       // 已熟 (mastery.js): the rule and the record live there; the page puts the はなまる on the words.
       const KNOWN_CLEAR = window.JLPTMastery.CLEAR;
@@ -7218,22 +7221,22 @@
       const ICON_CHEV = '<svg class="e-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
       // Each table tile gets a small say button in the corner. The tile's content is wrapped so
       // that, while answers are masked, tapping it peeks (see setMask); unmasked it does nothing.
-      words.forEach(({ el, rec }) => {
+      words.forEach(({ el, item }) => {
         if (el.matches('.tile')) {
           const box = document.createElement('div');
           box.className = 'tile-btn';
           box.append(...el.childNodes);
           el.append(box);
-          el.insertAdjacentHTML('beforeend', sayButton(rec.w, rec.r, 'say tile-say'));
+          el.insertAdjacentHTML('beforeend', sayButton(item.w, item.r, 'say tile-say'));
           return;
         }
         const row = el.querySelector('.e-row');
         const ex = el.querySelector('.e-ex');
         if (ex) {
           ex.hidden = true;
-          row.insertAdjacentHTML('afterend', `<button type="button" class="ex-toggle" aria-expanded="false" aria-controls="${ex.id}" aria-label="「${esc(rec.w)}」的例句" title="例句">${ICON_CHEV}</button>`);
+          row.insertAdjacentHTML('afterend', `<button type="button" class="ex-toggle" aria-expanded="false" aria-controls="${ex.id}" aria-label="「${esc(item.w)}」的例句" title="例句">${ICON_CHEV}</button>`);
         }
-        row.insertAdjacentHTML('afterend', sayButton(rec.w, rec.r));
+        row.insertAdjacentHTML('afterend', sayButton(item.w, item.r));
       });
 
       // 錯題本 (missbook.js): the rules and the record live there; the page shows the list.
@@ -7242,8 +7245,8 @@
       const wordId = bank.wordId;
       // Where each word sits on the page, for jumping to it from the 錯題本.
       const wordEls = new Map();
-      words.forEach(({ el, rec }) => {
-        const id = wordId(rec);
+      words.forEach(({ el, item }) => {
+        const id = wordId(item);
         if (!wordEls.has(id)) wordEls.set(id, []);
         wordEls.get(id).push(el);
       });
@@ -7567,12 +7570,12 @@
       // Tapping it asks once more before taking it off, so a stray thumb cannot undo five answers.
       function renderKnown() {
         renderScopeCounts();
-        words.forEach(({ el, rec }) => {
+        words.forEach(({ el, item }) => {
           const has = el.querySelector(':scope > .known');
-          const known = mastery.isKnown(rec);
+          const known = mastery.isKnown(item);
           if (known === !!has) return;
           if (has) { has.remove(); return; }
-          const btn = `<button type="button" class="known" data-id="${esc(wordId(rec))}" aria-label="${esc(`「${rec.w}」已熟，按兩下擦掉はなまる`)}" title="已熟（連續答對 ${KNOWN_CLEAR} 次）">${ICON_KNOWN}</button>`;
+          const btn = `<button type="button" class="known" data-id="${esc(wordId(item))}" aria-label="${esc(`「${item.w}」已熟，按兩下擦掉はなまる`)}" title="已熟（連續答對 ${KNOWN_CLEAR} 次）">${ICON_KNOWN}</button>`;
           if (el.matches('.tile')) el.insertAdjacentHTML('beforeend', btn);
           else el.querySelector(':scope > .e-row').insertAdjacentHTML('afterend', btn);
         });
@@ -7589,7 +7592,7 @@
         const btn = e.target.closest('.known');
         if (!btn) return;
         e.stopPropagation();
-        const item = bank.items.find(x => wordId(x) === btn.dataset.id);
+        const item = itemAt.get(btn.parentElement);
         if (!btn.classList.contains('armed')) {
           disarmKnown();
           btn.classList.add('armed');
