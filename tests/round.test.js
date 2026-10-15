@@ -315,3 +315,20 @@ test('擦掉はなまる：這組裡還沒作答的抽查題改成一般題目�
   again.practice.unmark(again.bank.item(answered.k));
   assert.equal(answered.check, true);
 });
+
+const counts = practice => practice.scopes().map(s => `${s.id} ${s.left}/${s.total}`);
+
+test('每個範圍的字數：全部、錯題本，再依頁面順序列出每章和它的各節', () => {
+  const { practice } = setup();
+  assert.deepEqual(counts(practice), ['all 16/16', 'miss 0/0', 'ch-1 12/12', '名詞 12/12', 'ch-2 4/4', '副詞 4/4']);
+});
+
+test('每個範圍的字數：已熟的字不算在剩下的字裡，錯題本也一樣', () => {
+  const { bank, mastery, practice, reply } = setup();
+  bank.pool('名詞').slice(0, 2).forEach(x => learn(mastery, x));
+  practice.start('副詞');
+  const q = practice.round.qs[0];
+  reply(false);
+  learn(mastery, bank.item(q.k));
+  assert.deepEqual(counts(practice), ['all 13/16', 'miss 0/1', 'ch-1 10/12', '名詞 10/12', 'ch-2 3/4', '副詞 3/4']);
+});

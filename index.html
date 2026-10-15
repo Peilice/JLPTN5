@@ -7110,26 +7110,31 @@
       const KNOWN_CLEAR = window.JLPTMastery.CLEAR;
       const mastery = window.JLPTMastery.createMastery(bank, store);
       const scopeSel = $('quizScope');
+      // Each range's name, read once off the headings.
+      const scopeNames = new Map([['all', '全部'], ['miss', '錯題本']]);
       document.querySelectorAll('.chapter').forEach(ch => {
         const no = text(ch.querySelector('h2 .ch-no'));
         const g = document.createElement('optgroup');
         g.label = `${no}　${text(ch.querySelector('h2')).slice(no.length)}`;
-        g.append(new Option(`${no}全部`, ch.id));
-        ch.querySelectorAll('.lex-section').forEach(sec => g.append(new Option(sec.dataset.name, sec.id)));
+        scopeNames.set(ch.id, `${no}全部`);
+        g.append(new Option(scopeNames.get(ch.id), ch.id));
+        ch.querySelectorAll('.lex-section').forEach(sec => {
+          scopeNames.set(sec.id, sec.dataset.name);
+          g.append(new Option(sec.dataset.name, sec.id));
+        });
         scopeSel.append(g);
       });
       scopeSel.options[0].textContent = '全部';
       // Each range says how many words it has, and how many are left once some are 已熟: （40／52）.
-      const scopeOpts = [...scopeSel.options];
-      scopeOpts.forEach(o => { o.dataset.name = o.textContent; });
+      // The counts come from round.js. The 錯題本 can be chosen only while it has words, or is chosen.
       function renderScopeCounts() {
-        scopeOpts.forEach(o => {
-          const all = bank.pool(o.value);
-          const left = all.filter(x => !mastery.isKnown(x)).length;
-          o.textContent = `${o.dataset.name}（${left < all.length ? `${left}／` : ''}${all.length}）`;
+        const counts = new Map(practice.scopes().map(x => [x.id, x]));
+        [...scopeSel.options].forEach(o => {
+          const { total, left } = counts.get(o.value);
+          o.textContent = `${scopeNames.get(o.value)}（${left < total ? `${left}／` : ''}${total}）`;
+          if (o.value === 'miss') o.disabled = !total && scopeSel.value !== 'miss';
         });
       }
-      renderScopeCounts();
       // 錯題本 sits beside 全部, before the chapter groups, not inside 第一章.
       scopeSel.insertBefore(new Option('錯題本', 'miss'), scopeSel.querySelector('optgroup'));
       document.querySelectorAll('.bank-total').forEach(el => { el.textContent = bank.pool('all').length; });
@@ -7467,7 +7472,7 @@
 
       // Restarting mid-round needs a second tap, so a stray thumb cannot wipe progress.
       let armTimer = null;
-      const scopeName = () => $('quizScope').selectedOptions[0].textContent.replace(/（[^）]*）$/, '');
+      const scopeName = () => scopeNames.get(scopeSel.value);
       const scopePending = () => practice.round && $('quizScope').value !== practice.round.scope && !isDone();
       function disarmRestart() {
         clearTimeout(armTimer);
@@ -7497,7 +7502,7 @@
       $('quizNext').addEventListener('click', next);
       // Changing the range mid-round queues it for the next round instead of wiping progress.
       $('quizScope').addEventListener('change', () => {
-        if (scopeSel.value !== 'miss' && !misses.list().length) missOpt.disabled = true;
+        renderScopeCounts();
         openQuiz(true);
         if (!inProgress()) { newRound(); return; }
         disarmRestart();
@@ -7522,15 +7527,13 @@
       const missBook = $('missBook');
       const missBody = $('missBody');
       missToggle.hidden = false;
-      const missOpt = [...scopeSel.options].find(o => o.value === 'miss');
       function renderMissBook() {
         const ids = misses.list();
         missToggle.classList.toggle('is-empty', !ids.length);
         missToggle.setAttribute('aria-label', `錯題本 ${ids.length} 字`);
         missToggle.innerHTML = (ids.length ? `<span class="miss">${ICON_MISS}</span>` : '') +
           `<span class="mt-label">錯題本</span><span class="n">${ids.length}</span>${ICON_CHEV}`;
-        missOpt.textContent = `錯題本（${ids.length}）`;
-        missOpt.disabled = !ids.length && scopeSel.value !== 'miss';
+        renderScopeCounts();
         missBody.innerHTML = ids.length
           ? `<div class="miss-head"><p class="chapter-intro">共 ${ids.length} 字，答錯多的排前面；連續答對 ${MISS_CLEAR} 次就移出。點字可以跳到它在單字表的位置。</p>` +
           `<button type="button" class="btn btn-secondary miss-drill">練這些字</button></div>` +
@@ -7839,8 +7842,7 @@
       function renderResume() {
         const round = practice.round;
         const total = round.qs.length;
-        const name = ([...scopeSel.options].find(o => o.value === round.scope) || scopeSel.selectedOptions[0])
-          .textContent.replace(/（[^）]*）$/, '');
+        const name = scopeNames.get(round.scope) || scopeName();
         const [main, sub] = isDone()
           ? ['這組做完了', `答對 ${practice.score()} / ${total}・看結果或再練一組`]
           : inProgress()

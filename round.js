@@ -21,8 +21,20 @@
     // so the 錯題本 range needs no order.
     const pool = scope => scope === 'miss' ? misses.list().map(x => x.item) : bank.pool(scope);
     const save = () => store.set(KEY, round);
+    const notKnown = list => list.filter(x => !mastery.isKnown(x));
     // A word in the 錯題本 is asked the way it was missed.
     const ask = item => ({ ...bank.question(item, misses.typeFor(item)), choice: null });
+
+    // Every range with how many words it has and how many are not 已熟 yet (what a new 一組
+    // draws from): 全部, the 錯題本, then each chapter followed by its sections, in page order.
+    function scopes() {
+      const ids = ['all', 'miss'];
+      bank.items.forEach(x => [x.ch, x.cat].forEach(id => { if (!ids.includes(id)) ids.push(id); }));
+      return ids.map(id => {
+        const all = pool(id);
+        return { id, total: all.length, left: notKnown(all).length };
+      });
+    }
 
     // A new 一組 from the range; an empty range (錯題本 with no words) falls back to 全部.
     // 已熟 words are skipped, but one of them is mixed in to check it is still known.
@@ -31,7 +43,7 @@
     function start(scope) {
       if (!pool(scope).length) scope = 'all';
       const all = shuffle(pool(scope));
-      const fresh = all.filter(x => !mastery.isKnown(x));
+      const fresh = notKnown(all);
       const check = all.find(x => mastery.isKnown(x));
       let qs;
       if (!fresh.length) qs = all.slice(0, LENGTH).map(ask);
@@ -156,6 +168,7 @@
     return {
       pool,
       start,
+      scopes,
       retry,
       restore,
       result,
