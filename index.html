@@ -1809,7 +1809,7 @@
       }
     }
 
-    /* 已熟: a small はなまる sticker on the word, tilted like the result one. */
+    /* 已熟: a small はなまる drawn in orange pen beside the word. */
     .entry:has(> .known) {
       grid-template-columns: minmax(0, 1fr) repeat(3, auto);
     }
@@ -1831,23 +1831,17 @@
     .known .hanamaru {
       width: 26px;
       height: 26px;
-      transform: rotate(-8deg);
-      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
     }
 
-    .known .k-flower {
-      fill: var(--sticker);
-    }
-
-    .known .k-ring {
+    .hanamaru path {
       fill: none;
-      stroke: #ffffff;
+      stroke: var(--accent);
       stroke-width: 9;
-      stroke-dasharray: 12 16;
       stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    /* Armed to come off: the sticker fades under a red cross until the second tap. */
+    /* Armed to come off: the はなまる fades under a red cross until the second tap. */
     .known.armed .hanamaru {
       opacity: 0.4;
     }
@@ -1865,7 +1859,7 @@
       height: 20px;
     }
 
-    /* A card gets it stuck over its top-left corner, clear of the word; a table cell, whose
+    /* A card has it drawn over its top-left corner, clear of the word; a table cell, whose
      wrapper scrolls and would clip that, keeps it inside in the empty lower-right. */
     .tile>.known {
       position: absolute;
@@ -1885,25 +1879,6 @@
     .tile>.known .hanamaru {
       width: 22px;
       height: 22px;
-    }
-
-    .rv-book .hanamaru,
-    .done-grad .hanamaru {
-      transform: rotate(-8deg);
-    }
-
-    .rv-book .k-flower,
-    .done-grad .k-flower {
-      fill: var(--sticker);
-    }
-
-    .rv-book .k-ring,
-    .done-grad .k-ring {
-      fill: none;
-      stroke: #ffffff;
-      stroke-width: 9;
-      stroke-dasharray: 12 16;
-      stroke-linecap: round;
     }
 
     .e-word {
@@ -7303,12 +7278,27 @@
         for (let i = 1; i <= n; i++) d += ` A 17 17 0 0 1 ${at(i)}`;
         return d + ' Z';
       })();
-      const ICON_KNOWN = `<svg class="hanamaru" viewBox="0 0 168 168" aria-hidden="true"><path class="k-flower" d="${FLOWER}"/><circle class="k-ring" cx="84" cy="84" r="48"/></svg>`;
+      // 已熟: a はなまる drawn in pen, the way a teacher marks homework: a spiral two turns
+      // round, inside nine looped petals. Orange, not red, which reads as wrong here.
+      const ICON_KNOWN = (() => {
+        let spiral = 'M 84 84';
+        for (let t = 0; t <= 4.2 * Math.PI; t += 0.15) {
+          const r = 6 + t * 3.6;
+          spiral += ` L ${(84 + r * Math.cos(t)).toFixed(1)} ${(84 + r * Math.sin(t)).toFixed(1)}`;
+        }
+        const n = 9, r = 66, at = i => {
+          const a = (i / n) * 2 * Math.PI - Math.PI / 2;
+          return `${(84 + r * Math.cos(a)).toFixed(1)} ${(84 + r * Math.sin(a)).toFixed(1)}`;
+        };
+        let petals = `M ${at(0)}`;
+        for (let i = 1; i <= n; i++) petals += ` A 20 20 0 0 1 ${at(i)}`;
+        return `<svg class="hanamaru" viewBox="0 0 168 168" aria-hidden="true"><path d="${spiral}"/><path d="${petals} Z"/></svg>`;
+      })();
 
       function renderMeta() {
         const round = practice.round;
         $('knownNote').hidden = !round.allKnown || isDone();
-        $('knownNote').textContent = '這個範圍的字都貼上はなまる了，這組照樣全部出題，當作複習。';
+        $('knownNote').textContent = '這個範圍的字都畫上はなまる了，這組照樣全部出題，當作複習。';
         const total = round.qs.length;
         $('quizProgress').textContent = isDone() ? `共 ${total} 題` : `第 ${round.i + 1} / ${total} 題`;
         $('quizScore').textContent = `答對 ${practice.score()}`;
@@ -7331,8 +7321,8 @@
       function knownLine(q) {
         const k = q.known;
         if (!k) return '';
-        if (k.became) return `<p class="rv-book">${ICON_KNOWN}連續答對 ${KNOWN_CLEAR} 次，貼上はなまる，之後出題先跳過</p>`;
-        if (k.lost) return `<p class="rv-book">抽查已熟的字答錯了，撕下はなまる</p>`;
+        if (k.became) return `<p class="rv-book">${ICON_KNOWN}連續答對 ${KNOWN_CLEAR} 次，畫上はなまる，之後出題先跳過</p>`;
+        if (k.lost) return `<p class="rv-book">抽查已熟的字答錯了，擦掉はなまる</p>`;
         if (q.check && k.known) return `<p class="rv-book">${ICON_KNOWN}抽查已熟的字：還記得，はなまる留著</p>`;
         return '';
       }
@@ -7476,7 +7466,7 @@
             `<span class="m-c">${esc(m.c)}</span></li>`).join('')}</ul>` : '') +
           (cleared.length ? `<p class="done-grad">${ICON_OK}<span>${cleared.length} 個字已連續答對 ${MISS_CLEAR} 次，移出錯題本：` +
             cleared.map(x => `<span lang="ja">${esc(x.w)}</span>`).join('、') + `</span></p>` : '') +
-          (known.length ? `<p class="done-grad">${ICON_KNOWN}<span>${known.length} 個字已連續答對 ${KNOWN_CLEAR} 次，貼上はなまる：` +
+          (known.length ? `<p class="done-grad">${ICON_KNOWN}<span>${known.length} 個字已連續答對 ${KNOWN_CLEAR} 次，畫上はなまる：` +
             known.map(x => `<span lang="ja">${esc(x.w)}</span>`).join('、') + `</span></p>` : '');
         done.querySelector('[data-act="retry"]')?.addEventListener('click', () => {
           newRound(true);
@@ -7582,7 +7572,7 @@
           const known = mastery.isKnown(rec);
           if (known === !!has) return;
           if (has) { has.remove(); return; }
-          const btn = `<button type="button" class="known" data-id="${esc(wordId(rec))}" aria-label="${esc(`「${rec.w}」已熟，按兩下撕下はなまる`)}" title="已熟（連續答對 ${KNOWN_CLEAR} 次）">${ICON_KNOWN}</button>`;
+          const btn = `<button type="button" class="known" data-id="${esc(wordId(rec))}" aria-label="${esc(`「${rec.w}」已熟，按兩下擦掉はなまる`)}" title="已熟（連續答對 ${KNOWN_CLEAR} 次）">${ICON_KNOWN}</button>`;
           if (el.matches('.tile')) el.insertAdjacentHTML('beforeend', btn);
           else el.querySelector(':scope > .e-row').insertAdjacentHTML('afterend', btn);
         });
@@ -7604,7 +7594,7 @@
           disarmKnown();
           btn.classList.add('armed');
           btn.innerHTML = ICON_KNOWN + `<span class="known-x">${ICON_NG}</span>`;
-          $('quizLive').textContent = `再按一次撕下「${item.w}」的はなまる，之後會重新出題。`;
+          $('quizLive').textContent = `再按一次擦掉「${item.w}」的はなまる，之後會重新出題。`;
           unmarkTimer = setTimeout(disarmKnown, 4000);
           return;
         }
@@ -7614,7 +7604,7 @@
         const el = btn.parentElement;
         renderKnown();
         el.querySelector('button, [tabindex]')?.focus({ preventScroll: true });
-        $('quizLive').textContent = `已撕下「${item.w}」的はなまる，之後會重新出題。`;
+        $('quizLive').textContent = `已擦掉「${item.w}」的はなまる，之後會重新出題。`;
       }, true);
       renderKnown();
 
